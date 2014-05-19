@@ -1,0 +1,2 @@
+language: scala
+script: sbt "^ publish-local" "^ scripted"
