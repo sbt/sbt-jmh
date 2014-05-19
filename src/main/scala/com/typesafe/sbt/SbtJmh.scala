@@ -13,13 +13,14 @@ object SbtJmh extends Plugin {
   lazy val jmhSettings = Seq(
     sourceGenerators in Compile <+= generateJavaSources in Compile,
 
+    sourceDirectories in Compile += sourceDirectory.value / "jmh",
+
     mainClass in (Compile, run) := Some("org.openjdk.jmh.Main"),
 
     fork in (Compile, run) := true, // makes sure that sbt manages classpath for JMH when forking
 
     generateJavaSources in Compile := {
       val out = (target in Compile).value / s"scala-${scalaBinaryVersion.value}"
-      println("out = " + out)
 
       val compiledBytecodeDirectory = out / "classes"
       val outputSourceDirectory = out / "generated-sources" / "jmh"
