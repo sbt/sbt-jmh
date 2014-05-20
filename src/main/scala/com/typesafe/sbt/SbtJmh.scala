@@ -5,10 +5,7 @@ import sbt.Keys._
 import org.openjdk.jmh.annotations.GenerateMicroBenchmark
 import org.openjdk.jmh.generators.bytecode.JmhBytecodeGenerator
 import sbt.inc.Analysis
-import scala.Some
-import scala.Some
 import sbt.CommandStrings._
-import scala.Some
 import java.io.PrintWriter
 
 object SbtJmh extends Plugin {
@@ -23,21 +20,6 @@ object SbtJmh extends Plugin {
     mainClass in (Compile, run) := Some("org.openjdk.jmh.Main"),
 
     fork in (Compile, run) := true, // makes sure that sbt manages classpath for JMH when forking
-
-//    generateJavaSources in Compile := {
-//      val out = (target in Compile).value / s"scala-${scalaBinaryVersion.value}"
-//
-//      val compiledBytecodeDirectory = out / "classes"
-//      val outputSourceDirectory = out / "generated-sources" / "jmh"
-//      val outputResourceDirectory = compiledBytecodeDirectory
-//
-//      val micro = classOf[GenerateMicroBenchmark]
-//      Thread.currentThread().setContextClassLoader(micro.getClassLoader)
-//
-//      JmhBytecodeGenerator.main(Array(compiledBytecodeDirectory, outputSourceDirectory, outputResourceDirectory).map(_.toString))
-//
-//      (outputSourceDirectory ** "*").filter(_.isFile).get
-//    },
 
     sourceDirectories in Compile += target.value / s"scala-${scalaBinaryVersion.value}" / "generated-sources" / "jmh",
 
