@@ -1,6 +1,8 @@
 sbt-jmh
 =======
 
+**THIS IS AN EARLY DRAFT - THOUGH IT WORKS, IT IS CURRENTLY NOT PROPERLY MAINTAINED AS PLUGIN **
+
 Sbt plugin for running JMH tests.
 
 http://openjdk.java.net/projects/code-tools/jmh/
