@@ -27,13 +27,15 @@ object SbtJmh extends Plugin {
     generateJavaSources in Compile := generateBenchmarkJavaSources(streams.value, (target in Compile).value, scalaBinaryVersion.value),
 
     compileAgain in Jmh := {
-      myCompileTaskImpl(streams.value, (compileInputs in (Compile, compile)).value)
+      myCompile(streams.value, (compileInputs in (Compile, compile)).value, Nil.toSeq)
     },
+
+    outputTarget in Jmh := target.value / s"scala-${scalaBinaryVersion.value}",
 
     compile in Jmh := {
       streams.value.log.info("Compiling generated JMH benchmarks...")
       val generatedJava = (generateJavaSources in Jmh).value
-      myCompileGeneratedJava(streams.value, (compileInputs in (Compile, compile)).value, generatedJava)
+      myCompile(streams.value, (compileInputs in (Compile, compile)).value, generatedJava)
     },
 
     version in Jmh := "0.7.1",
@@ -54,13 +56,11 @@ object SbtJmh extends Plugin {
 
 
 
-  def generateBenchmarkJavaSources(s: TaskStreams, target: File, scalaBinaryV: String): Seq[File] = {
+  def generateBenchmarkJavaSources(s: TaskStreams, outputTarget: File, scalaBinaryV: String): Seq[File] = {
     s.log.info("Generating JMH benchmark Java source files...")
 
-    val out = target / s"scala-$scalaBinaryV"
-
-    val compiledBytecodeDirectory = out / "classes"
-    val outputSourceDirectory = out / "generated-sources" / "jmh"
+    val compiledBytecodeDirectory = outputTarget / "classes"
+    val outputSourceDirectory = outputTarget / "generated-sources" / "jmh"
     val outputResourceDirectory = compiledBytecodeDirectory
 
     // assuring the classes are loaded in case of same thread execution
@@ -72,7 +72,7 @@ object SbtJmh extends Plugin {
   }
 
   /** Compiler run, with additional files to compile (JMH generated sources) */
-  def myCompileGeneratedJava(s: TaskStreams, ci: Compiler.Inputs, javaToCompile: Seq[File]): inc.Analysis = {
+  def myCompile(s: TaskStreams, ci: Compiler.Inputs, javaToCompile: Seq[File]): inc.Analysis = {
     lazy val x = s.text(ExportStream)
     def onArgs(cs: Compiler.Compilers) = {
       cs.copy(
@@ -85,17 +85,6 @@ object SbtJmh extends Plugin {
     try Compiler(i, s.log) finally x.close() // workaround for #937
   }
 
-  def myCompileTaskImpl(s: TaskStreams, ci: Compiler.Inputs): inc.Analysis = {
-    lazy val x = s.text(ExportStream)
-    def onArgs(cs: Compiler.Compilers) = {
-      cs.copy(
-        scalac = cs.scalac.onArgs(exported(x, "scalac")),
-        javac = cs.javac.onArgs(exported(x, "javac")))
-    }
-    val i = ci.copy(compilers = onArgs(ci.compilers))
-    try Compiler(i, s.log) finally x.close() // workaround for #937
-  }
-
   def exported(w: PrintWriter, command: String): Seq[String] => Unit = args =>
     w.println((command +: args).mkString(" "))
 
@@ -104,6 +93,8 @@ object SbtJmh extends Plugin {
     val Jmh = config("jmh") extend Compile
 
     val generateJavaSources = taskKey[Seq[File]]("Generate benchmark JMH Java code")
+
+    val outputTarget = settingKey[File]("Directory where the generated sources should be written")
 
     val generateInstrumentedClasses = taskKey[Seq[File]]("Generate instrumented JMH code")
 
