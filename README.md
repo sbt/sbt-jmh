@@ -1,7 +1,7 @@
 sbt-jmh
 =======
 
-**THIS IS AN EARLY DRAFT - THOUGH IT WORKS, IT IS CURRENTLY NOT PROPERLY MAINTAINED AS PLUGIN **
+**THIS IS AN EARLY DRAFT - THOUGH IT WORKS, IT IS CURRENTLY NOT PROPERLY MAINTAINED AS PLUGIN**
 
 Sbt plugin for running JMH tests.
 
@@ -12,8 +12,19 @@ JMH about itself:
 
 JMH is a Java harness for building, running, and analysing nano/micro/milli/macro benchmarks written in Java and other languages targetting the JVM.
 
+Please read shipilev.net/blog/2014/nanotrusting-nanotime/ and other blog posts on microbenchmarking (or why most benchmarks are wrong) and make sure your benchmark is valid, before using this plugin to prove performance of things :-)
+
 Usage
 -----
+
+**THIS PLUGIN IS NOT RELEASED NOR SUPPORTED (yet?) Please open issues and pull requests though :-)**
+
+
+You need to publish it locally to use, as it's not released yet. 
+
+```scala
+publishLocal
+```
 
 Add the below snippet to your `project/plugins.sbt`:
 
