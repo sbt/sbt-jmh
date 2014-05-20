@@ -1,6 +1,8 @@
 sbtPlugin := true
 
-organization := "com.typesafe.sbt"
+//organization := "com.typesafe.sbt" someday perhaps
+
+organization := "pl.project13.scala"
 
 name := "sbt-jmh"
 

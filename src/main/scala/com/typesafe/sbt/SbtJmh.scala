@@ -36,10 +36,12 @@ object SbtJmh extends Plugin {
       myCompileGeneratedJava(streams.value, (compileInputs in (Compile, compile)).value, generatedJava)
     },
 
+    version in Jmh := "0.7.1",
+
     libraryDependencies ++= Seq(
-      "org.openjdk.jmh" % "jmh-core"                 % "0.7.1",   // GPLv2
-      "org.openjdk.jmh" % "jmh-generator-bytecode"   % "0.7.1",   // GPLv2
-      "org.openjdk.jmh" % "jmh-generator-reflection" % "0.7.1"    // GPLv2
+      "org.openjdk.jmh" % "jmh-core"                 % (version in Jmh).value,   // GPLv2
+      "org.openjdk.jmh" % "jmh-generator-bytecode"   % (version in Jmh).value,   // GPLv2
+      "org.openjdk.jmh" % "jmh-generator-reflection" % (version in Jmh).value    // GPLv2
     ),
 
     compile in Jmh <<= (compile in Jmh).dependsOn(generateJavaSources in Jmh, compile in Compile),
@@ -100,7 +102,7 @@ object SbtJmh extends Plugin {
 
   object JmhKeys {
     val Jmh = config("jmh") extend Compile
-    
+
     val generateJavaSources = taskKey[Seq[File]]("Generate benchmark JMH Java code")
 
     val generateInstrumentedClasses = taskKey[Seq[File]]("Generate instrumented JMH code")
