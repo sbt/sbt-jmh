@@ -29,7 +29,7 @@ publishLocal
 Add the below snippet to your `project/plugins.sbt`:
 
 ```scala
-addSbtPlugin("com.typesafe.sbt" % "sbt-jmh" % version_here)
+addSbtPlugin("pl.project13.scala" % "sbt-jmh" % version_here)
 ```
 
 and that one to your `build.sbt`:
