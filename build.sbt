@@ -8,7 +8,7 @@ organization := "pl.project13.scala"
 
 name := "sbt-jmh"
 
-version := "0.1.2"
+version := "0.1.3-SNAPSHOT"
 
 val jmhVersion = "0.7.1"
 
