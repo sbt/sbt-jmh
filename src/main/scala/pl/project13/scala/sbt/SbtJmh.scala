@@ -4,7 +4,6 @@ import sbt._
 import sbt.Keys._
 import org.openjdk.jmh.annotations.GenerateMicroBenchmark
 import org.openjdk.jmh.generators.bytecode.JmhBytecodeGenerator
-import sbt.inc.Analysis
 import sbt.CommandStrings._
 import java.io.PrintWriter
 
@@ -13,9 +12,8 @@ object SbtJmh extends Plugin {
   import JmhKeys._
 
   lazy val jmhSettings = Seq(
-    sourceGenerators in Compile <+= generateJavaSources in Compile,
-
-    sourceDirectories in Compile += sourceDirectory.value / "jmh",
+    sourceGenerators in Jmh := (sourceGenerators in Compile).value,
+    sourceGenerators in Jmh <+= generateJavaSources in Jmh,
 
     mainClass in (Compile, run) := Some("org.openjdk.jmh.Main"),
 
@@ -23,12 +21,7 @@ object SbtJmh extends Plugin {
 
     sourceDirectories in Compile += target.value / s"scala-${scalaBinaryVersion.value}" / "generated-sources" / "jmh",
 
-    generateJavaSources in Jmh := generateBenchmarkJavaSources(streams.value, (target in Compile).value, scalaBinaryVersion.value),
-    generateJavaSources in Compile := generateBenchmarkJavaSources(streams.value, (target in Compile).value, scalaBinaryVersion.value),
-
-    compileAgain in Jmh := {
-      myCompile(streams.value, (compileInputs in (Compile, compile)).value, Nil.toSeq)
-    },
+    generateJavaSources in Jmh := generateBenchmarkJavaSources(streams.value, (outputTarget in Jmh).value, scalaBinaryVersion.value),
 
     outputTarget in Jmh := target.value / s"scala-${scalaBinaryVersion.value}",
 
@@ -47,17 +40,15 @@ object SbtJmh extends Plugin {
     ),
 
     compile in Jmh <<= (compile in Jmh).dependsOn(generateJavaSources in Jmh, compile in Compile),
-    compile in Jmh <<= (compile in Jmh).dependsOn(compileAgain in Jmh),
+    compile in Jmh <<= (compile in Jmh).dependsOn(),
     compile in Jmh <<= (compile in Jmh).dependsOn(compile in Compile),
 
     run in Jmh <<= (run in Compile).dependsOn(compile in Jmh),
     run in Compile <<= (run in Compile).dependsOn(compile in Jmh)
   )
 
-
-
   def generateBenchmarkJavaSources(s: TaskStreams, outputTarget: File, scalaBinaryV: String): Seq[File] = {
-    s.log.info("Generating JMH benchmark Java source files...")
+    s.log.info(s"Generating JMH benchmark Java source files...")
 
     val compiledBytecodeDirectory = outputTarget / "classes"
     val outputSourceDirectory = outputTarget / "generated-sources" / "jmh"
@@ -94,11 +85,9 @@ object SbtJmh extends Plugin {
 
     val generateJavaSources = taskKey[Seq[File]]("Generate benchmark JMH Java code")
 
-    val outputTarget = settingKey[File]("Directory where the generated sources should be written")
+    val outputTarget = settingKey[File]("Directory where the bytecode to be consumed and generated sources should be written to (`target` or sometimes `target/scala-2.10`)")
 
     val generateInstrumentedClasses = taskKey[Seq[File]]("Generate instrumented JMH code")
-
-    val compileAgain = taskKey[Analysis]("Compile the generated sources")
 
   }
 
