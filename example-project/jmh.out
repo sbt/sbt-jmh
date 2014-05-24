@@ -1,0 +1,2 @@
+"Benchmark","Mode","Threads","Samples","Mean","Mean Error (99.9%)","Unit"
+"org.openjdk.jmh.samples.JMHSample_01_HelloWorld.wellHelloThere","thrpt",1,1,3120819.9524,NaN,"ops/ms"
