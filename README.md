@@ -1,5 +1,6 @@
 sbt-jmh
 =======
+[![Build Status](https://travis-ci.org/ktoso/sbt-jmh.svg?branch=master)](https://travis-ci.org/ktoso/sbt-jmh)
 
 **THIS IS AN EARLY DRAFT - THOUGH IT WORKS, IT IS CURRENTLY NOT PROPERLY MAINTAINED AS PLUGIN**
 
