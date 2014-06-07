@@ -31,7 +31,7 @@ object SbtJmh extends Plugin {
       myCompile(streams.value, (compileInputs in (Compile, compile)).value, generatedJava)
     },
 
-    version in Jmh := "0.7.1",
+    version in Jmh := "0.8",
 
     libraryDependencies ++= Seq(
       "org.openjdk.jmh" % "jmh-core"                 % (version in Jmh).value,   // GPLv2

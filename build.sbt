@@ -10,7 +10,7 @@ name := "sbt-jmh"
 
 version := "0.1.4-SNAPSHOT"
 
-val jmhVersion = "0.7.1"
+val jmhVersion = "0.8"
 
 libraryDependencies += "org.openjdk.jmh" % "jmh-core"                 % jmhVersion    // GPLv2
 
