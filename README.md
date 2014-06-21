@@ -2,35 +2,36 @@ sbt-jmh
 =======
 [![Build Status](https://travis-ci.org/ktoso/sbt-jmh.svg?branch=master)](https://travis-ci.org/ktoso/sbt-jmh)
 
-**THIS IS AN EARLY DRAFT - THOUGH IT WORKS, IT IS CURRENTLY NOT PROPERLY MAINTAINED AS PLUGIN**
-
-Sbt plugin for running JMH tests.
-
-http://openjdk.java.net/projects/code-tools/jmh/
+SBT plugin for running [OpenJDK JMH](http://openjdk.java.net/projects/code-tools/jmh/) benchmarks.
 
 JMH about itself:
 -----------------
 
 JMH is a Java harness for building, running, and analysing nano/micro/milli/macro benchmarks written in Java and other languages targetting the JVM.
 
-Please read <a href="shipilev.net/blog/2014/nanotrusting-nanotime/">shipilev.net/blog/2014/nanotrusting-nanotime/</a> and other blog posts on microbenchmarking (or why most benchmarks are wrong) and make sure your benchmark is valid, before using this plugin to prove performance of things :-)
+Please read shipilev.net/blog/2014/nanotrusting-nanotime/ and other blog posts on microbenchmarking (or why most benchmarks are wrong) and make sure your benchmark is valid, before using this plugin to prove performance of things :-)
+before you set out to implement your benchmarks (and brag about their results :-)). 
 
 Usage
 -----
 
-**THIS PLUGIN IS NOT RELEASED NOR SUPPORTED (yet?) Please open issues and pull requests though :-)**
+Please make sure your benchmark is valid and you're able to explain the performance numbers, before using this plugin to prove performance of things :-)
 
+JMH Version
+-----------
 
-You need to publish it locally to use, as it's not released yet. 
+| Plugin version | Shipped JMH version | 
+| -------------- |:-------------------:| 
+| `0.1.3`        | `0.8.1`             | 
+| `0.1.4`        | `0.9`               |
 
-```scala
-publishLocal
-```
+Usage
+-----
 
 Add the below snippet to your `project/plugins.sbt`:
 
 ```scala
-addSbtPlugin("pl.project13.scala" % "sbt-jmh" % version_here)
+addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.1.4")
 ```
 
 and that one to your `build.sbt`:
@@ -38,6 +39,8 @@ and that one to your `build.sbt`:
 ```scala
 jmhSettings
 ```
+
+Write your benchmarks in `src/main/scala`. They will be picked up and instrumented by the plugin.
 
 JMH has a very specific way of working (it generates loads of code), so you should prepare a separate project for for youe benchmarks. In it, just type `run` in order to run your benchmarks.
 All JMH options work as expected. For help type `run -h`. Another example of running it is:
@@ -47,6 +50,11 @@ run -i 3 -wi 3 -f1 -t1 org.openjdk.jmh.samples.JMHSample_26_BatchSize.*
 ```
 
 Which means "3 iterations" "3 warmup iterations" "1 fork" "1 thread". Please note that benchmarks should be usually executed at least in 10 iterations (as a rule of thumb), but more is better.
+
+Options
+-------
+
+Please invoke `run -h` to get a full list of run as well as output format options.
 
 Examples
 --------
@@ -96,13 +104,6 @@ The examples are scala-fied examples from tethe original JMH repo, check them ou
 [info]
 [info]
 [info] Benchmark                                                 Mode   Samples         Mean   Mean error    Units
-[info] o.o.j.s.JMHSample_01_HelloWorld.wellHelloThere           thrpt         3  3227211.757   484384.392   ops/ms
-[info] o.o.j.s.JMHSample_02_BenchmarkModes.measureAll           thrpt         3        0.000        0.000   ops/us
-[info] o.o.j.s.JMHSample_02_BenchmarkModes.measureMultiple      thrpt         3        0.000        0.000   ops/us
-[info] o.o.j.s.JMHSample_02_BenchmarkModes.measureThroughput    thrpt         3        9.922        0.176    ops/s
-[info] o.o.j.s.JMHSample_03_States.measureShared                thrpt         3   357034.385    30303.559   ops/ms
-[info] o.o.j.s.JMHSample_03_States.measureUnshared              thrpt         3   358039.299    36189.573   ops/ms
-[info] o.o.j.s.JMHSample_04_DefaultState.measure                thrpt         3   356046.876    51480.555   ops/ms
 [info] o.o.j.s.JMHSample_22_FalseSharing.baseline               thrpt         3      692.034      179.561   ops/us
 [info] o.o.j.s.JMHSample_22_FalseSharing.baseline:reader        thrpt         3      199.185      185.188   ops/us
 [info] o.o.j.s.JMHSample_22_FalseSharing.baseline:writer        thrpt         3      492.850        7.307   ops/us
@@ -118,18 +119,6 @@ The examples are scala-fied examples from tethe original JMH repo, check them ou
 [info] o.o.j.s.JMHSample_22_FalseSharing.sparse                 thrpt         3     1362.515      461.782   ops/us
 [info] o.o.j.s.JMHSample_22_FalseSharing.sparse:reader          thrpt         3      898.282      415.388   ops/us
 [info] o.o.j.s.JMHSample_22_FalseSharing.sparse:writer          thrpt         3      464.233       49.958   ops/us
-[info] o.o.j.s.JMHSample_02_BenchmarkModes.measureAll            avgt         3   100751.985     1654.449    us/op
-[info] o.o.j.s.JMHSample_02_BenchmarkModes.measureAvgTime        avgt         3   100733.303      446.266    us/op
-[info] o.o.j.s.JMHSample_02_BenchmarkModes.measureMultiple       avgt         3   100854.000      575.621    us/op
-[info] o.o.j.s.JMHSample_26_BatchSize.measureWrong_1             avgt         3        0.000        0.000    ms/op
-[info] o.o.j.s.JMHSample_26_BatchSize.measureWrong_5             avgt         3        0.000        0.000    ms/op
-[info] o.o.j.s.JMHSample_02_BenchmarkModes.measureAll          sample        33   100703.015      210.163    us/op
-[info] o.o.j.s.JMHSample_02_BenchmarkModes.measureMultiple     sample        33   100575.915      256.931    us/op
-[info] o.o.j.s.JMHSample_02_BenchmarkModes.measureSamples      sample        33   100544.140      227.595    us/op
-[info] o.o.j.s.JMHSample_02_BenchmarkModes.measureAll              ss         3   101053.667     3841.347       us
-[info] o.o.j.s.JMHSample_02_BenchmarkModes.measureMultiple         ss         3   100683.667     9844.620       us
-[info] o.o.j.s.JMHSample_02_BenchmarkModes.measureSingleShot       ss         3   100445.333     4975.198       us
-[info] o.o.j.s.JMHSample_26_BatchSize.measureRight                 ss         3        1.165       18.153       ms
 ```
 
 License

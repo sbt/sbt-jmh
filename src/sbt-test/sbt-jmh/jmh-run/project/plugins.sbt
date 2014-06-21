@@ -1,1 +1,1 @@
-addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.1.4-SNAPSHOT")
+addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.1.4")

@@ -8,15 +8,17 @@ organization := "pl.project13.scala"
 
 name := "sbt-jmh"
 
-version := "0.1.4-SNAPSHOT"
+version := "0.1.4"
 
-val jmhVersion = "0.8"
+val jmhVersion = "0.9"
 
 libraryDependencies += "org.openjdk.jmh" % "jmh-core"                 % jmhVersion    // GPLv2
 
 libraryDependencies += "org.openjdk.jmh" % "jmh-generator-bytecode"   % jmhVersion    // GPLv2
 
 libraryDependencies += "org.openjdk.jmh" % "jmh-generator-reflection" % jmhVersion    // GPLv2
+
+libraryDependencies += "org.openjdk.jmh" % "jmh-generator-asm"        % jmhVersion    // GPLv2
 
 publishTo <<= isSnapshot { snapshot =>
   if (snapshot) Some(Classpaths.sbtPluginSnapshots) else Some(Classpaths.sbtPluginReleases)

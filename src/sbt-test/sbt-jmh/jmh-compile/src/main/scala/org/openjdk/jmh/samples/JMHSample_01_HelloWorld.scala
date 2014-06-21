@@ -24,7 +24,7 @@
  */
 package org.openjdk.jmh.samples
 
-import org.openjdk.jmh.annotations.GenerateMicroBenchmark
+import org.openjdk.jmh.annotations.Benchmark
 
 class JMHSample_01_HelloWorld {
   /*
@@ -52,7 +52,7 @@ class JMHSample_01_HelloWorld {
    * examples by having the "baseline" measurements to compare against.
    */
 
-  @GenerateMicroBenchmark
+  @Benchmark
   def wellHelloThere(): Unit = {
     // this method was intentionally left blank.
   }
