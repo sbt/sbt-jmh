@@ -9,8 +9,8 @@ JMH about itself:
 
 JMH is a Java harness for building, running, and analysing nano/micro/milli/macro benchmarks written in Java and other languages targetting the JVM.
 
-Please read shipilev.net/blog/2014/nanotrusting-nanotime/ and other blog posts on microbenchmarking (or why most benchmarks are wrong) and make sure your benchmark is valid, before using this plugin to prove performance of things :-)
-before you set out to implement your benchmarks (and brag about their results :-)). 
+Please read [nanotrusting nanotime](shipilev.net/blog/2014/nanotrusting-nanotime/) and other blog posts on microbenchmarking (or why most benchmarks are wrong) and make sure your benchmark is valid,
+before you set out to implement your benchmarks.
 
 Usage
 -----
@@ -46,10 +46,12 @@ JMH has a very specific way of working (it generates loads of code), so you shou
 All JMH options work as expected. For help type `run -h`. Another example of running it is:
 
 ```
-run -i 3 -wi 3 -f1 -t1 org.openjdk.jmh.samples.JMHSample_26_BatchSize.*
+run -i 3 -wi 3 -f1 -t1 .*FalseSharing.*
 ```
 
 Which means "3 iterations" "3 warmup iterations" "1 fork" "1 thread". Please note that benchmarks should be usually executed at least in 10 iterations (as a rule of thumb), but more is better.
+
+**For "real" results we recomend to at least warm up 10 to 20 iterations, and then measure 10 to 20 iterations again. Forking the JVM is required to avoid falling into specific optimisations (no JVM optimisation is really "completely" predictable)**
 
 Options
 -------
