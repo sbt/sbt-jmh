@@ -22,8 +22,14 @@ JMH Version
 
 | Plugin version | Shipped JMH version | 
 | -------------- |:-------------------:| 
-| `0.1.3`        | `0.8.1`             | 
 | `0.1.4`        | `0.9`               |
+| `0.1.3`        | `0.8.1`             | 
+
+You should of course always prefer the latest release. For minor JMH releases you can override the shipped version by writing:
+
+```scala
+version in Jmh := "0.9.x"
+```
 
 Usage
 -----
