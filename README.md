@@ -13,7 +13,7 @@ JMH about itself:
 
 JMH is a Java harness for building, running, and analysing nano/micro/milli/macro benchmarks written in Java and other languages targetting the JVM.
 
-Please read shipilev.net/blog/2014/nanotrusting-nanotime/ and other blog posts on microbenchmarking (or why most benchmarks are wrong) and make sure your benchmark is valid, before using this plugin to prove performance of things :-)
+Please read <a href="shipilev.net/blog/2014/nanotrusting-nanotime/">shipilev.net/blog/2014/nanotrusting-nanotime/</a> and other blog posts on microbenchmarking (or why most benchmarks are wrong) and make sure your benchmark is valid, before using this plugin to prove performance of things :-)
 
 Usage
 -----
