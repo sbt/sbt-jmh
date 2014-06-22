@@ -28,8 +28,18 @@ You should of course always prefer the latest release. For minor JMH releases yo
 version in Jmh := "0.9.x"
 ```
 
-Usage
------
+Quickstart
+----------
+Just use the Typesafe Activator to get the template downloaded:
+
+```
+activator new sbt-jmh-seed
+```
+
+And start writing benchmarks!
+
+Adding to your project
+----------------------
 
 Add the below snippet to your `project/plugins.sbt`:
 
@@ -37,10 +47,16 @@ Add the below snippet to your `project/plugins.sbt`:
 addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.1.4")
 ```
 
-and that one to your `build.sbt`:
+And then create a new project in your build, to which you should add the jmhSettings. 
+For example create another directory with `build.sbt` in it, and paste:
 
 ```scala
+import JmhKeys._
+
 jmhSettings
+
+# only needed for some kinds of builds
+outputTarget in Jmh := target.value / s"scala-${scalaBinaryVersion.value}"
 ```
 
 Write your benchmarks in `src/main/scala`. They will be picked up and instrumented by the plugin.
