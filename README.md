@@ -12,13 +12,10 @@ JMH is a Java harness for building, running, and analysing nano/micro/milli/macr
 Please read [nanotrusting nanotime](shipilev.net/blog/2014/nanotrusting-nanotime/) and other blog posts on microbenchmarking (or why most benchmarks are wrong) and make sure your benchmark is valid,
 before you set out to implement your benchmarks.
 
-Usage
------
+Versions
+--------
 
-Please make sure your benchmark is valid and you're able to explain the performance numbers, before using this plugin to prove performance of things :-)
-
-JMH Version
------------
+The latest published plugin version is: [![Download](https://api.bintray.com/packages/ktosopl/sbt-plugins/sbt-jmh/images/download.png) ](https://bintray.com/ktosopl/sbt-plugins/sbt-jmh/_latestVersion)
 
 | Plugin version | Shipped JMH version | 
 | -------------- |:-------------------:| 
