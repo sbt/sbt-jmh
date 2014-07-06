@@ -54,9 +54,6 @@ For example create another directory with `build.sbt` in it, and paste:
 import JmhKeys._
 
 jmhSettings
-
-# only needed for some kinds of builds
-outputTarget in Jmh := target.value / s"scala-${scalaBinaryVersion.value}"
 ```
 
 Write your benchmarks in `src/main/scala`. They will be picked up and instrumented by the plugin.

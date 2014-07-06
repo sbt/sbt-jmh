@@ -33,7 +33,7 @@ object SbtJmh extends Plugin {
       scalaBinaryVersion.value
     ),
 
-    outputTarget in Jmh := target.value / s"scala-${scalaBinaryVersion.value}",
+    outputTarget in Jmh := crossTarget.value,
 
     compile in Jmh := {
       streams.value.log.info("Compiling generated JMH benchmarks...")
