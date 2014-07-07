@@ -7,9 +7,9 @@ SBT plugin for running [OpenJDK JMH](http://openjdk.java.net/projects/code-tools
 JMH about itself:
 -----------------
 
-JMH is a Java harness for building, running, and analysing nano/micro/milli/macro benchmarks written in Java and other languages targetting the JVM.
+JMH is a Java harness for building, running, and analysing nano/micro/milli/macro benchmarks written in Java and other languages targeting the JVM.
 
-Please read [nanotrusting nanotime](http://shipilev.net/blog/2014/nanotrusting-nanotime/) and other blog posts on microbenchmarking (or why most benchmarks are wrong) and make sure your benchmark is valid,
+Please read [nanotrusting nanotime](http://shipilev.net/blog/2014/nanotrusting-nanotime/) and other blog posts on micro-benchmarking (or why most benchmarks are wrong) and make sure your benchmark is valid,
 before you set out to implement your benchmarks.
 
 Versions
@@ -58,7 +58,7 @@ jmhSettings
 
 Write your benchmarks in `src/main/scala`. They will be picked up and instrumented by the plugin.
 
-JMH has a very specific way of working (it generates loads of code), so you should prepare a separate project for for youe benchmarks. In it, just type `run` in order to run your benchmarks.
+JMH has a very specific way of working (it generates loads of code), so you should prepare a separate project for your benchmarks. In it, just type `run` in order to run your benchmarks.
 All JMH options work as expected. For help type `run -h`. Another example of running it is:
 
 ```
@@ -67,7 +67,7 @@ run -i 3 -wi 3 -f1 -t1 .*FalseSharing.*
 
 Which means "3 iterations" "3 warmup iterations" "1 fork" "1 thread". Please note that benchmarks should be usually executed at least in 10 iterations (as a rule of thumb), but more is better.
 
-**For "real" results we recomend to at least warm up 10 to 20 iterations, and then measure 10 to 20 iterations again. Forking the JVM is required to avoid falling into specific optimisations (no JVM optimisation is really "completely" predictable)**
+**For "real" results we recommend to at least warm up 10 to 20 iterations, and then measure 10 to 20 iterations again. Forking the JVM is required to avoid falling into specific optimisations (no JVM optimisation is really "completely" predictable)**
 
 Options
 -------
@@ -76,7 +76,7 @@ Please invoke `run -h` to get a full list of run as well as output format option
 
 Examples
 --------
-The examples are scala-fied examples from tethe original JMH repo, check them out, and run them! The results will look somewhat like this:
+The examples are scala-fied examples from the original JMH repo, check them out, and run them! The results will look somewhat like this:
 
 ```
 ...
@@ -142,4 +142,4 @@ The examples are scala-fied examples from tethe original JMH repo, check them ou
 License
 -------
 
-This plugin is reeased under the **Apache 2.0 License**
+This plugin is released under the **Apache 2.0 License**
