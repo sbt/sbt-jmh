@@ -51,7 +51,7 @@ And then create a new project in your build, to which you should add the jmhSett
 For example create another directory with `build.sbt` in it, and paste:
 
 ```scala
-import JmhKeys._
+import pl.project13.scala.sbt.SbtJmh._
 
 jmhSettings
 ```
