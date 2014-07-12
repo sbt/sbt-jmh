@@ -51,10 +51,16 @@ And then create a new project in your build, to which you should add the jmhSett
 For example create another directory with `build.sbt` in it, and paste:
 
 ```scala
-import pl.project13.scala.sbt.SbtJmh._
-
 jmhSettings
 ```
+
+If you're using a `project/Build.scala`-style build file, you should instead write:
+
+```scala
+import pl.project13.scala.sbt.SbtJmh._
+```
+
+and then add jmhSettings as a setting to a `Project`.
 
 Write your benchmarks in `src/main/scala`. They will be picked up and instrumented by the plugin.
 
