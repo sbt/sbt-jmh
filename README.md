@@ -149,3 +149,8 @@ License
 -------
 
 This plugin is released under the **Apache 2.0 License**
+
+Contributing
+------------
+
+Test plugin with `sbt scripted`
