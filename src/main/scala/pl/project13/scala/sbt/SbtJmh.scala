@@ -41,7 +41,7 @@ object SbtJmh extends Plugin {
       myCompile(streams.value, (compileInputs in (Compile, compile)).value, generatedJava)
     },
 
-    version in Jmh := "1.0",
+    version in Jmh := "1.1",
 
     // includes the asm jar only if needed
     libraryDependencies ++= {
