@@ -19,6 +19,7 @@ The latest published plugin version is: [![Download](https://api.bintray.com/pac
 
 | Plugin version | Shipped JMH version | 
 | -------------- |:-------------------:| 
+| `0.1.7`        | `1.3.1`             |
 | `0.1.6`        | `1.1`               |
 | `0.1.5`        | `1.0` (!)           |
 | `0.1.4`        | `0.9`               |
@@ -46,7 +47,7 @@ Adding to your project
 Add the below snippet to your `project/plugins.sbt`:
 
 ```scala
-addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.1.6")
+addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.1.7")
 ```
 
 And then create a new project in your build, to which you should add the jmhSettings. 
@@ -81,6 +82,9 @@ Options
 -------
 
 Please invoke `run -h` to get a full list of run as well as output format options.
+
+**Useful hint**: If you plan to aggregate the collected data you should have a look at the available output formats (`-lrf`).
+For example it's possible to keep the benchmark's results as csv or json files for later regression analysis.
 
 Examples
 --------
@@ -155,4 +159,6 @@ This plugin is released under the **Apache 2.0 License**
 Contributing
 ------------
 
-Test plugin with `sbt scripted`
+Yes pull requests and opening issues is very welcome!
+
+Please test your changes using `sbt scripted`.
