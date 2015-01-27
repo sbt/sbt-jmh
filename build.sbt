@@ -2,17 +2,15 @@ import bintray.Keys._
 
 sbtPlugin := true
 
-//organization := "com.typesafe.sbt" someday perhaps
-
 organization := "pl.project13.scala"
 
 name := "sbt-jmh"
 
-version := "0.1.8"
+version := "0.1.9"
 
 scalaVersion := "2.10.4"
 
-val jmhVersion = "1.4"
+val jmhVersion = "1.5"
 
 libraryDependencies += "org.openjdk.jmh" % "jmh-core"                 % jmhVersion    // GPLv2
 
