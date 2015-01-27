@@ -1,0 +1,5 @@
+# use the given class as runner
+> runMain com.example.CustomRunnerApp -i 1 -wi 1 -f 1 .*Hello.*
+
+# check if the custom file was generated
+$ exists custom.out

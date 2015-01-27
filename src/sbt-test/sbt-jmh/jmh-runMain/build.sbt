@@ -1,0 +1,3 @@
+import JmhKeys._
+
+jmhSettings

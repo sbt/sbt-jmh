@@ -24,8 +24,7 @@ The latest published plugin version is: [![Download](https://api.bintray.com/pac
 | `0.1.7`        | `1.3.1`             |
 | `0.1.6`        | `1.1`               |
 | `0.1.5`        | `1.0` (!)           |
-| `0.1.4`        | `0.9`               |
-| `0.1.3`        | `0.8.1`             |
+| ...            | ...                 |
 
 You should of course always prefer the latest release. 
 
@@ -150,6 +149,17 @@ The results will look somewhat like this:
 [info] o.o.j.s.JMHSample_22_FalseSharing.sparse:reader          thrpt         3      898.282      415.388   ops/us
 [info] o.o.j.s.JMHSample_22_FalseSharing.sparse:writer          thrpt         3      464.233       49.958   ops/us
 ```
+
+Advanced: Using custom Runners
+------------------------------
+It is possible to hand over the running of JMH to an `App` implemented by you, which allows you to programmatically
+access all test results and modify JMH arguments before you actually invoke it.
+
+To use a custom runner class with `runMain`, simply use it: `runMain com.example.MyRunner -i 10 .*` –
+an example for this is available in [src/sbt-test/jmh-runMain](src/sbt-test/jmh-runMain) (open the `test` file).
+
+To replace the runner class which is used when you type `run`, you can set the class in your build file –
+an example for this is available in [src/sbt-test/jmh-runMain](src/sbt-test/jmh-custom-runner) (open the `build.sbt` file).
 
 License
 -------

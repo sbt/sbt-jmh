@@ -62,7 +62,11 @@ object SbtJmh extends Plugin {
     compile in Jmh <<= (compile in Jmh).dependsOn(compile in Compile),
 
     run in Jmh <<= (run in Compile).dependsOn(compile in Jmh),
-    run in Compile <<= (run in Compile).dependsOn(compile in Jmh)
+    run in Compile <<= (run in Compile).dependsOn(compile in Jmh),
+  
+    // Allows users to write custom runners and `runMain my.Runner -i 10 .*`.
+    // This is needed because it brings in the compiled classes onto the runs classpath
+    runMain in Compile <<= (runMain in Compile).dependsOn(compile in JmhKeys.Jmh)
   )
 
   def generateBenchmarkJavaSources(s: TaskStreams, outputTarget: File, generatorType: String, classpath: Seq[Attributed[File]], scalaBinaryV: String): Seq[File] = {
