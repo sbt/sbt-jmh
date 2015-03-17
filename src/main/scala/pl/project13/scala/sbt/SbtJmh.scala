@@ -58,8 +58,8 @@ object SbtJmh extends Plugin {
     },
 
     compile in Jmh <<= (compile in Jmh).dependsOn(generateJavaSources in Jmh, compile in Compile),
-    compile in Jmh <<= (compile in Jmh).dependsOn(),
-    compile in Jmh <<= (compile in Jmh).dependsOn(compile in Compile),
+//    compile in Jmh <<= (compile in Jmh).dependsOn(),
+//    compile in Jmh <<= (compile in Jmh).dependsOn(compile in Compile),
 
     run in Jmh <<= (run in Compile).dependsOn(compile in Jmh),
     run in Compile <<= (run in Compile).dependsOn(compile in Jmh),
