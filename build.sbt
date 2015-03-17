@@ -6,11 +6,11 @@ organization := "pl.project13.scala"
 
 name := "sbt-jmh"
 
-version := "0.1.11"
+version := "0.1.12"
 
 scalaVersion := "2.10.4"
 
-val jmhVersion = "1.6"
+val jmhVersion = "1.6.2"
 
 libraryDependencies += "org.openjdk.jmh" % "jmh-core"                 % jmhVersion    // GPLv2
 
