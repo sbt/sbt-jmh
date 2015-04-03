@@ -1,4 +1,5 @@
 import bintray.Keys._
+import sbt.Keys._
 
 sbtPlugin := true
 
@@ -6,11 +7,9 @@ organization := "pl.project13.scala"
 
 name := "sbt-jmh"
 
-version := "0.1.12"
-
 scalaVersion := "2.10.4"
 
-val jmhVersion = "1.6.2"
+val jmhVersion = "1.7.1"
 
 libraryDependencies += "org.openjdk.jmh" % "jmh-core"                 % jmhVersion    // GPLv2
 
@@ -36,3 +35,7 @@ repository in bintray := "sbt-plugins"
 licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.html"))
 
 bintrayOrganization in bintray := None
+
+scriptedSettings
+
+scriptedLaunchOpts <+= version(v => s"-Dproject.version=$v")

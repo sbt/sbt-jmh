@@ -41,7 +41,7 @@ object SbtJmh extends Plugin {
       myCompile(streams.value, (compileInputs in (Compile, compile)).value, generatedJava)
     },
 
-    version in Jmh := "1.6",
+    version in Jmh := "1.7.1",
 
     // includes the asm jar only if needed
     libraryDependencies ++= {
@@ -58,7 +58,7 @@ object SbtJmh extends Plugin {
     },
 
     compile in Jmh <<= (compile in Jmh).dependsOn(generateJavaSources in Jmh, compile in Compile),
-//    compile in Jmh <<= (compile in Jmh).dependsOn(compile in Compile),
+    compile in Jmh <<= (compile in Jmh).dependsOn(compile in Compile),
 
     run in Jmh <<= (run in Compile).dependsOn(compile in Jmh),
     run in Compile <<= (run in Compile).dependsOn(compile in Jmh),
@@ -111,9 +111,7 @@ object SbtJmh extends Plugin {
 
     val outputTarget = settingKey[File]("Directory where the bytecode to be consumed and generated sources should be written to (`target` or sometimes `target/scala-2.10`)")
 
-    // issue: JMH 0.9 has an 1-off error in the args parser, which makes it ignore this option - this is reported and will be fixed soon
-    // see also: https://twitter.com/ktosopl/status/480452428396257283
-    val generatorType = settingKey[String]("WARNING: Does not work with JMH 0.9 because of small error in args parser; Benchmark code generator type. Available: `default`, `reflection` or `asm`.")
+    val generatorType = settingKey[String]("Benchmark code generator type. Available: `default`, `reflection` or `asm`.")
 
     val generateInstrumentedClasses = taskKey[Seq[File]]("Generate instrumented JMH code")
 
