@@ -9,7 +9,7 @@ name := "sbt-jmh"
 
 scalaVersion := "2.10.4"
 
-val jmhVersion = "1.7.1"
+val jmhVersion = "1.8"
 
 libraryDependencies += "org.openjdk.jmh" % "jmh-core"                 % jmhVersion    // GPLv2
 
