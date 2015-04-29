@@ -2,18 +2,37 @@ package pl.project13.scala.sbt
 
 import sbt._
 import sbt.Keys._
+import java.io.PrintWriter
 import org.openjdk.jmh.annotations.Benchmark
 import org.openjdk.jmh.generators.bytecode.JmhBytecodeGenerator
-import sbt.CommandStrings._
-import java.io.PrintWriter
 
 import scala.tools.nsc.util.ScalaClassLoader.URLClassLoader
 
-object SbtJmh extends Plugin {
+object JmhPlugin extends AutoPlugin {
+
+  object JmhKeys {
+    val Jmh = config("jmh") extend Compile
+
+    val generateJavaSources = taskKey[Seq[File]]("Generate benchmark JMH Java code")
+
+    val outputTarget = settingKey[File]("Directory where the bytecode to be consumed and generated sources should be written to (`target` or sometimes `target/scala-2.10`)")
+
+    val generatorType = settingKey[String]("Benchmark code generator type. Available: `default`, `reflection` or `asm`.")
+
+    val generateInstrumentedClasses = taskKey[Seq[File]]("Generate instrumented JMH code")
+  }
 
   import JmhKeys._
 
-  lazy val jmhSettings = Seq(
+  val autoImport = JmhKeys
+
+  /** All we need is Java. */
+  override def requires = plugins.JvmPlugin
+
+  /** This enables the plugin once all requirements are fulfilled. */
+  override def trigger = allRequirements
+
+  override def projectSettings = Seq(
     sourceGenerators in Jmh := (sourceGenerators in Compile).value,
     sourceGenerators in Jmh <+= generateJavaSources in Jmh,
 
@@ -63,7 +82,6 @@ object SbtJmh extends Plugin {
     run in Jmh <<= (run in Compile).dependsOn(compile in Jmh),
     run in Compile <<= (run in Compile).dependsOn(compile in Jmh),
 
-
     // Allows users to write custom runners and `runMain my.Runner -i 10 .*`.
     // This is needed because it brings in the compiled classes onto the runs classpath
     runMain in Compile <<= (runMain in Compile).dependsOn(compile in JmhKeys.Jmh)
@@ -88,7 +106,7 @@ object SbtJmh extends Plugin {
 
   /** Compiler run, with additional files to compile (JMH generated sources) */
   def myCompile(s: TaskStreams, ci: Compiler.Inputs, javaToCompile: Seq[File]): inc.Analysis = {
-    lazy val x = s.text(ExportStream)
+    lazy val x = s.text(CommandStrings.ExportStream)
     def onArgs(cs: Compiler.Compilers) = {
       cs.copy(
         scalac = cs.scalac.onArgs(exported(x, "scalac")),
@@ -102,19 +120,4 @@ object SbtJmh extends Plugin {
 
   def exported(w: PrintWriter, command: String): Seq[String] => Unit = args =>
     w.println((command +: args).mkString(" "))
-
-
-  object JmhKeys {
-    val Jmh = config("jmh") extend Compile
-
-    val generateJavaSources = taskKey[Seq[File]]("Generate benchmark JMH Java code")
-
-    val outputTarget = settingKey[File]("Directory where the bytecode to be consumed and generated sources should be written to (`target` or sometimes `target/scala-2.10`)")
-
-    val generatorType = settingKey[String]("Benchmark code generator type. Available: `default`, `reflection` or `asm`.")
-
-    val generateInstrumentedClasses = taskKey[Seq[File]]("Generate instrumented JMH code")
-
-  }
-
 }
