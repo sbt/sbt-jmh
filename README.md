@@ -19,6 +19,7 @@ The latest published plugin version is: [![Download](https://api.bintray.com/pac
 
 | Plugin version | Shipped JMH version | 
 | -------------- |:-------------------:| 
+| `0.1.15`       | `1.9.1`             |
 | `0.1.14`       | `1.8.0`             |
 | `0.1.13`       | `1.7.1`             |
 | `0.1.12`       | `1.6.2`             |
@@ -43,7 +44,7 @@ Adding to your project
 Add the below snippet to your `project/plugins.sbt`:
 
 ```scala
-addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.1.14")
+addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.1.15")
 ```
 
 And then create a new project in your build, to which you should add the jmhSettings. 

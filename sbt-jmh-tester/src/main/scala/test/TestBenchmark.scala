@@ -2,7 +2,7 @@ package test
 
 import org.openjdk.jmh.annotations.Benchmark
 
-class Test {
+class TestBenchmark {
 
   @Benchmark
   def range(): Int =

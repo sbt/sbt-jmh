@@ -5,7 +5,7 @@ sbtPlugin := true
 organization := "pl.project13.scala"
 name := "sbt-jmh"
 
-scalaVersion := "2.10.4"
+scalaVersion := "2.10.5"
 scalacOptions ++= List(
   "-unchecked",
   "-deprecation",
@@ -14,7 +14,7 @@ scalacOptions ++= List(
   "-encoding", "UTF-8"
 )
 
-val jmhVersion = "1.8"
+val jmhVersion = "1.9.1"
 
 libraryDependencies += "org.openjdk.jmh" % "jmh-core"                 % jmhVersion    // GPLv2
 libraryDependencies += "org.openjdk.jmh" % "jmh-generator-bytecode"   % jmhVersion    // GPLv2
