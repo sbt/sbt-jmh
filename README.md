@@ -17,13 +17,14 @@ Versions
 
 The latest published plugin version is: [![Download](https://api.bintray.com/packages/ktosopl/sbt-plugins/sbt-jmh/images/download.png) ](https://bintray.com/ktosopl/sbt-plugins/sbt-jmh/_latestVersion)
 
-| Plugin version | Shipped JMH version | 
-| -------------- |:-------------------:| 
-| `0.1.15`       | `1.9.1`             |
-| `0.1.14`       | `1.8.0`             |
-| `0.1.13`       | `1.7.1`             |
-| `0.1.12`       | `1.6.2`             |
-| ...            | ...                 |
+| Plugin version         | Shipped JMH version | 
+| ---------------------- |:-------------------:| 
+| `0.2.0` (auto plugin)  | `1.9.1`             |
+| `0.1.15` (auto plugin) | `1.9.1`             |
+| `0.1.14`               | `1.8.0`             |
+| `0.1.13`               | `1.7.1`             |
+| `0.1.12`               | `1.6.2`             |
+| ...                    | ...                 |
 
 Not interesting versions are skipped in the above listing. Always use the newest which has the JMH version you need.
 You should stick to the latest version at all times anyway of course.
@@ -41,26 +42,14 @@ And start writing benchmarks!
 Adding to your project
 ----------------------
 
-Add the below snippet to your `project/plugins.sbt`:
+Since sbt-jmh is an **AutoPlugin** all you need to do in order to activate it in 
+your project is to add the below line to your `project/plugins.sbt` file:
 
 ```scala
 addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.1.15")
 ```
 
-And then create a new project in your build, to which you should add the jmhSettings. 
-For example create another directory with `build.sbt` in it, and paste:
-
-```scala
-jmhSettings
-```
-
-If you're using a `project/Build.scala`-style build file, you should instead write:
-
-```scala
-import pl.project13.scala.sbt.SbtJmh._
-```
-
-and then add jmhSettings as a setting to a `Project`.
+You can read more about [auto plugins in sbt on it's documentation page](http://www.scala-sbt.org/0.13/tutorial/Using-Plugins.html#Enabling+and+disabling+auto+plugins).
 
 Write your benchmarks in `src/main/scala`. They will be picked up and instrumented by the plugin.
 
