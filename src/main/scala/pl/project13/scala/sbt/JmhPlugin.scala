@@ -29,8 +29,8 @@ object JmhPlugin extends AutoPlugin {
   /** All we need is Java. */
   override def requires = plugins.JvmPlugin
 
-  /** This enables the plugin once all requirements are fulfilled. */
-  override def trigger = allRequirements
+  /** Plugin must be enabled on the benchmarks project. See http://www.scala-sbt.org/0.13/tutorial/Using-Plugins.html */
+  override def trigger = noTrigger
 
   override def projectSettings = Seq(
     sourceGenerators in Jmh := (sourceGenerators in Compile).value,
