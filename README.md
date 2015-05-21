@@ -48,7 +48,15 @@ Since sbt-jmh is an **AutoPlugin** all you need to do in order to activate it in
 your project is to add the below line to your `project/plugins.sbt` file:
 
 ```scala
-addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.1.15")
+// project/plugins.sbt
+addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.2.0")
+```
+
+and enable it in the projects where you want to (useful in multi-project builds, as you can enable it only where you need it):
+
+```scala
+// build.sbt
+enablePlugins(JmhPlugin)
 ```
 
 You can read more about [auto plugins in sbt on it's documentation page](http://www.scala-sbt.org/0.13/tutorial/Using-Plugins.html#Enabling+and+disabling+auto+plugins).
