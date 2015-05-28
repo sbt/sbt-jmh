@@ -155,10 +155,10 @@ It is possible to hand over the running of JMH to an `App` implemented by you, w
 access all test results and modify JMH arguments before you actually invoke it.
 
 To use a custom runner class with `runMain`, simply use it: `runMain com.example.MyRunner -i 10 .*` –
-an example for this is available in [src/sbt-test/sbt-jmh/jmh-runMain](src/sbt-test/sbt-jmh/jmh-runMain) (open the `test` file).
+an example for this is available in [src/sbt-test/sbt-jmh/runMain](src/sbt-test/sbt-jmh/runMain) (open the `test` file).
 
 To replace the runner class which is used when you type `run`, you can set the class in your build file –
-an example for this is available in [src/sbt-test/sbt-jmh/jmh-custom-runner](src/sbt-test/sbt-jmh/jmh-custom-runner) (open the `build.sbt` file).
+an example for this is available in [src/sbt-test/sbt-jmh/custom-runner](src/sbt-test/sbt-jmh/custom-runner) (open the `build.sbt` file).
 
 License
 -------
