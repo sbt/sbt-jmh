@@ -14,7 +14,7 @@ scalacOptions ++= List(
   "-encoding", "UTF-8"
 )
 
-val jmhVersion = "1.9.1"
+val jmhVersion = "1.10"
 
 libraryDependencies += "org.openjdk.jmh" % "jmh-core"                 % jmhVersion    // GPLv2
 libraryDependencies += "org.openjdk.jmh" % "jmh-generator-bytecode"   % jmhVersion    // GPLv2

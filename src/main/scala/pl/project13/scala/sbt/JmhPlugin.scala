@@ -60,7 +60,7 @@ object JmhPlugin extends AutoPlugin {
       myCompile(streams.value, (compileInputs in (Compile, compile)).value, generatedJava)
     },
 
-    version in Jmh := "1.9.1",
+    version in Jmh := "1.10",
 
     // includes the asm jar only if needed
     libraryDependencies ++= {
