@@ -1,11 +1,8 @@
-package main.scala.org.openjdk.jmh.samples
+package org.openjdk.jmh.samples
 
 import java.util.concurrent.TimeUnit
 
-import main.scala.org.openjdk.jmh.samples.JMHSample_32_BulkWarmup.Counter
 import org.openjdk.jmh.annotations._
-import org.openjdk.jmh.runner.Runner
-import org.openjdk.jmh.runner.options.{OptionsBuilder, WarmupMode}
 
 object JMHSample_32_BulkWarmup {
 
@@ -23,24 +20,15 @@ object JMHSample_32_BulkWarmup {
    * executed in a different JVM, and we only "mix" the warmup code we want.
    */
 
-  trait Counter {
-    def inc(): Int
-  }
+}
 
-  def main(args: Array[String]) {
-    val opt = new OptionsBuilder().include(classOf[JMHSample_32_BulkWarmup].getSimpleName)
-      .warmupMode(WarmupMode.BULK)
-      .warmupIterations(5)
-      .measurementIterations(5)
-      .forks(1)
-      .build()
-    new Runner(opt).run()
-  }
+sealed trait Counter {
+  def inc(): Int
 }
 
 @State(Scope.Thread)
- @BenchmarkMode(Mode.AverageTime)
- @OutputTimeUnit(TimeUnit.NANOSECONDS)
+@BenchmarkMode(Array(Mode.AverageTime))
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
 class JMHSample_32_BulkWarmup {
 
    class Counter1 extends Counter {

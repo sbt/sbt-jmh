@@ -1,9 +1,8 @@
-package main.scala.org.openjdk.jmh.samples
+package org.openjdk.jmh.samples
 
 import java.security.{Policy, URIParameter}
 import java.util.concurrent.TimeUnit
 
-import main.scala.org.openjdk.jmh.samples.JMHSample_33_SecurityManager.{SecurityManagerEmpty, SecurityManagerInstalled}
 import org.openjdk.jmh.annotations.Benchmark
 import org.openjdk.jmh.annotations.BenchmarkMode
 import org.openjdk.jmh.annotations.Mode
@@ -12,8 +11,6 @@ import org.openjdk.jmh.annotations.Scope
 import org.openjdk.jmh.annotations.Setup
 import org.openjdk.jmh.annotations.State
 import org.openjdk.jmh.annotations.TearDown
-import org.openjdk.jmh.runner.Runner
-import org.openjdk.jmh.runner.options.OptionsBuilder
 
 object JMHSample_33_SecurityManager {
 
@@ -64,19 +61,13 @@ object JMHSample_33_SecurityManager {
     }
   }
 
-  def main(args: Array[String]) {
-    val opt = new OptionsBuilder().include(classOf[JMHSample_33_SecurityManager].getSimpleName)
-      .warmupIterations(5)
-      .measurementIterations(5)
-      .forks(1)
-      .build()
-    new Runner(opt).run()
-  }
 }
 
-@BenchmarkMode(Mode.AverageTime)
+@BenchmarkMode(Array(Mode.AverageTime))
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 class JMHSample_33_SecurityManager {
+
+  import JMHSample_33_SecurityManager._
 
   @Benchmark
   def testWithSM(s: SecurityManagerInstalled): String = System.getProperty("java.home")

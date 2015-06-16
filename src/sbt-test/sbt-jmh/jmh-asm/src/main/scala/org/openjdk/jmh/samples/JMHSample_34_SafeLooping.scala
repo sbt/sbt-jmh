@@ -1,12 +1,9 @@
-package main.scala.org.openjdk.jmh.samples
+package org.openjdk.jmh.samples
 
 import java.util.concurrent.TimeUnit
 
-import main.scala.org.openjdk.jmh.samples.JMHSample_34_SafeLooping._
 import org.openjdk.jmh.annotations.{Benchmark, BenchmarkMode, CompilerControl, Fork, Measurement, Mode, OutputTimeUnit, Param, Scope, Setup, State, Warmup}
 import org.openjdk.jmh.infra.Blackhole
-import org.openjdk.jmh.runner.Runner
-import org.openjdk.jmh.runner.options.OptionsBuilder
 
 object JMHSample_34_SafeLooping {
 
@@ -23,29 +20,13 @@ object JMHSample_34_SafeLooping {
    * implementation, but different data, is measured.
    */
 
-  val BASE = 42
-
-  def work(x: Int): Int = BASE + x
-
-  @CompilerControl(CompilerControl.Mode.DONT_INLINE)
-  def sink(v: Int) {
-  }
-
-  def main(args: Array[String]) {
-    val opt = new OptionsBuilder().include(classOf[JMHSample_34_SafeLooping].getSimpleName)
-      .warmupIterations(5)
-      .measurementIterations(5)
-      .forks(3)
-      .build()
-    new Runner(opt).run()
-  }
 }
 
 @State(Scope.Thread)
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Fork(3)
-@BenchmarkMode(Mode.AverageTime)
+@BenchmarkMode(Array(Mode.AverageTime))
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 class JMHSample_34_SafeLooping {
 
@@ -53,6 +34,14 @@ class JMHSample_34_SafeLooping {
   var size: Int = _
 
   var xs: Array[Int] = _
+
+  val BASE = 42
+
+  def work(x: Int): Int = BASE + x
+
+  @CompilerControl(CompilerControl.Mode.DONT_INLINE)
+  def sink(v: Int) {
+  }
 
   @Setup
   def setup() {
