@@ -21,6 +21,7 @@ The latest published plugin version is: [![Download](https://api.bintray.com/pac
 
 | Plugin version         | Shipped JMH version | 
 | ---------------------- |:-------------------:| 
+| `0.2.1` (auto plugin)  | `1.10`              |
 | `0.2.0` (auto plugin)  | `1.9.1`             |
 | `0.1.15` (auto plugin) | `1.9.1`             |
 | `0.1.14`               | `1.8.0`             |
@@ -49,7 +50,7 @@ your project is to add the below line to your `project/plugins.sbt` file:
 
 ```scala
 // project/plugins.sbt
-addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.2.0")
+addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.2.1")
 ```
 
 and enable it in the projects where you want to (useful in multi-project builds, as you can enable it only where you need it):
@@ -84,7 +85,7 @@ For example it's possible to keep the benchmark's results as csv or json files f
 
 Examples
 --------
-The [examples are scala-fied examples from the original JMH repo](https://github.com/ktoso/sbt-jmh/tree/master/src/sbt-test/sbt-jmh/jmh-run/src/main/scala/org/openjdk/jmh/samples), check them out, and run them! 
+The [examples are scala-fied examples from the original JMH repo](https://github.com/ktoso/sbt-jmh/tree/master/src/sbt-test/sbt-jmh/run/src/main/scala/org/openjdk/jmh/samples), check them out, and run them! 
 
 The results will look somewhat like this:
 

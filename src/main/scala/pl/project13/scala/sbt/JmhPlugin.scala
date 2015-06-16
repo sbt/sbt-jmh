@@ -60,7 +60,7 @@ object JmhPlugin extends AutoPlugin {
       myCompile(streams.value, (compileInputs in (Compile, compile)).value, generatedJava)
     },
 
-    version in Jmh := "1.9.1",
+    version in Jmh := "1.10",
 
     // includes the asm jar only if needed
     libraryDependencies ++= {
@@ -115,6 +115,7 @@ object JmhPlugin extends AutoPlugin {
     val i = ci
       .copy(compilers = onArgs(ci.compilers))
       .copy(config = ci.config.copy(sources = ci.config.sources ++ javaToCompile))
+    // FIXME About this warning (in case your SBT has >= 0.13.8 version): #48
     try Compiler(i, s.log) finally x.close() // workaround for #937
   }
 
