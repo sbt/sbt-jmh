@@ -85,7 +85,7 @@ For example it's possible to keep the benchmark's results as csv or json files f
 
 Examples
 --------
-The [examples are scala-fied examples from the original JMH repo](https://github.com/ktoso/sbt-jmh/tree/master/src/sbt-test/sbt-jmh/jmh-run/src/main/scala/org/openjdk/jmh/samples), check them out, and run them! 
+The [examples are scala-fied examples from the original JMH repo](https://github.com/ktoso/sbt-jmh/tree/master/src/sbt-test/sbt-jmh/run/src/main/scala/org/openjdk/jmh/samples), check them out, and run them! 
 
 The results will look somewhat like this:
 
