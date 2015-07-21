@@ -43,6 +43,8 @@ activator new sbt-jmh-seed
 
 And start writing benchmarks!
 
+Hint: You have to trigger `jmh:compile`, so that jmh creates the `BenchmarkList`. 
+
 Adding to your project
 ----------------------
 
