@@ -38,7 +38,7 @@ Quickstart
 Just use the Typesafe Activator to get the template downloaded:
 
 ```
-activator new sbt-jmh-seed
+activator new PROJECT_NAME sbt-jmh-seed
 ```
 
 And start writing benchmarks!
