@@ -60,8 +60,13 @@ and enable it in the projects where you want to (useful in multi-project builds,
 
 ```scala
 // build.sbt
-import pl.project13.scala.sbt.JmhPlugin
 enablePlugins(JmhPlugin)
+```
+
+If you define your project in a `Build.scala`, you also need the following import:
+
+```scala
+import pl.project13.scala.sbt.JmhPlugin
 ```
 
 You can read more about [auto plugins in sbt on it's documentation page](http://www.scala-sbt.org/0.13/tutorial/Using-Plugins.html#Enabling+and+disabling+auto+plugins).
