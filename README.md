@@ -60,6 +60,7 @@ and enable it in the projects where you want to (useful in multi-project builds,
 
 ```scala
 // build.sbt
+import pl.project13.scala.sbt.JmhPlugin
 enablePlugins(JmhPlugin)
 ```
 
