@@ -77,7 +77,7 @@ JMH has a very specific way of working (it generates loads of code), so you shou
 All JMH options work as expected. For help type `run -h`. Another example of running it is:
 
 ```
-run -i 3 -wi 3 -f1 -t1 .*FalseSharing.*
+jmh:run -i 3 -wi 3 -f1 -t1 .*FalseSharing.*
 ```
 
 Which means "3 iterations" "3 warmup iterations" "1 fork" "1 thread". Please note that benchmarks should be usually executed at least in 10 iterations (as a rule of thumb), but more is better.
@@ -164,10 +164,10 @@ Advanced: Using custom Runners
 It is possible to hand over the running of JMH to an `App` implemented by you, which allows you to programmatically
 access all test results and modify JMH arguments before you actually invoke it.
 
-To use a custom runner class with `runMain`, simply use it: `runMain com.example.MyRunner -i 10 .*` –
+To use a custom runner class with `runMain`, simply use it: `jmh:runMain com.example.MyRunner -i 10 .*` –
 an example for this is available in [src/sbt-test/sbt-jmh/runMain](src/sbt-test/sbt-jmh/runMain) (open the `test` file).
 
-To replace the runner class which is used when you type `run`, you can set the class in your build file –
+To replace the runner class which is used when you type `jmh:run`, you can set the class in your build file –
 an example for this is available in [src/sbt-test/sbt-jmh/custom-runner](src/sbt-test/sbt-jmh/custom-runner) (open the `build.sbt` file).
 
 License
