@@ -1,0 +1,11 @@
+Introduced cached code generation – code will only be re-compiled if changed.
+Thanks Björn Antonsson!
+
+Also:
+
+- Scoped all tasks under the `jmh` config. The 
+  `run` task is now accessible as `jmh:run` (and `jmh:runMain`).
+
+Pull requests:
+
+- [https://github.com/ktoso/sbt-jmh/pull/55](#55) Make the JMH plugin only regenerate and recompile on source changes – @bantonsson 
