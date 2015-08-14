@@ -2,29 +2,22 @@ package pl.project13.scala.sbt
 
 import sbt._
 import sbt.Keys._
-import java.io.PrintWriter
 import org.openjdk.jmh.annotations.Benchmark
 import org.openjdk.jmh.generators.bytecode.JmhBytecodeGenerator
-
 import scala.tools.nsc.util.ScalaClassLoader.URLClassLoader
 
 object JmhPlugin extends AutoPlugin {
 
   object JmhKeys {
-    val Jmh = config("jmh") extend Compile
-
-    val generateJavaSources = taskKey[Seq[File]]("Generate benchmark JMH Java code")
-
-    val outputTarget = settingKey[File]("Directory where the bytecode to be consumed and generated sources should be written to (`target` or sometimes `target/scala-2.10`)")
-
+    val Jmh = config("jmh") extend Test
     val generatorType = settingKey[String]("Benchmark code generator type. Available: `default`, `reflection` or `asm`.")
-
-    val generateInstrumentedClasses = taskKey[Seq[File]]("Generate instrumented JMH code")
   }
 
   import JmhKeys._
 
   val autoImport = JmhKeys
+
+  val generateJmhSourcesAndResources = taskKey[(Seq[File], Seq[File])]("Generate benchmark JMH Java code and resources")
 
   /** All we need is Java. */
   override def requires = plugins.JvmPlugin
@@ -32,35 +25,22 @@ object JmhPlugin extends AutoPlugin {
   /** Plugin must be enabled on the benchmarks project. See http://www.scala-sbt.org/0.13/tutorial/Using-Plugins.html */
   override def trigger = noTrigger
 
-  override def projectSettings = Seq(
-    sourceGenerators in Jmh := (sourceGenerators in Compile).value,
-    sourceGenerators in Jmh <+= generateJavaSources in Jmh,
+  override def projectConfigurations = Seq(Jmh)
 
-    mainClass in (Compile, run) := Some("org.openjdk.jmh.Main"),
+  override def projectSettings = inConfig(Jmh)(Defaults.testSettings ++ Seq(
+    // settings in Jmh
+    version := "1.10.3",
+    generatorType := "default",
 
-    fork in (Compile, run) := true, // makes sure that sbt manages classpath for JMH when forking
+    mainClass in run := Some("org.openjdk.jmh.Main"),
+    fork in run := true, // makes sure that sbt manages classpath for JMH when forking
 
-    sourceDirectories in Compile += target.value / s"scala-${scalaBinaryVersion.value}" / "generated-sources" / "jmh",
-
-    generatorType in Jmh := "default",
-
-    generateJavaSources in Jmh := generateBenchmarkJavaSources(
-      streams.value,
-      (outputTarget in Jmh).value,
-      (generatorType in Jmh).value,
-      (dependencyClasspath in Compile).value,
-      scalaBinaryVersion.value
-    ),
-
-    outputTarget in Jmh := crossTarget.value,
-
-    compile in Jmh := {
-      streams.value.log.info("Compiling generated JMH benchmarks...")
-      val generatedJava = (generateJavaSources in Jmh).value
-      myCompile(streams.value, (compileInputs in (Compile, compile)).value, generatedJava)
-    },
-
-    version in Jmh := "1.10.3",
+    sourceGenerators := Seq(Def.task { generateJmhSourcesAndResources.value._1 }.taskValue),
+    resourceGenerators := Seq(Def.task { generateJmhSourcesAndResources.value._2 }.taskValue),
+    generateJmhSourcesAndResources := generateBenchmarkSourcesAndResources(streams.value, crossTarget.value / "jmh-cache", (classDirectory in Compile).value, sourceManaged.value, resourceManaged.value, generatorType.value, (dependencyClasspath in Compile).value),
+    generateJmhSourcesAndResources <<= generateJmhSourcesAndResources dependsOn(compile in Compile)
+  )) ++ Seq(
+    // settings in default
 
     // includes the asm jar only if needed
     libraryDependencies ++= {
@@ -74,51 +54,32 @@ object JmhPlugin extends AutoPlugin {
         case "asm"                    => Seq("org.openjdk.jmh" % "jmh-generator-asm" % jmhVersion)    // GPLv2
         case unknown                  => throw new IllegalArgumentException(s"Unknown benchmark generator type: $unknown, please use one of the supported generators!")
       })
-    },
-
-    compile in Jmh <<= (compile in Jmh).dependsOn(generateJavaSources in Jmh, compile in Compile),
-    compile in Jmh <<= (compile in Jmh).dependsOn(compile in Compile),
-
-    run in Jmh <<= (run in Compile).dependsOn(compile in Jmh),
-    run in Compile <<= (run in Compile).dependsOn(compile in Jmh),
-
-    // Allows users to write custom runners and `runMain my.Runner -i 10 .*`.
-    // This is needed because it brings in the compiled classes onto the runs classpath
-    runMain in Compile <<= (runMain in Compile).dependsOn(compile in JmhKeys.Jmh)
+    }
   )
 
-  def generateBenchmarkJavaSources(s: TaskStreams, outputTarget: File, generatorType: String, classpath: Seq[Attributed[File]], scalaBinaryV: String): Seq[File] = {
-    require(outputTarget ne null, "outputTarget in Jmh must not be null!")
-    s.log.info(s"Generating JMH benchmark Java source files...")
+  private def generateBenchmarkSourcesAndResources(s: TaskStreams, cacheDir: File, bytecodeDir: File, sourceDir: File, resourceDir: File, generatorType: String, classpath: Seq[Attributed[File]]): (Seq[File], Seq[File]) = {
+    val inputs: Set[File] = (bytecodeDir ** "*").filter(_.isFile).get.toSet
+    val cachedGeneration = FileFunction.cached(cacheDir, FilesInfo.hash) { _ =>
+      // ignore change report and rebuild it completely
+      internalGenerateBenchmarkSourcesAndResources(s, bytecodeDir, sourceDir, resourceDir, generatorType, classpath)
+    }
+    cachedGeneration(inputs).toSeq.partition(f => IO.relativizeFile(sourceDir, f).nonEmpty)
+  }
 
-    val compiledBytecodeDirectory = outputTarget / "classes"
-    val outputSourceDirectory = outputTarget / "generated-sources" / "jmh"
-    val outputResourceDirectory = compiledBytecodeDirectory
+  private def internalGenerateBenchmarkSourcesAndResources(s: TaskStreams, bytecodeDir: File, sourceDir: File, resourceDir: File, generatorType: String, classpath: Seq[Attributed[File]]): Set[File] = {
+    // rebuild everything
+    IO.delete(sourceDir)
+    IO.createDirectory(sourceDir)
+    IO.delete(resourceDir)
+    IO.createDirectory(resourceDir)
 
     // since we might end up using reflection (even in ASM generated benchmarks), we have to set up the classpath to include classes our code depends on
     val bench = classOf[Benchmark]
     val loader = new URLClassLoader(classpath.map(_.data.toURI.toURL), bench.getClassLoader)
-    Thread.currentThread().setContextClassLoader(loader)
-
-    JmhBytecodeGenerator.main(Array(compiledBytecodeDirectory, outputSourceDirectory, outputResourceDirectory, generatorType).map(_.toString))
-    (outputSourceDirectory ** "*").filter(_.isFile).get
+    val old = Thread.currentThread.getContextClassLoader
+    Thread.currentThread.setContextClassLoader(loader)
+    JmhBytecodeGenerator.main(Array(bytecodeDir, sourceDir, resourceDir, generatorType).map(_.toString))
+    Thread.currentThread.setContextClassLoader(old)
+    ((sourceDir ** "*").filter(_.isFile) +++ (resourceDir ** "*").filter(_.isFile)).get.toSet
   }
-
-  /** Compiler run, with additional files to compile (JMH generated sources) */
-  def myCompile(s: TaskStreams, ci: Compiler.Inputs, javaToCompile: Seq[File]): inc.Analysis = {
-    lazy val x = s.text(CommandStrings.ExportStream)
-    def onArgs(cs: Compiler.Compilers) = {
-      cs.copy(
-        scalac = cs.scalac.onArgs(exported(x, "scalac")),
-        javac = cs.javac.onArgs(exported(x, "javac")))
-    }
-    val i = ci
-      .copy(compilers = onArgs(ci.compilers))
-      .copy(config = ci.config.copy(sources = ci.config.sources ++ javaToCompile))
-    // FIXME About this warning (in case your SBT has >= 0.13.8 version): #48
-    try Compiler(i, s.log) finally x.close() // workaround for #937
-  }
-
-  def exported(w: PrintWriter, command: String): Seq[String] => Unit = args =>
-    w.println((command +: args).mkString(" "))
 }
