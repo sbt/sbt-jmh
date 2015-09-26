@@ -1,1 +1,1 @@
-enablePlugins(JmhPlugin)
+enablePlugins(JmhPlugin, FlamegraphPlugin)

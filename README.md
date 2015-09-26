@@ -14,6 +14,20 @@ JMH is a Java harness for building, running, and analysing nano/micro/milli/macr
 Please read [nanotrusting nanotime](http://shipilev.net/blog/2014/nanotrusting-nanotime/) and other blog posts on micro-benchmarking (or why most benchmarks are wrong) and make sure your benchmark is valid,
 before you set out to implement your benchmarks.
 
+License question
+================
+
+```
+!!!!!!!!!!!!!!!!!!!
+  
+  NOTE TO SELF
+
+  Ask Johannes about licensing of his perf-map-agent, it's GPLv2 currently.
+  Can this plugin be GPLv2? Would his sources need to become Apache 2?
+
+!!!!!!!!!!!!!!!!!!!
+```
+
 Versions
 --------
 

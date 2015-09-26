@@ -1,4 +1,6 @@
 import bintray.Keys._
+import sbt._
+import Keys._
 
 sbtPlugin := true
 
@@ -35,3 +37,8 @@ bintrayOrganization in bintray := None
 
 scriptedSettings
 scriptedLaunchOpts <+= version(v => s"-Dproject.version=$v")
+
+lazy val ignis = project.in(file("sbt-jmh-ignis"))
+  .settings(
+    libraryDependencies ++= Seq.empty
+  )
