@@ -1,5 +1,0 @@
-# compile jmh sources all the way to ready to run bench class files
-> jmh:run -i 1 -wi 1 -f 1 .*Hello.*
-
-# check if the custom file was generated
-$ exists custom.out

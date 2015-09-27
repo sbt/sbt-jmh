@@ -1,9 +1,10 @@
-import sbt.Keys._
 import sbt._
+import Keys._
 
 scalaVersion := "2.10.5"
 
 val commonSettings = Seq(
+  isSnapshot := true, // hack to get around warnings when testing `scripted`
   scalaVersion := "2.10.5",
   organization := "pl.project13.scala",
   scalacOptions ++= List(
@@ -15,9 +16,12 @@ val commonSettings = Seq(
   )
 )
 
-val jmhVersion = "1.11"
+val Jmh = config("jmh") extend Test
 
-val jmhDependencies = Seq(
+val jmhVersion: String = "1.11"
+version in Jmh := jmhVersion
+
+lazy val jmhDependencies = Seq(
   "org.openjdk.jmh" % "jmh-core"                 % jmhVersion, // GPLv2
   "org.openjdk.jmh" % "jmh-generator-bytecode"   % jmhVersion, // GPLv2
   "org.openjdk.jmh" % "jmh-generator-reflection" % jmhVersion, // GPLv2
@@ -35,11 +39,17 @@ lazy val flamegraph = project.in(file("sbt-jmh-flamegraph"))
   .settings(commonSettings: _*)
   .settings(
     name := "sbt-jmh-flamegraph",
-    libraryDependencies ++= jmhDependencies,
-    libraryDependencies += ("com.sun" % "tools" % "1.8" % "provided")
-      .from("file://" + System.getProperty("java.home").dropRight(3)+"lib/tools.jar")
+    version in Jmh := jmhVersion,
+    libraryDependencies ++= jmhDependencies
+  ).dependsOn(plugin, flamegraphLib)
+
+lazy val flamegraphLib = project.in(file("sbt-jmh-flamegraph-lib"))
+  .settings(commonSettings: _*)
+  .settings(
+    name := "sbt-jmh-flamegraph-lib",
+    version in Jmh := jmhVersion,
+    libraryDependencies ++= jmhDependencies
   )
 
 lazy val root = project.in(file("."))
-  .settings(commonSettings: _*)
   .aggregate(plugin, flamegraph)
