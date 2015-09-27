@@ -35,6 +35,9 @@ object FlamegraphPlugin extends AutoPlugin {
     // make sure agent will be loaded to JMH
     jvmArgsAppend ++= Seq("-XX:+PreserveFramePointer"),
 
+    // use the custom runner
+    mainClass in run := Some("pl.project13.scala.sbt.flamegraph.runner.FlamegraphJmhRunner"),
+
     autoCloneFlamegraph := true,
     autoCloneInto := new File("/tmp/sbt-jmh-flamegraph-Flamegraph"),
     flamegraphDir := { // TODO use it somehow
@@ -51,11 +54,8 @@ object FlamegraphPlugin extends AutoPlugin {
           cloneInto
       }
     })) ++ Seq(
-    // settings in default
-    mainClass in (Jmh, run) := Some("pl.project13.scala.sbt.flamegraph.runner.FlamegraphJmhRunner"),
-
-//    // make custom runner available on classpath
-//    libraryDependencies += "pl.project13.scala" %% "sbt-jmh-flamegraph-lib" % version.value,
+      // make custom runner available on classpath
+      libraryDependencies += "pl.project13.scala" %% "sbt-jmh-flamegraph-lib" % version.value,
 
       libraryDependencies ++= {
         val jmhVersion = (version in Jmh).value
