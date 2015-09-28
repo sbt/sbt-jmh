@@ -2,11 +2,7 @@ package pl.project13.scala.benchmark
 
 import org.openjdk.jmh.annotations.Benchmark
 
-class RangeSummingBenchmark {
-
-  @Benchmark
-  def range_sum(): Int =
-    (1 to 300).sum
+class RangeFoldingBenchmark {
 
   //noinspection SimplifiableFoldOrReduce
   @Benchmark

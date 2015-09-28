@@ -31,7 +31,7 @@ object FlamegraphPlugin extends AutoPlugin {
 
   override def projectConfigurations = Seq(Jmh)
 
-  override def projectSettings = inConfig(Jmh)(Defaults.testSettings ++ Seq(
+  override def projectSettings = JmhPlugin.projectSettings ++ inConfig(Jmh)(Seq(
     // make sure agent will be loaded to JMH
     jvmArgsAppend ++= Seq("-XX:+PreserveFramePointer"),
 
@@ -55,20 +55,7 @@ object FlamegraphPlugin extends AutoPlugin {
       }
     })) ++ Seq(
       // make custom runner available on classpath
-      libraryDependencies += "pl.project13.scala" %% "sbt-jmh-flamegraph-lib" % version.value,
-
-      libraryDependencies ++= {
-        val jmhVersion = (version in Jmh).value
-        Seq(
-          "org.openjdk.jmh" % "jmh-core"                 % jmhVersion,   // GPLv2
-          "org.openjdk.jmh" % "jmh-generator-bytecode"   % jmhVersion,   // GPLv2
-          "org.openjdk.jmh" % "jmh-generator-reflection" % jmhVersion    // GPLv2
-        ) ++ ((generatorType in Jmh).value match {
-          case "default" | "reflection" => Nil // default == reflection (0.9)
-          case "asm"                    => Seq("org.openjdk.jmh" % "jmh-generator-asm" % jmhVersion)    // GPLv2
-          case unknown                  => throw new IllegalArgumentException(s"Unknown benchmark generator type: $unknown, please use one of the supported generators!")
-        })
-      }
+      libraryDependencies += "pl.project13.scala" %% "sbt-jmh-flamegraph-lib" % "0.3.0"
   )
 
 }

@@ -1,6 +1,8 @@
 import sbt._
 import Keys._
 
+val Jmh = config("jmh") extend Test
+
 scalaVersion := "2.10.5"
 
 val commonSettings = Seq(
@@ -16,8 +18,7 @@ val commonSettings = Seq(
   )
 )
 
-val Jmh = config("jmh") extend Test
-
+// source of Truth for JMH version
 val jmhVersion: String = "1.11"
 version in Jmh := jmhVersion
 
@@ -52,4 +53,4 @@ lazy val flamegraphLib = project.in(file("sbt-jmh-flamegraph-lib"))
   )
 
 lazy val root = project.in(file("."))
-  .aggregate(plugin, flamegraph)
+  .aggregate(plugin, flamegraph, flamegraphLib)
