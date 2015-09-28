@@ -61,11 +61,7 @@ public class AttachOnce {
 
     private static File findSoFile() {
         final String os = System.getProperty("os.arch").toLowerCase(Locale.ROOT);
-        if (os.contains("nix") || os.contains("nux") || os.contains("aix")) {
-            if (os.contains("64")) return new File("libperfmap-64bit.so");
-            else throw new RuntimeException("32bit systems are not supported!");
-        } else {
-            throw new RuntimeException(String.format("Running on not supported OS! Only Linux supported, was: [%s]", os));
-        }
+        if (os.contains("64")) return new File("libperfmap-64bit.so");
+        else throw new RuntimeException("32bit systems are not supported!");
     }
 }
