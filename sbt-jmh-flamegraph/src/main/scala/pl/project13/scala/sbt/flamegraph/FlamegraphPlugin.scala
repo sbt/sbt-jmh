@@ -24,8 +24,10 @@ object FlamegraphPlugin extends AutoPlugin {
     val perfRecordSeconds = settingKey[Int]("Number of seconds that perf should be recording events during the benchmark. Defaults to 15.")
     val attachJarPath = settingKey[Option[String]]("Optionally provide path to your custom java-agent which should be attached instead of the default one (as implemented by jrudolph).")
 
-    val perfSettings = settingKey[PerfSettings]("Perf configuration, set by configuring the various options.")
-    val settings     = settingKey[FlamesSettings]("Flamegraph configuration, set by configuring the various options.")
+    // TODO can't figure out why the lib is not available here
+    // fails with [info] Caused by: java.lang.ClassNotFoundException: pl.project13.scala.sbt.flamegraph.PerfSettings
+//    val perfSettings = settingKey[PerfSettings]("Perf configuration, set by configuring the various options.")
+//    val settings     = settingKey[FlamesSettings]("Flamegraph configuration, set by configuring the various options.")
   }
 
   import FlamegraphKeys._
@@ -48,8 +50,6 @@ object FlamegraphPlugin extends AutoPlugin {
       // use the custom runner
       mainClass in run := Some("pl.project13.scala.sbt.flamegraph.runner.FlamegraphJmhRunner"),
 
-      libraryDependencies += "pl.project13.scala" %% "sbt-jmh-flamegraph-lib" % "0.3.0",
-
       autoCloneFlamegraph := true,
       autoCloneInto := new File("/tmp/sbt-jmh-flamegraph-Flamegraph"),
       flamegraphDir := {
@@ -67,24 +67,24 @@ object FlamegraphPlugin extends AutoPlugin {
             cloneInto
         }
     })) ++ inConfig(Flames)(Seq(
-      verbose := false,
+      verbose := {
+        System.setProperty("FLAMES_VERBOSE", "1")
+        true // TODO make false
+      },
       perfRecordSeconds := 15,
       attachJarPath := None,
-      svgOut := "out.svg",
+      svgOut := {
+        System.setProperty("PERF_FLAME_OUTPUT", "out.svg")
+        "out.svg"
+      }
 
       // settings aggregation
-      perfSettings := {
-        PerfSettings() // TODO make configurable
-      },
-      settings := {
-        FlamesSettings(svgOut.value, attachJarPath.value, verbose.value, null)//perfSettings.value)
-      },
-
-      // run app with flamegraph generation
-      run := {
-        (settings in Flames).value.emitToEnv() // mutate the env! (also known as: oh gosh, don't make me pass those arroung in args to the runner)
-        ??? // TODO implement flames:run my.example.App
-      }
+//      perfSettings := {
+//        PerfSettings() // TODO make configurable
+//      },
+//      settings := {
+//        FlamesSettings(svgOut.value, attachJarPath.value, verbose.value, null)//perfSettings.value)
+//      },
     )) ++ Seq(
       // make custom runner available on classpath
       libraryDependencies += "pl.project13.scala" %% "sbt-jmh-flamegraph-lib" % "0.3.0"

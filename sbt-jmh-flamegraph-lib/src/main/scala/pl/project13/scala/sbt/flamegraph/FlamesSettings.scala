@@ -2,16 +2,17 @@ package pl.project13.scala.sbt.flamegraph
 
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.duration._
+import scala.util.Try
 
 object FlamesSettings {
   def fromEnv(): FlamesSettings = {
     FlamesSettings(
-      sys.env("PERF_FLAME_OUTPUT"),
-      sys.env.get("ATTACH_JAR_PATH"),
-      sys.env.get("FLAMES_VERBOSE").exists(_ == "1"),
-      PerfSettings(
-        sys.env.get("PERF_RECORD_SECONDS").map(_.toInt).getOrElse(15).seconds,
-        sys.env.get("PERF_RECORD_FREQ").map(_.toInt).getOrElse(99))
+      svgOut = Option(System.getProperty("PERF_FLAME_OUTPUT")).getOrElse("out.svg"), // TODO figure out a better way...
+      attachJarPath = Try(System.getProperty("ATTACH_JAR_PATH")).toOption,
+      verbose = Try(System.getProperty("FLAMES_VERBOSE")).toOption.exists(_ == "1"),
+      perf = PerfSettings(
+        recordSeconds = Try(System.getProperty("PERF_RECORD_SECONDS")).map(_.toInt).getOrElse(15).seconds,
+        recordFreq = Try(System.getProperty("PERF_RECORD_FREQ")).map(_.toInt).getOrElse(99))
     )
   }
 }

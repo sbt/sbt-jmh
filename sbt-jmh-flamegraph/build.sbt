@@ -24,8 +24,6 @@ bintrayPublishSettings
 repository in bintray := "sbt-plugins"
 bintrayOrganization in bintray := None
 
-libraryDependencies += "pl.project13.scala" %% "sbt-jmh-flamegraph-lib" % "0.3.0"
-
 scriptedSettings
 scriptedLaunchOpts <+= version(v => s"-Dproject.version=$v")
 
