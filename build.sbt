@@ -1,44 +1,45 @@
-import bintray.Keys._
+import sbt.Keys._
 import sbt._
-import Keys._
-
-sbtPlugin := true
-
-organization := "pl.project13.scala"
-name := "sbt-jmh"
 
 scalaVersion := "2.10.5"
-scalacOptions ++= List(
-  "-unchecked",
-  "-deprecation",
-  "-language:_",
-  "-target:jvm-1.6",
-  "-encoding", "UTF-8"
+
+val commonSettings = Seq(
+  scalaVersion := "2.10.5",
+  organization := "pl.project13.scala",
+  scalacOptions ++= List(
+    "-unchecked",
+    "-deprecation",
+    "-language:_",
+    "-target:jvm-1.6",
+    "-encoding", "UTF-8"
+  )
 )
 
 val jmhVersion = "1.11"
 
-libraryDependencies += "org.openjdk.jmh" % "jmh-core"                 % jmhVersion    // GPLv2
-libraryDependencies += "org.openjdk.jmh" % "jmh-generator-bytecode"   % jmhVersion    // GPLv2
-libraryDependencies += "org.openjdk.jmh" % "jmh-generator-reflection" % jmhVersion    // GPLv2
-libraryDependencies += "org.openjdk.jmh" % "jmh-generator-asm"        % jmhVersion    // GPLv2
+val jmhDependencies = Seq(
+  "org.openjdk.jmh" % "jmh-core"                 % jmhVersion, // GPLv2
+  "org.openjdk.jmh" % "jmh-generator-bytecode"   % jmhVersion, // GPLv2
+  "org.openjdk.jmh" % "jmh-generator-reflection" % jmhVersion, // GPLv2
+  "org.openjdk.jmh" % "jmh-generator-asm"        % jmhVersion // GPLv2
+)
 
-publishTo <<= isSnapshot { snapshot =>
-  if (snapshot) Some(Classpaths.sbtPluginSnapshots) else Some(Classpaths.sbtPluginReleases)
-}
-
-// publishing settings
-
-publishMavenStyle := false
-licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.html"))
-bintrayPublishSettings
-repository in bintray := "sbt-plugins"
-bintrayOrganization in bintray := None
-
-scriptedSettings
-scriptedLaunchOpts <+= version(v => s"-Dproject.version=$v")
-
-lazy val ignis = project.in(file("sbt-jmh-ignis"))
+lazy val plugin = project.in(file("sbt-jmh-plugin"))
+  .settings(commonSettings: _*)
   .settings(
-    libraryDependencies ++= Seq.empty
+    name := "sbt-jmh",
+    libraryDependencies ++= jmhDependencies
   )
+
+lazy val flamegraph = project.in(file("sbt-jmh-flamegraph"))
+  .settings(commonSettings: _*)
+  .settings(
+    name := "sbt-jmh-flamegraph",
+    libraryDependencies ++= jmhDependencies,
+    libraryDependencies += ("com.sun" % "tools" % "1.8" % "provided")
+      .from("file://" + System.getProperty("java.home").dropRight(3)+"lib/tools.jar")
+  )
+
+lazy val root = project.in(file("."))
+  .settings(commonSettings: _*)
+  .aggregate(plugin, flamegraph)

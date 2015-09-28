@@ -29,7 +29,7 @@ object FlamegraphPlugin extends AutoPlugin {
     // make sure agent will be loaded to JMH
     jvmArgsAppend ++= Seq("-XX:+PreserveFramePointer"),
     autoCloneFlamegraph := true,
-    autoCloneInto := new File("/tmp/sbt-jmh-ignis-Flamegraph"),
+    autoCloneInto := new File("/tmp/sbt-jmh-flamegraph-Flamegraph"),
     flamegraphDir := { // TODO use it somehow
       sys.props.get("FLAMEGRAPH_DIR") match {
         case Some(s) => new File(s)

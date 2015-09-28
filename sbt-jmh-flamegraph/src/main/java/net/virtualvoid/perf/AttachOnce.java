@@ -20,10 +20,9 @@
 
 package net.virtualvoid.perf;
 
-import java.io.File;
-
 import com.sun.tools.attach.VirtualMachine;
-import java.lang.management.ManagementFactory;
+
+import java.io.File;
 import java.util.Locale;
 
 /**
