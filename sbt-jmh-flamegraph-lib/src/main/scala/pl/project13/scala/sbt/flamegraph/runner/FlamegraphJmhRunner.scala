@@ -25,7 +25,13 @@ object FlamegraphJmhRunner
   override implicit def ec = ExecutionContext.Implicits.global
 
   def main(args: Array[String]): Unit = {
-    val opts = new CommandLineOptions(args: _*) // parse command line arguments, and then bend them to your will! ;-)
+
+    // TODO make option to enable or not
+    //    val preserveFramePointer = Array()
+    val preserveFramePointer = Array("-jvmArgsAppend", "-XX:+PreserveFramePointer")
+    val preparedArgs = args ++ preserveFramePointer
+
+    val opts = new CommandLineOptions(preparedArgs: _*) // parse command line arguments, and then bend them to your will! ;-)
 
     preparePerfJavaFlamesScripts()
     preparePerfJavaFlamesLibs()
@@ -39,12 +45,19 @@ object FlamegraphJmhRunner
 
     // TODO figure out benchmark name somehow?
     val output = new File("out.svg")
+
+    // TODO add handling of how long to collect data
     val flamesProcess = attachPerfJavaFlames(pid, output)
 
     resultsFuture onComplete {
-      case _ =>
+      case Success(_) =>
         log(s"Stopping moinitoring of $pid...")
         flamesProcess.kill()
+      case Failure(ex) =>
+        ex.printStackTrace()
+        flamesProcess.kill()
+        log("JMH run failed, quitting.")
+        System.exit(-1)
     }
 
     log("Awaiting benchmark results...")
@@ -102,6 +115,7 @@ trait PerfSupport extends Logging {
 
   // env vars
   val FlamegraphDir = "FLAMEGRAPH_DIR"
+  val PerfFlameOutputFilename = "PERF_FLAME_OUTPUT" // should be ".svg"
 
   def preparePerfJavaFlamesScripts(): Unit = {
     if (!ScriptDir.exists())
@@ -156,7 +170,7 @@ trait PerfSupport extends Logging {
     import scala.sys.process._
 
     val env =
-      ("PERF_FLAME_OUTPUT", svgOut.toString) ::
+      (PerfFlameOutputFilename, svgOut.toString) ::
       (FlamegraphDir, sys.env.getOrElse(FlamegraphDir, "/tmp/sbt-jmh-flamegraph-Flamegraph")) ::
       Nil
 

@@ -102,9 +102,7 @@ object JmhPlugin extends AutoPlugin {
     val loader = new URLClassLoader(classpath.map(_.data.toURI.toURL), bench.getClassLoader)
     val old = Thread.currentThread.getContextClassLoader
     Thread.currentThread.setContextClassLoader(loader)
-    val options = Array(bytecodeDir, sourceDir, resourceDir, generatorType).map(_.toString) ++
-      jvmOptions.prependOptions ++
-      jvmOptions.appendOptions
+    val options = Array(bytecodeDir, sourceDir, resourceDir, generatorType).map(_.toString)
 
     JmhBytecodeGenerator.main(options)
     Thread.currentThread.setContextClassLoader(old)

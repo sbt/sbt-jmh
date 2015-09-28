@@ -6,7 +6,7 @@ class RangeFoldingBenchmark {
 
   //noinspection SimplifiableFoldOrReduce
   @Benchmark
-  def range_foldLeft(): Int =
-    (1 to 300).foldLeft(0)(_ + _)
-
+  def range_foldLeft(): Integer = {
+    (1 to 1000).foldLeft(new Integer(0))(_ + _)
+  }
 }

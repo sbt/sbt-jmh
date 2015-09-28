@@ -10,6 +10,7 @@ object FlamegraphPlugin extends AutoPlugin {
 
   import JmhPlugin._
   import JmhPlugin.JmhKeys.Jmh
+  import JmhPlugin.JmhKeys.jvmArgsPrepend
   import JmhPlugin.JmhKeys.jvmArgsAppend
   import JmhPlugin.JmhKeys.generatorType
   val FlameGraphRepo = "https://github.com/brendangregg/FlameGraph"

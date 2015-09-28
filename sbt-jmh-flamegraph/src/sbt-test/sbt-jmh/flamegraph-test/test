@@ -7,6 +7,5 @@
 # TODO: maybe jmh:flames would be more fun?
 
 # check if the custom file was generated
-$ pause
 $ exists /tmp/perf-*.data
 $ exists /tmp/*.svg
