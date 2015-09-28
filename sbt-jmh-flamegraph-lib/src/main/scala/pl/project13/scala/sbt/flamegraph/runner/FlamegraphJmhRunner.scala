@@ -24,8 +24,9 @@ object FlamegraphJmhRunner
 
   def main(args: Array[String]): Unit = {
 
+    // TODO replace this by parsing the args, and the plugin add settings there -FLAME:perfDuration=2s
     // obtain settings by using a horrible way to communicate between plugin and Runner
-    val settings = FlamesSettings.fromEnv()
+    val settings = FlamesSettings.fromEnv(new File("."))
 
     // TODO make option to enable or not
     //    val preserveFramePointer = Array()

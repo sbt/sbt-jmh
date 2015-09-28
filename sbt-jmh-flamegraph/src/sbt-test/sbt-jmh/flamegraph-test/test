@@ -7,4 +7,5 @@
 # TODO: maybe jmh:flames would be more fun?
 
 # check flamegraph was generated
-$ exists out.svg # TODO: default name, make it better... 
+# TODO: default name, make it better...
+$ exists out.svg

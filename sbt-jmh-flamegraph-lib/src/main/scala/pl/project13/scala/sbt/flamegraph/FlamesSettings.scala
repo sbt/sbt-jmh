@@ -1,13 +1,15 @@
 package pl.project13.scala.sbt.flamegraph
 
+import java.io.File
+
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.duration._
 import scala.util.Try
 
 object FlamesSettings {
-  def fromEnv(): FlamesSettings = {
+  def fromEnv(dir: File): FlamesSettings = {
     FlamesSettings(
-      svgOut = Option(System.getProperty("PERF_FLAME_OUTPUT")).getOrElse("out.svg"), // TODO figure out a better way...
+      svgOut = dir.getAbsolutePath.replaceAll("\\.", "") + "out.svg", // TODO THIS MUST BE PASSED IN AS PARAM...
       attachJarPath = Try(System.getProperty("ATTACH_JAR_PATH")).toOption,
       verbose = Try(System.getProperty("FLAMES_VERBOSE")).toOption.exists(_ == "1"),
       perf = PerfSettings(
