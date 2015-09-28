@@ -3,10 +3,6 @@ import sbt.Keys._
 
 version := "0.3.0"
 
-publishTo <<= isSnapshot { snapshot =>
-  if (snapshot) Some(Classpaths.sbtPluginSnapshots) else Some(Classpaths.sbtPluginReleases)
-}
-
 libraryDependencies += ("com.sun" % "tools" % "1.8" % "provided")
   .from("file://" + System.getProperty("java.home").dropRight(3)+"lib/tools.jar")
 

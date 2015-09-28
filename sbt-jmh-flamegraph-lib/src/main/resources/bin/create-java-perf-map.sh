@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
-set -x
+
+if [ "$FLAMES_VERBOSE" == "1" ]; then
+  set -x
+fi
 
 CUR_DIR=`pwd`
 PID=$1

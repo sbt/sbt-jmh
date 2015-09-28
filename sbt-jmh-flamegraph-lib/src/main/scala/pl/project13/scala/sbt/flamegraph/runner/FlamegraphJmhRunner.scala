@@ -1,20 +1,18 @@
 package pl.project13.scala.sbt.flamegraph.runner
 
-import java.io.{File, BufferedOutputStream, FileOutputStream, InputStream}
-import java.nio.file.{StandardCopyOption, CopyOption, Files}
-import java.nio.file.attribute.{BasicFileAttributes, FileAttribute}
-import java.util
+import java.io.File
+import java.nio.file.{Files, StandardCopyOption}
 
 import org.openjdk.jmh.results.RunResult
 import org.openjdk.jmh.runner.Runner
 import org.openjdk.jmh.runner.options.CommandLineOptions
+import pl.project13.scala.sbt.flamegraph.FlamesSettings
 
 import scala.annotation.tailrec
-import scala.collection.JavaConverters._
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext, Future}
-import scala.util.{Failure, Success, Try}
 import scala.sys.process._
+import scala.util.{Failure, Success}
 
 object FlamegraphJmhRunner
   extends JvmProcessSupport
@@ -25,6 +23,9 @@ object FlamegraphJmhRunner
   override implicit def ec = ExecutionContext.Implicits.global
 
   def main(args: Array[String]): Unit = {
+
+    // obtain settings by using a horrible way to communicate between plugin and Runner
+    val settings = FlamesSettings.fromEnv()
 
     // TODO make option to enable or not
     //    val preserveFramePointer = Array()
@@ -40,17 +41,15 @@ object FlamegraphJmhRunner
 
     // TODO support multiple forks, need PID monitoring
     val (resultsFuture, pid) = detectJvmProcessId {
-      runner.run() // actually run the benchmarks
+      runner.runSingle() // actually run the benchmarks
     }
 
-    // TODO figure out benchmark name somehow?
-    val output = new File("out.svg")
-
     // TODO add handling of how long to collect data
-    val flamesProcess = attachPerfJavaFlames(pid, output)
+    val flamesProcess = attachPerfJavaFlames(pid, settings)
 
     resultsFuture onComplete {
       case Success(_) =>
+        log(s"SVG output written to: ${settings.svgOut}")
         log(s"Stopping moinitoring of $pid...")
         flamesProcess.kill()
       case Failure(ex) =>
@@ -61,7 +60,7 @@ object FlamegraphJmhRunner
     }
 
     log("Awaiting benchmark results...")
-    val results = Await.result(resultsFuture, 1.minute)
+    Await.ready(resultsFuture, 24.hours)
     System.exit(0)
   }
 
@@ -71,11 +70,11 @@ trait JvmProcessSupport {
 
   implicit def ec: ExecutionContext
 
-  def detectJvmProcessId(block: => util.Collection[RunResult]): (Future[List[RunResult]], Long) = {
+  def detectJvmProcessId(block: => RunResult): (Future[RunResult], Long) = {
     val pidsBefore = jps()
     val results = Future {
       // run benchmarks
-      block.asScala.toList
+      block
     }
     val forkedPid = findForkedMain(pidsBefore)
     results -> forkedPid
@@ -165,12 +164,12 @@ trait PerfSupport extends Logging {
     }
   }
 
-  def attachPerfJavaFlames(pid: Long, svgOut: File): PerfProcess = {
+  def attachPerfJavaFlames(pid: Long, settings: FlamesSettings): PerfProcess = {
     log(s"Attaching perf to jvm process: ${Console.BOLD}$pid${Console.RESET}")
     import scala.sys.process._
 
     val env =
-      (PerfFlameOutputFilename, svgOut.toString) ::
+      (PerfFlameOutputFilename, settings.svgOut.toString) ::
       (FlamegraphDir, sys.env.getOrElse(FlamegraphDir, "/tmp/sbt-jmh-flamegraph-Flamegraph")) ::
       Nil
 

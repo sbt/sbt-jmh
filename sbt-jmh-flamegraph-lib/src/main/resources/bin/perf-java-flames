@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
-#set -x
+if [ "$FLAMES_VERBOSE" == "1" ]; then
+  set -x
+fi
 
 PID=$1
 

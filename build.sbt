@@ -36,6 +36,13 @@ lazy val plugin = project.in(file("sbt-jmh-plugin"))
     libraryDependencies ++= jmhDependencies
   )
 
+lazy val flamegraphLib = project.in(file("sbt-jmh-flamegraph-lib"))
+  .settings(commonSettings: _*)
+  .settings(
+    name := "sbt-jmh-flamegraph-lib",
+    version in Jmh := jmhVersion,
+    libraryDependencies ++= jmhDependencies
+  )
 lazy val flamegraph = project.in(file("sbt-jmh-flamegraph"))
   .settings(commonSettings: _*)
   .settings(
@@ -44,13 +51,5 @@ lazy val flamegraph = project.in(file("sbt-jmh-flamegraph"))
     libraryDependencies ++= jmhDependencies
   ).dependsOn(plugin, flamegraphLib)
 
-lazy val flamegraphLib = project.in(file("sbt-jmh-flamegraph-lib"))
-  .settings(commonSettings: _*)
-  .settings(
-    name := "sbt-jmh-flamegraph-lib",
-    version in Jmh := jmhVersion,
-    libraryDependencies ++= jmhDependencies
-  )
-
 lazy val root = project.in(file("."))
-  .aggregate(plugin, flamegraph, flamegraphLib)
+  .aggregate(plugin, flamegraph)
