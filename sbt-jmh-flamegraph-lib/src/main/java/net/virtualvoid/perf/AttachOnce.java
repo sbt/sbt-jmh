@@ -41,7 +41,7 @@ public class AttachOnce {
         loadAgent(pid, options);
     }
 
-    static void loadAgent(String pid, String options) throws Exception {
+    public static void loadAgent(String pid, String options) throws Exception {
         final VirtualMachine vm = VirtualMachine.attach(pid);
         try {
             final File lib = findSoFile();
@@ -61,7 +61,7 @@ public class AttachOnce {
 
     private static File findSoFile() {
         final String os = System.getProperty("os.arch").toLowerCase(Locale.ROOT);
-        if (os.contains("64")) return new File("libperfmap-64bit.so");
+        if (os.contains("64")) return new File("target/libperfmap-64bit.so"); // TODO too naive
         else throw new RuntimeException("32bit systems are not supported!");
     }
 }

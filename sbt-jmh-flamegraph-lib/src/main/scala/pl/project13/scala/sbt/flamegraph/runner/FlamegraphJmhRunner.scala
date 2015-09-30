@@ -35,8 +35,8 @@ object FlamegraphJmhRunner
 
     val opts = new CommandLineOptions(preparedArgs: _*) // parse command line arguments, and then bend them to your will! ;-)
 
-    preparePerfJavaFlamesScripts()
-    preparePerfJavaFlamesLibs()
+    unpackPerfJavaFlamesScripts()
+    unpackPerfJavaFlamesLibs()
 
     val runner = new Runner(opts) // full access to all JMH features, you can also provide a custom output Format here
 
@@ -117,7 +117,7 @@ trait PerfSupport extends Logging {
   val FlamegraphDir = "FLAMEGRAPH_DIR"
   val PerfFlameOutputFilename = "PERF_FLAME_OUTPUT" // should be ".svg"
 
-  def preparePerfJavaFlamesScripts(): Unit = {
+  def unpackPerfJavaFlamesScripts(): Unit = {
     if (!ScriptDir.exists())
       Files.createDirectory(ScriptDir.toPath)
     if (!new File(ScriptDir, "bin").exists())
@@ -145,7 +145,7 @@ trait PerfSupport extends Logging {
     }
   }
 
-  def preparePerfJavaFlamesLibs(): Unit = {
+  def unpackPerfJavaFlamesLibs(): Unit = {
     if (!ScriptDir.exists())
       Files.createDirectory(ScriptDir.toPath)
 

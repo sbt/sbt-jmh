@@ -1,6 +1,6 @@
 package pl.project13.scala.sbt.flamegraph
 
-import java.io.File
+import java.io.{FileNotFoundException, File}
 
 import pl.project13.scala.sbt._
 import sbt._
@@ -47,8 +47,8 @@ object FlamegraphPlugin extends AutoPlugin {
       // make sure agent will be loaded to JMH
       jvmArgsAppend ++= Seq("-XX:+PreserveFramePointer"),
 
-      // use the custom runner
-      mainClass in run := Some("pl.project13.scala.sbt.flamegraph.runner.FlamegraphJmhRunner"),
+//      // use the custom runner
+//      mainClass in run := Some("pl.project13.scala.sbt.flamegraph.runner.FlamegraphJmhRunner"),
 
       autoCloneFlamegraph := true,
       autoCloneInto := new File("/tmp/sbt-jmh-flamegraph-Flamegraph"),
@@ -87,7 +87,33 @@ object FlamegraphPlugin extends AutoPlugin {
 //      },
     )) ++ Seq(
       // make custom runner available on classpath
-      libraryDependencies += "pl.project13.scala" %% "sbt-jmh-flamegraph-lib" % "0.3.0"
+      libraryDependencies += "pl.project13.scala" %% "sbt-jmh-flamegraph-lib" % "0.3.0",
+
+      internalDependencyClasspath in Compile += { Attributed.blank(JavaTools) },
+      internalDependencyClasspath in Test += { Attributed.blank(JavaTools) },
+      internalDependencyClasspath in Jmh += { Attributed.blank(JavaTools) }
     )
+
+  // epic hack to get the tools.jar JDK dependency
+  val JavaTools = List[Option[String]] (
+    // manual
+    sys.env.get("JDK_HOME"),
+    sys.env.get("JAVA_HOME"),
+    // osx
+    try Some("/usr/libexec/java_home".!!.trim)
+    catch {
+      case _: Throwable => None
+    },
+    // fallback
+    sys.props.get("java.home").map(new File(_).getParent),
+    sys.props.get("java.home")
+  ).flatten.map { n =>
+    new File(n + "/lib/tools.jar")
+  }.find(_.exists).getOrElse (
+    throw new FileNotFoundException (
+      """Could not automatically find the JDK/lib/tools.jar.
+        |You must explicitly set JDK_HOME or JAVA_HOME.""".stripMargin
+    )
+  )
 
 }
