@@ -21,7 +21,7 @@ public class AttachAgent {
       unpackPerfJavaFlamesLibs(unpackTo);
 
       long pid = getPid();
-      System.out.println("Attaching agent to PID (self): " + pid);
+      System.out.println("> Attaching agent to PID (self): " + pid);
 
       AttachOnce.loadAgent(String.valueOf(pid), agentArgs);
     } catch (Exception e) {

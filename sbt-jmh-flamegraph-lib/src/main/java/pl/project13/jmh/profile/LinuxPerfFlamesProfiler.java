@@ -78,6 +78,7 @@ public class LinuxPerfFlamesProfiler implements ExternalProfiler {
   @Override
   public Collection<String> addJVMOptions(BenchmarkParams params) {
     final String agentJarName = "sbt-jmh-flamegraph-lib_2.10.jar";
+    // TODO not hardcode this
     final String agentJarPath = "/home/ktoso/.ivy2/local/pl.project13.scala/sbt-jmh-flamegraph-lib_2.10/0.3.0/jars/" + agentJarName;
     return Arrays.asList(
         "-XX:+PreserveFramePointer",
@@ -137,8 +138,9 @@ public class LinuxPerfFlamesProfiler implements ExternalProfiler {
 
     // step 1
     final Process perfScriptProcess = new ProcessBuilder()
-        .command("perf", "script", "-i", perfData)
+        .command("perf", "script", "-i", perfDataPid)
         .redirectOutput(new File(stacksPid))
+        .redirectError(ProcessBuilder.Redirect.appendTo(new File("/tmp/perf-err")))
         .start();
 
     perfScriptProcess.waitFor(30, TimeUnit.SECONDS);
@@ -148,6 +150,7 @@ public class LinuxPerfFlamesProfiler implements ExternalProfiler {
         .directory(new File(FLAMEGRAPH_DIR))
         .command("./stackcollapse-perf.pl", stacksPid)
         .redirectOutput(new File(collapsedPid))
+        .redirectError(ProcessBuilder.Redirect.appendTo(new File("/tmp/perf-err")))
         .start();
     stackcollapseProcess.waitFor(30, TimeUnit.SECONDS);
 
@@ -162,6 +165,7 @@ public class LinuxPerfFlamesProfiler implements ExternalProfiler {
         .redirectInput(new File(collapsedPid))
         .command("./flamegraph.pl", "--color=java")
         .redirectOutput(perfFlamesOutputPidFile)
+        .redirectError(ProcessBuilder.Redirect.appendTo(new File("/tmp/perf-err")))
         .start();
 
     flamegraphProcess.waitFor(30, TimeUnit.SECONDS);
@@ -179,7 +183,7 @@ public class LinuxPerfFlamesProfiler implements ExternalProfiler {
 
   @Override
   public boolean allowPrintErr() {
-    return false;
+    return true;
   }
 
   @Override
