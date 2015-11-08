@@ -29,7 +29,7 @@ object JmhPlugin extends AutoPlugin {
 
   override def projectSettings = inConfig(Jmh)(Defaults.testSettings ++ Seq(
     // settings in Jmh
-    version := "1.10.3",
+    version := "1.11",
     generatorType := "default",
 
     mainClass in run := Some("org.openjdk.jmh.Main"),
