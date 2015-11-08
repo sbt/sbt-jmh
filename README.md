@@ -21,8 +21,8 @@ The latest published plugin version is: [![Download](https://api.bintray.com/pac
 
 | Plugin version         | Shipped JMH version | 
 | ---------------------- |:-------------------:| 
-| `0.2.4` (auto plugin)  | `1.11`              |
-| `0.2.3` (auto plugin)  | `1.10.3`            |
+| `0.2.5` (auto plugin)  | `1.11`              |
+| `0.2.4` (auto plugin)  | `1.10.3`            |
 | `0.2.1` (auto plugin)  | `1.10`              |
 | `0.2.0` (auto plugin)  | `1.9.1`             |
 | `0.1.15` (auto plugin) | `1.9.1`             |
