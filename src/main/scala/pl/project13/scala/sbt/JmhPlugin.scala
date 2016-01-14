@@ -1,5 +1,7 @@
 package pl.project13.scala.sbt
 
+import java.util.Properties
+
 import sbt._
 import sbt.Keys._
 import org.openjdk.jmh.annotations.Benchmark
@@ -29,7 +31,7 @@ object JmhPlugin extends AutoPlugin {
 
   override def projectSettings = inConfig(Jmh)(Defaults.testSettings ++ Seq(
     // settings in Jmh
-    version := "1.11",
+    version := jmhVersionFromProps(),
     generatorType := "default",
 
     mainClass in run := Some("org.openjdk.jmh.Main"),
@@ -56,6 +58,14 @@ object JmhPlugin extends AutoPlugin {
       })
     }
   )
+
+  private def jmhVersionFromProps(): String = {
+    val props = new Properties()
+    val is = getClass.getResourceAsStream("/sbt-jmh.properties")
+    props.load(is)
+    is.close()
+    props.get("jmh.version").toString
+  }
 
   private def generateBenchmarkSourcesAndResources(s: TaskStreams, cacheDir: File, bytecodeDir: File, sourceDir: File, resourceDir: File, generatorType: String, classpath: Seq[Attributed[File]]): (Seq[File], Seq[File]) = {
     val inputs: Set[File] = (bytecodeDir ** "*").filter(_.isFile).get.toSet
