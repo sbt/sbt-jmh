@@ -7,7 +7,7 @@ sbtPlugin := true
 organization := "pl.project13.scala"
 name := "sbt-jmh"
 
-scalaVersion := "2.10.5"
+scalaVersion := "2.10.6"
 scalacOptions ++= List(
   "-unchecked",
   "-deprecation",
