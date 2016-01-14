@@ -1,11 +1,13 @@
 import bintray.Keys._
+import java.io.FileInputStream
+import java.util.Properties
 
 sbtPlugin := true
 
 organization := "pl.project13.scala"
 name := "sbt-jmh"
 
-scalaVersion := "2.10.5"
+scalaVersion := "2.10.6"
 scalacOptions ++= List(
   "-unchecked",
   "-deprecation",
@@ -14,7 +16,13 @@ scalacOptions ++= List(
   "-encoding", "UTF-8"
 )
 
-val jmhVersion = "1.11"
+val jmhVersion = {
+  val props = new Properties()
+  val is = new FileInputStream(new File("src/main/resources/sbt-jmh.properties"))
+  props.load(is)
+  is.close()
+  props.get("jmh.version").toString
+}
 
 libraryDependencies += "org.openjdk.jmh" % "jmh-core"                 % jmhVersion    // GPLv2
 libraryDependencies += "org.openjdk.jmh" % "jmh-generator-bytecode"   % jmhVersion    // GPLv2
