@@ -19,7 +19,7 @@ val commonSettings = Seq(
 )
 
 // source of Truth for JMH version
-val jmhVersion: String = "1.11"
+val jmhVersion: String = "1.11.3"
 version in Jmh := jmhVersion
 
 lazy val jmhDependencies = Seq(
