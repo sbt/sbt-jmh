@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,13 +31,13 @@ public class LinuxPerfFlamesProfiler implements ExternalProfiler {
   private final int delayMs;
 
   public LinuxPerfFlamesProfiler(String initLine) throws ProfilerException {
-    OptionParser parser = new OptionParser();
+    final OptionParser parser = new OptionParser();
 
-    OptionSpec<Integer> optDelay = parser.accepts("delay",
+    final OptionSpec<Integer> optDelay = parser.accepts("delay",
                                                   "Delay collection for a given time, in milliseconds; -1 to detect automatically.")
                                          .withRequiredArg().ofType(Integer.class).describedAs("ms").defaultsTo(-1);
 
-    OptionSet set = parseInitLine(initLine, parser);
+    final OptionSet set = parseInitLine(initLine, parser);
 
     try {
       delayMs = set.valueOf(optDelay);
@@ -44,12 +45,12 @@ public class LinuxPerfFlamesProfiler implements ExternalProfiler {
       throw new ProfilerException(e.getMessage());
     }
 
-    Collection<String> msgs = Utils.tryWith("perf", "stat", "--log-fd", "2", "echo", "1");
+    final Collection<String> msgs = Utils.tryWith("perf", "stat", "--log-fd", "2", "echo", "1");
     if (!msgs.isEmpty()) {
       throw new ProfilerException(msgs.toString());
     }
 
-    Collection<String> delay = Utils.tryWith("perf", "stat", "--log-fd", "2", "--delay", "1", "echo", "1");
+    final Collection<String> delay = Utils.tryWith("perf", "stat", "--log-fd", "2", "--delay", "1", "echo", "1");
     isDelayed = delay.isEmpty();
   }
 
@@ -68,16 +69,21 @@ public class LinuxPerfFlamesProfiler implements ExternalProfiler {
     final String PERF_RECORD_FREQ = String.valueOf(99);
     final String PERF_DATA_FILE = "/tmp/perf.data";
 
+    List<String> opts;
     if (isDelayed) {
-      return Arrays.asList("perf", "record", "-F", PERF_RECORD_FREQ, "-o", PERF_DATA_FILE, "-g", "--delay", String.valueOf(delay));
+      opts = Arrays.asList("perf", "record", "-F", PERF_RECORD_FREQ, "-o", PERF_DATA_FILE, "-g", "--delay", String.valueOf(delay));
     } else {
-      return Arrays.asList("perf", "record", "-F", PERF_RECORD_FREQ, "-o", PERF_DATA_FILE, "-g");
+      opts = Arrays.asList("perf", "record", "-F", PERF_RECORD_FREQ, "-o", PERF_DATA_FILE, "-g");
     }
+    System.out.println("Prepared Invoke Options: " + opts.toString());
+
+    return opts;
   }
 
   @Override
   public Collection<String> addJVMOptions(BenchmarkParams params) {
     final String agentJarName = "sbt-jmh-flamegraph-lib_2.10.jar";
+    System.out.println("Adding JVM Options, -javaagent:" + agentJarName);
     // TODO not hardcode this
     final String agentJarPath = "/home/ktoso/.ivy2/local/pl.project13.scala/sbt-jmh-flamegraph-lib_2.10/0.3.0/jars/" + agentJarName;
     return Arrays.asList(
@@ -88,7 +94,17 @@ public class LinuxPerfFlamesProfiler implements ExternalProfiler {
 
   @Override
   public void beforeTrial(BenchmarkParams params) {
-    // do nothing
+    final String PERF_RECORD_FREQ = String.valueOf(99);
+    final String PERF_DATA_FILE = "/tmp/perf.data";
+    try {
+      System.out.println("LinuxPerfFlamesProfiler.beforeTrial");
+      final int targetUser = 1000;
+      new ProcessBuilder()
+          .command("sudo", "-u", "#" + targetUser, "perf", "record", "-F", PERF_RECORD_FREQ, "-o", PERF_DATA_FILE, "-g", "--", "sleep", "15")
+          .start();
+    } catch (IOException e) {
+      throw new RuntimeException("Unable to start perf for tial!", e);
+    }
   }
 
   @Override

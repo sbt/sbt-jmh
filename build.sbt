@@ -1,9 +1,9 @@
 import sbt._
-import Keys._
+import sbt.Keys._
 
 val Jmh = config("jmh") extend Test
 
-scalaVersion := "2.10.5"
+scalaVersion := "2.10.6"
 
 val commonSettings = Seq(
   isSnapshot := true, // hack to get around warnings when testing `scripted`

@@ -3,9 +3,14 @@
 > jmh:compile
 # compile jmh sources all the way to ready to run bench class files
 
-> jmh:run -wi 10 -i 20 -f 1 .* -prof pl.project13.jmh.profile.LinuxPerfFlamesProfiler -jvmArgs "-XX:+PreserveFramePointer"
+#> jmh:run -wi 5 -i 20 -f 1 .* -jvmArgs "-XX:+PreserveFramePointer"
+> jmh:run -wi 5 -i 20 -f 1 .* -prof pl.project13.jmh.profile.LinuxPerfFlamesProfiler -jvmArgs "-XX:+PreserveFramePointer"
+
 # TODO: maybe jmh:flames would be more fun?
+
+$ pause
 
 # check flamegraph was generated
 # TODO: default name, make it better...
-$ exists flamegraph-latest.svgx
+$ exists flamegraph-latest.svg
+$ exec grep RangeFoldingBenchmark flamegraph-latest.svg

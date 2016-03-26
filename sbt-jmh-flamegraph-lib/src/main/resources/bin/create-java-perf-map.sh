@@ -1,9 +1,6 @@
 #!/bin/bash
+# by Johannes Rudolph
 set -e
-
-if [ "$FLAMES_VERBOSE" == "1" ]; then
-  set -x
-fi
 
 CUR_DIR=`pwd`
 PID=$1

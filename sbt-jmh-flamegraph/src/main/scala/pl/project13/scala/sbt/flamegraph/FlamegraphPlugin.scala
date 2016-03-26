@@ -22,6 +22,7 @@ object FlamegraphPlugin extends AutoPlugin {
     val verbose = settingKey[Boolean]("If true will print output from shell scripts which orchestrate perf and attaching of the java agent. Useful for debugging.")
     val svgOut = settingKey[String]("Path of the SVG flamegraph output.")
     val perfRecordSeconds = settingKey[Int]("Number of seconds that perf should be recording events during the benchmark. Defaults to 15.")
+    val perfRecordFreq= settingKey[Int]("Frequency of measurements. Defaults o 99.")
     val attachJarPath = settingKey[Option[String]]("Optionally provide path to your custom java-agent which should be attached instead of the default one (as implemented by jrudolph).")
 
     // TODO can't figure out why the lib is not available here
@@ -60,10 +61,15 @@ object FlamegraphPlugin extends AutoPlugin {
             val cloneInto = autoCloneInto.value
 
             // TODO make more robust
-            println(s"Unable to find local FlameGraph, and autoCloneFlamegraph was set, " +
-              s"cloning: $FlameGraphRepo to $cloneInto")
-            import sys.process._
-            if (!cloneInto.exists()) s"""git clone $FlameGraphRepo $cloneInto""".!!
+            if (cloneInto.exists())
+              println("Target location exists, assumig it as FLAMEGRAPH_DIR location: " + cloneInto)
+            else {
+              println(s"Unable to find local FlameGraph, and autoCloneFlamegraph was set, " +
+                          s"cloning: $FlameGraphRepo to $cloneInto")
+              import sys.process._
+              s"""git clone $FlameGraphRepo $cloneInto""".!!
+              println("Cloned into: " + cloneInto)
+            }
             cloneInto
         }
     })) ++ inConfig(Flames)(Seq(
@@ -72,6 +78,7 @@ object FlamegraphPlugin extends AutoPlugin {
         true // TODO make false
       },
       perfRecordSeconds := 15,
+      perfRecordFreq := 99,
       attachJarPath := None,
       svgOut := {
         System.setProperty("PERF_FLAME_OUTPUT", "out.svg")

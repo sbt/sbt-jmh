@@ -24,6 +24,7 @@ public class AttachAgent {
       System.out.println("> Attaching agent to PID (self): " + pid);
 
       AttachOnce.loadAgent(String.valueOf(pid), agentArgs);
+      Thread.sleep(2000);
     } catch (Exception e) {
       e.printStackTrace();
     }

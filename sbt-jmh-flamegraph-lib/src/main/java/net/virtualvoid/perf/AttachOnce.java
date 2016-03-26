@@ -50,7 +50,10 @@ public class AttachOnce {
                 System.out.printf("Expected %s at '%s' but it didn't exist.\n", lib, fullPath);
                 System.exit(1);
             }
-            else vm.loadAgentPath(fullPath, options);
+            else {
+              vm.loadAgentPath(fullPath, options);
+              System.out.println("> Loaded " + fullPath + " agent.");
+            }
         } catch(com.sun.tools.attach.AgentInitializationException e) {
             // rethrow all but the expected exception
             if (!e.getMessage().equals("Agent_OnAttach failed")) throw e;
@@ -62,6 +65,6 @@ public class AttachOnce {
     private static File findSoFile() {
         final String os = System.getProperty("os.arch").toLowerCase(Locale.ROOT);
         if (os.contains("64")) return new File("target/libperfmap-64bit.so"); // TODO too naive
-        else throw new RuntimeException("32bit systems are not supported!");
+        else throw new RuntimeException("32bit systems are not supported (but I'd like to)!");
     }
 }

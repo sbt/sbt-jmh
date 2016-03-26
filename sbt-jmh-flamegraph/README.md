@@ -16,3 +16,9 @@ USERNAME ALL = NOPASSWD: /usr/bin/perf
 Make sure that you provide the full path to `/usr/bin/perf`, not just `perf` -
 as this would allow executing any binary which is named `perf`, whereas you mean the
 `/usr/bin/perf` specifically.
+
+Also do:
+
+```
+echo 0 > /proc/sys/kernel/kptr_restrict
+```

@@ -1,6 +1,5 @@
 import sbt._
 import sbt.Keys._
-import bintray.Keys._
 
 sbtPlugin := true
 
@@ -20,9 +19,6 @@ libraryDependencies += ("com.sun" % "tools" % "1.8" % "provided")
 
 publishMavenStyle := false
 licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.html"))
-bintrayPublishSettings
-repository in bintray := "sbt-plugins"
-bintrayOrganization in bintray := None
 
 scriptedSettings
 scriptedLaunchOpts <+= version(v => s"-Dproject.version=$v")
