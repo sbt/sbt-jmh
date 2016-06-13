@@ -1,0 +1,1 @@
+Bumped JMH dependency to 1.12 (from 0.11.3).
