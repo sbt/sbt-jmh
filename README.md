@@ -85,6 +85,23 @@ Which means "3 iterations" "3 warmup iterations" "1 fork" "1 thread". Please not
 
 **For "real" results we recommend to at least warm up 10 to 20 iterations, and then measure 10 to 20 iterations again. Forking the JVM is required to avoid falling into specific optimisations (no JVM optimisation is really "completely" predictable)**
 
+If your benchmark should be a module in a multimodule project and needs access to another modules test classes then you
+might want to define your benchmarks in `src/test` as well (because [Intellij does not support "compile->test" dependencies](https://youtrack.jetbrains.com/issue/SCL-8396)).
+While this is not directly supported it can be achieved with some tweaks. Assuming the benchmarks live in a module `bench` and need access
+ to test classes from `anotherModule`, you have to define this dependency in your main `build.sbt`:
+```
+lazy val bench = project.dependsOn(anotherModule % "test->test").enablePlugins(JmhPlugin)
+```
+In `bench/build.sbt` you need to tweak some settings:
+```
+sourceDirectory in Jmh := (sourceDirectory in Test).value
+classDirectory in Jmh := (classDirectory in Test).value
+dependencyClasspath in Jmh := (dependencyClasspath in Test).value
+// rewire tasks, so that 'jmh:run' automatically invokes 'jmh:compile' (otherwise a clean 'jmh:run' would fail)
+compile in Jmh <<= (compile in Jmh) dependsOn (compile in Test)
+run in Jmh <<= (run in Jmh) dependsOn (Keys.compile in Jmh)
+```
+
 Options
 -------
 
