@@ -6,6 +6,8 @@ import sbt._
 import sbt.Keys._
 import org.openjdk.jmh.annotations.Benchmark
 import org.openjdk.jmh.generators.bytecode.JmhBytecodeGenerator
+import sbt.KeyRanks.AMinusSetting
+
 import scala.tools.nsc.util.ScalaClassLoader.URLClassLoader
 
 object JmhPlugin extends AutoPlugin {
@@ -36,10 +38,13 @@ object JmhPlugin extends AutoPlugin {
 
     mainClass in run := Some("org.openjdk.jmh.Main"),
     fork in run := true, // makes sure that sbt manages classpath for JMH when forking
+    // allow users to configure another classesDirectory like e.g. test:classDirectory
+    classDirectory := (classDirectory in Compile).value,
+    dependencyClasspath := (dependencyClasspath in Compile).value,
 
     sourceGenerators := Seq(Def.task { generateJmhSourcesAndResources.value._1 }.taskValue),
     resourceGenerators := Seq(Def.task { generateJmhSourcesAndResources.value._2 }.taskValue),
-    generateJmhSourcesAndResources := generateBenchmarkSourcesAndResources(streams.value, crossTarget.value / "jmh-cache", (classDirectory in Compile).value, sourceManaged.value, resourceManaged.value, generatorType.value, (dependencyClasspath in Compile).value),
+    generateJmhSourcesAndResources := generateBenchmarkSourcesAndResources(streams.value, crossTarget.value / "jmh-cache", (classDirectory in Jmh).value, sourceManaged.value, resourceManaged.value, generatorType.value, (dependencyClasspath in Jmh).value),
     generateJmhSourcesAndResources <<= generateJmhSourcesAndResources dependsOn(compile in Compile)
   )) ++ Seq(
     // settings in default
