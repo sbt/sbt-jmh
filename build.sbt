@@ -75,6 +75,9 @@ val myScriptedSettings = scriptedSettings ++ Seq(
 val _crossVersions = Seq(
   "2.10.6", 
   "2.11.8", 
+  "2.12.0-M2",
+  "2.12.0-M3",
+  "2.12.0-M4",
   "2.12.0-M5"
 )
 
