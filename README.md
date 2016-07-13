@@ -19,18 +19,16 @@ Versions
 
 The latest published plugin version is: [![Download](https://api.bintray.com/packages/ktosopl/sbt-plugins/sbt-jmh/images/download.png) ](https://bintray.com/ktosopl/sbt-plugins/sbt-jmh/_latestVersion)
 
-| Plugin version         | Shipped JMH version | 
-| ---------------------- |:-------------------:| 
-| `0.2.8` (auto plugin)  | `1.12`              |
-| `0.2.7` (auto plugin)  | `1.12`              |
-| `0.2.6` (auto plugin)  | `1.11.3`            |
-| `0.2.5` (auto plugin)  | `1.11`              |
-| `0.2.4` (auto plugin)  | `1.10.3`            |
-| `0.2.1` (auto plugin)  | `1.10`              |
-| `0.2.0` (auto plugin)  | `1.9.1`             |
-| `0.1.15` (auto plugin) | `1.9.1`             |
-| `0.1.14`               | `1.8.0`             |
-| ...                    | ...                 |
+| Plugin version         | Shipped JMH version                   | 
+| ---------------------- |:-------------------------------------:| 
+| `0.2.9` (auto plugin)  | `1.12` (added `-prof jmh.extras.JFR`) |
+| `0.2.8` (auto plugin)  | `1.12`                                |
+| `0.2.7` (auto plugin)  | `1.12`                                |
+| `0.2.6` (auto plugin)  | `1.11.3`                              |
+| `0.2.5` (auto plugin)  | `1.11`                                |
+| `0.2.4` (auto plugin)  | `1.10.3`                              |
+| `0.2.1` (auto plugin)  | `1.10`                                |
+| ...                    | ...                                   |
 
 Not interesting versions are skipped in the above listing. Always use the newest which has the JMH version you need.
 You should stick to the latest version at all times anyway of course.
@@ -110,6 +108,31 @@ Please invoke `run -h` to get a full list of run as well as output format option
 
 **Useful hint**: If you plan to aggregate the collected data you should have a look at the available output formats (`-lrf`).
 For example it's possible to keep the benchmark's results as csv or json files for later regression analysis.
+
+Using Oracle Flight Recorder
+----------------------------
+
+Flight Recorder / *Java Mission Control* is an excellent tool shipped by default in the Oracle JDK distribution.
+It is a profiler that uses internal APIs (commercial) and thus is way more precise and detailed than your every-day profiler.
+
+To record a Flight Recorder file from a JMH run run it using the `jmh.extras.JFR` profiler:
+
+```scala
+jmh:run -prof jmh.extras.JFR -t1 -f 1 -wi 10 -i 20 .*TestBenchmark.*
+```
+
+This will result in flight recording file which you can then open and analyse offline using JMC.
+
+Example output:
+
+```
+[info] Secondary result "JFR":
+[info] JFR Messages:
+[info] --------------------------------------------
+[info] Flight Recording output saved to:
+[info]     /Users/ktoso/code/sbt-jmh/sbt-jmh-tester/./test.TestBenchmark.range-Throughput-1.jfr
+```
+
 
 Examples
 --------

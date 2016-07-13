@@ -15,6 +15,7 @@ object JmhPlugin extends AutoPlugin {
   object JmhKeys {
     val Jmh = config("jmh") extend Test
     val generatorType = settingKey[String]("Benchmark code generator type. Available: `default`, `reflection` or `asm`.")
+    val extrasVersion = settingKey[String]("sbt-jmh extras version")
   }
 
   import JmhKeys._
@@ -34,6 +35,7 @@ object JmhPlugin extends AutoPlugin {
   override def projectSettings = inConfig(Jmh)(Defaults.testSettings ++ Seq(
     // settings in Jmh
     version := jmhVersionFromProps(),
+    extrasVersion := extrasVersionFromProps(),
     generatorType := "default",
 
     mainClass in run := Some("org.openjdk.jmh.Main"),
@@ -52,10 +54,13 @@ object JmhPlugin extends AutoPlugin {
     // includes the asm jar only if needed
     libraryDependencies ++= {
       val jmhVersion = (version in Jmh).value
+      val extrasVersion = "0.3.0-SNAPSHOT"
+      
       Seq(
-        "org.openjdk.jmh" % "jmh-core"                 % jmhVersion,   // GPLv2
-        "org.openjdk.jmh" % "jmh-generator-bytecode"   % jmhVersion,   // GPLv2
-        "org.openjdk.jmh" % "jmh-generator-reflection" % jmhVersion    // GPLv2
+        "pl.project13.scala" %% "sbt-jmh-extras"           % extrasVersion, // Apache v2
+        "org.openjdk.jmh"     % "jmh-core"                 % jmhVersion,    // GPLv2
+        "org.openjdk.jmh"     % "jmh-generator-bytecode"   % jmhVersion,    // GPLv2
+        "org.openjdk.jmh"     % "jmh-generator-reflection" % jmhVersion     // GPLv2
       ) ++ ((generatorType in Jmh).value match {
         case "default" | "reflection" => Nil // default == reflection (0.9)
         case "asm"                    => Seq("org.openjdk.jmh" % "jmh-generator-asm" % jmhVersion)    // GPLv2
@@ -70,6 +75,13 @@ object JmhPlugin extends AutoPlugin {
     props.load(is)
     is.close()
     props.get("jmh.version").toString
+  }
+  private def extrasVersionFromProps(): String = {
+    val props = new Properties()
+    val is = getClass.getResourceAsStream("/sbt-jmh.properties")
+    props.load(is)
+    is.close()
+    props.get("extras.version").toString
   }
 
   private def generateBenchmarkSourcesAndResources(s: TaskStreams, cacheDir: File, bytecodeDir: File, sourceDir: File, resourceDir: File, generatorType: String, classpath: Seq[Attributed[File]]): (Seq[File], Seq[File]) = {

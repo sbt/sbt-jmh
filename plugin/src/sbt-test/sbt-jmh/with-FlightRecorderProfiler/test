@@ -1,0 +1,5 @@
+> show libraryDependencies
+> jmh:run -prof jmh.extras.JFR -i 5 -wi 1 -f 1 .*Hello.*
+
+# check if the custom file was generated
+$ exists org.openjdk.jmh.samples.JMHSample_01_HelloWorld.wellHelloThere-Throughput-0.jfr
