@@ -53,17 +53,17 @@ object JmhPlugin extends AutoPlugin {
 
     // includes the asm jar only if needed
     libraryDependencies ++= {
-      val jmhVersion = (version in Jmh).value
-      val extrasVersion = "0.3.0-SNAPSHOT"
+      val jmhV = (version in Jmh).value
+      val extrasV = (extrasVersion in Jmh).value
       
       Seq(
-        "pl.project13.scala" %% "sbt-jmh-extras"           % extrasVersion, // Apache v2
-        "org.openjdk.jmh"     % "jmh-core"                 % jmhVersion,    // GPLv2
-        "org.openjdk.jmh"     % "jmh-generator-bytecode"   % jmhVersion,    // GPLv2
-        "org.openjdk.jmh"     % "jmh-generator-reflection" % jmhVersion     // GPLv2
+        "pl.project13.scala" %% "sbt-jmh-extras"           % extrasV, // Apache v2
+        "org.openjdk.jmh"     % "jmh-core"                 % jmhV,    // GPLv2
+        "org.openjdk.jmh"     % "jmh-generator-bytecode"   % jmhV,    // GPLv2
+        "org.openjdk.jmh"     % "jmh-generator-reflection" % jmhV     // GPLv2
       ) ++ ((generatorType in Jmh).value match {
         case "default" | "reflection" => Nil // default == reflection (0.9)
-        case "asm"                    => Seq("org.openjdk.jmh" % "jmh-generator-asm" % jmhVersion)    // GPLv2
+        case "asm"                    => Seq("org.openjdk.jmh" % "jmh-generator-asm" % jmhV)    // GPLv2
         case unknown                  => throw new IllegalArgumentException(s"Unknown benchmark generator type: $unknown, please use one of the supported generators!")
       })
     }
