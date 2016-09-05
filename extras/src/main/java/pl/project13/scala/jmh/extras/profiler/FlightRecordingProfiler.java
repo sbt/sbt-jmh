@@ -71,14 +71,11 @@ public class FlightRecordingProfiler implements ExternalProfiler {
   @Override
   public Collection<String> addJVMOptions(BenchmarkParams params) {
 
-    startFlightRecordingOptions += "filename=" + jfrData;
-    flightRecorderOptions += "settings=" + params.getJvm().replace("bin/java", "lib/jfr/profile.jfc");
-
     return Arrays.asList(
       "-XX:+UnlockCommercialFeatures",
       "-XX:+FlightRecorder",
-      "-XX:StartFlightRecording=" + startFlightRecordingOptions,
-      "-XX:FlightRecorderOptions=" + flightRecorderOptions);
+      "-XX:StartFlightRecording=" + startFlightRecordingOptions + "filename=" + jfrData;,
+      "-XX:FlightRecorderOptions=" + "settings=" + params.getJvm().replace("bin/java", "lib/jfr/profile.jfc");
   }
 
   @Override
