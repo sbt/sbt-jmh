@@ -116,7 +116,7 @@ lazy val sbtJmhExtras = project
   .settings(sonatypeSettings: _*)
   .settings(
     name := "sbt-jmh-extras",
-    crossScalaVersions := _crossVersions
-    
+    autoScalaLibrary := false, // it is plain Java
+    crossPaths := false // it is plain Java
     // publishing settings
   )
