@@ -57,7 +57,7 @@ object JmhPlugin extends AutoPlugin {
       val extrasV = (extrasVersion in Jmh).value
       
       Seq(
-        "pl.project13.scala" %% "sbt-jmh-extras"           % extrasV, // Apache v2
+        "pl.project13.scala"  % "sbt-jmh-extras"           % extrasV, // Apache v2
         "org.openjdk.jmh"     % "jmh-core"                 % jmhV,    // GPLv2
         "org.openjdk.jmh"     % "jmh-generator-bytecode"   % jmhV,    // GPLv2
         "org.openjdk.jmh"     % "jmh-generator-reflection" % jmhV     // GPLv2
