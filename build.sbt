@@ -75,10 +75,7 @@ val myScriptedSettings = scriptedSettings ++ Seq(
 val _crossVersions = Seq(
   "2.10.6", 
   "2.11.8", 
-  "2.12.0-M2",
-  "2.12.0-M3",
-  "2.12.0-M4",
-  "2.12.0-M5"
+  "2.12.0-RC1"
 )
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -88,9 +85,9 @@ lazy val root =
     .in(file("."))
     .settings(commonSettings: _*)
     .settings(crossScalaVersions := _crossVersions)
-    .aggregate(sbtJmhPlugin, sbtJmhExtras)
+    .aggregate(plugin, extras)
 
-lazy val sbtJmhPlugin = project
+lazy val plugin = project
   .in(file("plugin"))
   .settings(commonSettings: _*)
   .settings(myScriptedSettings: _*)
@@ -107,10 +104,10 @@ lazy val sbtJmhPlugin = project
     bintrayPublishSettings,
     repository in bintray := "sbt-plugins",
     bintrayOrganization in bintray := None
-  ).dependsOn(sbtJmhExtras)
+  ).dependsOn(extras)
 
 
-lazy val sbtJmhExtras = project
+lazy val extras = project
   .in(file("extras"))
   .settings(commonSettings: _*)
   .settings(sonatypeSettings: _*)
