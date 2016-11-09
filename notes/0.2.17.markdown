@@ -1,1 +1,1 @@
-- Bumped JMH dependency to 1.15.
+- Bumped JMH dependency to 1.16.
