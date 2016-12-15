@@ -59,7 +59,7 @@ your project is to add the below line to your `project/plugins.sbt` file:
 
 ```scala
 // project/plugins.sbt
-addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.2.18")
+addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.2.19")
 ```
 
 and enable it in the projects where you want to (useful in multi-project builds, as you can enable it only where you need it):

@@ -47,7 +47,7 @@ object JmhPlugin extends AutoPlugin {
     sourceGenerators := Seq(Def.task { generateJmhSourcesAndResources.value._1 }.taskValue),
     resourceGenerators := Seq(Def.task { generateJmhSourcesAndResources.value._2 }.taskValue),
     generateJmhSourcesAndResources := generateBenchmarkSourcesAndResources(streams.value, crossTarget.value / "jmh-cache", (classDirectory in Jmh).value, sourceManaged.value, resourceManaged.value, generatorType.value, (dependencyClasspath in Jmh).value),
-    generateJmhSourcesAndResources <<= generateJmhSourcesAndResources dependsOn(compile in Compile)
+    generateJmhSourcesAndResources := (generateJmhSourcesAndResources dependsOn(compile in Compile)).value
   )) ++ Seq(
     // settings in default
 
