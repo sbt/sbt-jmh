@@ -2,7 +2,10 @@ package test
 
 import org.openjdk.jmh.annotations.Benchmark
 
+import scala.io.Source
+
 class TestBenchmark {
+  import TestBenchmark._
 
   @Benchmark
   def range(): Int =
@@ -16,4 +19,14 @@ class TestBenchmark {
       .takeWhile(_ < 100000)
       .filter(_ % 2 == 0)
       .count(_.toString.length == 4)
+
+  @Benchmark
+  def readFromFile(): Int =
+    helloFile.getLines()
+      .map(_.length)
+      .sum
+}
+
+object TestBenchmark {
+  val helloFile = Source.fromInputStream(getClass.getClassLoader.getResourceAsStream("hello.txt"))
 }
