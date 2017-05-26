@@ -1,3 +1,3 @@
 sudo: false
 language: scala
-script: sbt ';publishLocal; scripted'
+script: sbt '; extras/publishLocal; ^scripted'

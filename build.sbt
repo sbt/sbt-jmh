@@ -13,12 +13,12 @@ val jmhVersion = {
 val commonSettings = Seq(
   organization := "pl.project13.scala",
 
-  scalaVersion := "2.10.6",
+  crossSbtVersions := Vector("0.13.15", "1.0.0-M5"),
+
   scalacOptions ++= List(
     "-unchecked",
     "-deprecation",
     "-language:_",
-    "-target:jvm-1.6",
     "-encoding", "UTF-8"
   ),
 
@@ -72,19 +72,12 @@ val myScriptedSettings = scriptedSettings ++ Seq(
   scriptedLaunchOpts += s"-Dproject.version=${version.value}"
 ) 
 
-val _crossVersions = Seq(
-  "2.10.6", 
-  "2.11.11",
-  "2.12.2"
-)
-
 // ---------------------------------------------------------------------------------------------------------------------
 
 lazy val root =
   project
     .in(file("."))
     .settings(commonSettings: _*)
-    .settings(crossScalaVersions := _crossVersions)
     .aggregate(plugin, extras)
 
 lazy val plugin = project
@@ -115,6 +108,7 @@ lazy val extras = project
   .settings(sonatypeSettings: _*)
   .settings(
     name := "sbt-jmh-extras",
+    scalaVersion := "2.12.2",
     autoScalaLibrary := false, // it is plain Java
     crossPaths := false // it is plain Java
   )
