@@ -32,9 +32,9 @@ val sonatypeSettings: Seq[Setting[_]] = Seq(
   publishMavenStyle := true,
   publishArtifact in Test := false,
   pomIncludeRepository := { _ => false },
-  publishTo <<= version { (v: String) =>
+  publishTo := {
     val nexus = "https://oss.sonatype.org/"
-    if (v.trim.endsWith("SNAPSHOT"))
+    if (version.value.trim.endsWith("SNAPSHOT"))
       Some("snapshots" at nexus + "content/repositories/snapshots")
     else
       Some("releases" at nexus + "service/local/staging/deploy/maven2")
@@ -67,9 +67,9 @@ val sonatypeSettings: Seq[Setting[_]] = Seq(
     </parent>
   )
 
-// publishing settings
+// sbt-scripted settings
 val myScriptedSettings = scriptedSettings ++ Seq(
-  scriptedLaunchOpts <+= version(v => s"-Dproject.version=$v")
+  scriptedLaunchOpts += s"-Dproject.version=${version.value}"
 ) 
 
 val _crossVersions = Seq(
@@ -94,10 +94,12 @@ lazy val plugin = project
   .settings(
     name := "sbt-jmh",
     
-    // plugin publishing settings
     sbtPlugin := true,
-    publishTo <<= isSnapshot { snapshot =>
-      if (snapshot) Some(Classpaths.sbtPluginSnapshots) else Some(Classpaths.sbtPluginReleases)
+    publishTo := {
+      if (isSnapshot.value)
+        Some(Classpaths.sbtPluginSnapshots)
+      else
+        Some(Classpaths.sbtPluginReleases)
     },
     publishMavenStyle := false,
     licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.html")),
@@ -115,5 +117,4 @@ lazy val extras = project
     name := "sbt-jmh-extras",
     autoScalaLibrary := false, // it is plain Java
     crossPaths := false // it is plain Java
-    // publishing settings
   )
