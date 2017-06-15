@@ -19,28 +19,12 @@ Versions
 
 The latest published plugin version is: [![Download](https://api.bintray.com/packages/ktosopl/sbt-plugins/sbt-jmh/images/download.png) ](https://bintray.com/ktosopl/sbt-plugins/sbt-jmh/_latestVersion)
 
-| Plugin version         | Shipped JMH version                   | 
-| ---------------------- |:-------------------------------------:| 
-| `0.2.25` (auto plugin) | `1.19`                                |
-| `0.2.24` (auto plugin) | `1.18`                                |
-| `0.2.23` (auto plugin) | `1.17.5`                              |
-| `0.2.22` (auto plugin) | `1.17.5`                              |
-| `0.2.21` (auto plugin) | `1.17.4`                              |
-| `0.2.20` (auto plugin) | `1.17.3`                              |
-| `0.2.19` (auto plugin) | `1.17.2`                              |
-| `0.2.18` (auto plugin) | `1.17.1`                              |
-| `0.2.17` (auto plugin) | `1.16`                                |
-| `0.2.16` (auto plugin) | `1.14.1`                              |
-| `0.2.15` (auto plugin) | `1.14`                                |
-| `0.2.11` (auto plugin) | `1.13`                                |
-| `0.2.10` (auto plugin) | `1.12` (added `-prof jmh.extras.JFR`) |
-| `0.2.8` (auto plugin)  | `1.12`                                |
-| `0.2.7` (auto plugin)  | `1.12`                                |
-| `0.2.6` (auto plugin)  | `1.11.3`                              |
-| `0.2.5` (auto plugin)  | `1.11`                                |
-| `0.2.4` (auto plugin)  | `1.10.3`                              |
-| `0.2.1` (auto plugin)  | `1.10`                                |
-| ...                    | ...                                   |
+| Plugin version             | Shipped JMH version                   | 
+| -------------------------- |:-------------------------------------:| 
+| `0.2.26` (sbt 13.16-M1)    | `1.19`                                |
+| `0.2.25` (auto plugin)     | `1.19`                                |
+| `0.2.24` (auto plugin)     | `1.18`                                |
+| ...                        | ...                                   |
 
 Not interesting versions are skipped in the above listing. Always use the newest which has the JMH version you need.
 You should stick to the latest version at all times anyway of course.
