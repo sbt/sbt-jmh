@@ -129,6 +129,10 @@ Example output:
 [info]     /Users/ktoso/code/sbt-jmh/sbt-jmh-tester/./test.TestBenchmark.range-Throughput-1.jfr
 ```
 
+Export JFR to **specific directory**:
+```sbt
+jmh:run -prof jmh.extras.JFR:--dir={absolute}/{path}/{of}/{folder} -t1 -f 1 -wi 10 -i 20 .*TestBenchmark.*
+```
 
 Examples
 --------
