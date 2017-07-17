@@ -22,6 +22,8 @@ import org.openjdk.jmh.results.*;
 import java.io.StringWriter;
 import java.util.*;
 
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
 // Effectively equivalent to passing jvm args to append for each benchmark. e.g.,
 //
 //@Fork(jvmArgsAppend =
@@ -43,7 +45,7 @@ public class FlightRecordingProfiler implements ExternalProfiler {
   /**
    * Directory to contain all generated reports.
    */
-  private static final String SAVE_FLIGHT_OUTPUT_TO = System.getProperty("jmh.jfr.saveTo", ".");
+  private final String SAVE_FLIGHT_OUTPUT_TO ;
 
   /**
    * Temporary location to record data
@@ -59,7 +61,16 @@ public class FlightRecordingProfiler implements ExternalProfiler {
     IS_SUPPORTED = ManagementFactory.getRuntimeMXBean().getInputArguments().contains("-XX:+UnlockCommercialFeatures");
   }
 
-  public FlightRecordingProfiler() throws IOException {
+  public FlightRecordingProfiler(String initLine) throws IOException {
+    OptionParser parser = new OptionParser();
+    parser.accepts("dir").withRequiredArg().ofType(String.class);
+    OptionSet options = parser.parse(initLine);
+
+    if (options.hasArgument("dir")) {
+      SAVE_FLIGHT_OUTPUT_TO = (String) options.valueOf("dir");
+    } else {
+      SAVE_FLIGHT_OUTPUT_TO = System.getProperty("jmh.jfr.saveTo", ".");
+    }
     jfrData = FileUtils.tempFile(".jfrData").getAbsolutePath();
   }
 

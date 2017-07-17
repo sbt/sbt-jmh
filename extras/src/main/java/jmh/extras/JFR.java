@@ -6,6 +6,7 @@ import java.io.IOException;
 
 /** Convenience class for easy usage in terminal: `jmh:run -prof jmh.extras.JFR */
 public class JFR extends FlightRecordingProfiler {
-  public JFR() throws IOException {
+  public JFR(String initLine) throws IOException {
+    super(initLine);
   }
 }
