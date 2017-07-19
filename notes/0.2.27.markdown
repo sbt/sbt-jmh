@@ -1,0 +1,2 @@
+- First release compatible with sbt `1.0` (built against `1.0.0-RC2`)
+- Included JMH dependency is 1.19.
