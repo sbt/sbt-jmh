@@ -68,24 +68,8 @@ val sonatypeSettings: Seq[Setting[_]] = Seq(
   )
 
 // sbt-scripted settings
-val myScriptedSettings = scriptedSettings.filterNot(_.key.key.label == libraryDependencies.key.label) ++ Seq(
-  scriptedLaunchOpts += s"-Dproject.version=${version.value}",
-
-  // Temporary fix for issue https://github.com/sbt/sbt/issues/3325
-  libraryDependencies ++= {
-    CrossVersion.binarySbtVersion(scriptedSbt.value) match {
-      case "0.13" =>
-        Seq(
-          "org.scala-sbt" % "scripted-sbt" % scriptedSbt.value % scriptedConf.toString,
-          "org.scala-sbt" % "sbt-launch" % scriptedSbt.value % scriptedLaunchConf.toString
-        )
-      case _ =>
-        Seq(
-          "org.scala-sbt" %% "scripted-sbt" % scriptedSbt.value % scriptedConf.toString,
-          "org.scala-sbt" % "sbt-launch" % scriptedSbt.value % scriptedLaunchConf.toString
-        )
-    }
-  }
+val myScriptedSettings = scriptedSettings ++ Seq(
+  scriptedLaunchOpts += s"-Dproject.version=${version.value}"
 ) 
 
 // ---------------------------------------------------------------------------------------------------------------------
