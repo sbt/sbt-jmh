@@ -30,18 +30,6 @@ The latest published plugin version is: [![Download](https://api.bintray.com/pac
 Not interesting versions are skipped in the above listing. Always use the newest which has the JMH version you need.
 You should stick to the latest version at all times anyway of course.
 
-Quickstart
-----------
-Just use the Typesafe Activator to get the template downloaded:
-
-```
-activator new PROJECT_NAME sbt-jmh-seed
-```
-
-And start writing benchmarks!
-
-Hint: You have to trigger `jmh:compile`, so that jmh creates the `BenchmarkList`. 
-
 Adding to your project
 ----------------------
 
