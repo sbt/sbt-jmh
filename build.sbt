@@ -95,11 +95,13 @@ lazy val plugin = project
         Some(Classpaths.sbtPluginReleases)
     },
     publishMavenStyle := false,
+    startYear := Some(2014),
     licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.html")),
     bintrayPublishSettings,
     repository in bintray := "sbt-plugins",
     bintrayOrganization in bintray := None
   ).dependsOn(extras)
+  .enablePlugins(AutomateHeaderPlugin)
 
 
 lazy val extras = project
