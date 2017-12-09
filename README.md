@@ -19,8 +19,9 @@ Versions
 
 The latest published plugin version is: [![Download](https://api.bintray.com/packages/ktosopl/sbt-plugins/sbt-jmh/images/download.png) ](https://bintray.com/ktosopl/sbt-plugins/sbt-jmh/_latestVersion)
 
-| Plugin version                   | Shipped JMH version                   | 
-| -------------------------------- |:-------------------------------------:| 
+| Plugin version                 | JMH version & other information       | 
+| ------------------------------ |:-------------------------------------:| 
+| `0.3.0`  (sbt 13.16 / sbt 1.0) | `1.19`, async profiler, flame-graphs  |
 | `0.2.27` (sbt 0.13.16 / sbt 1.0) | `1.19`                                |
 | `0.2.26` (sbt 0.13.16-M1)        | `1.19`                                |
 | `0.2.25` (sbt 0.13.x)            | `1.19`                                |
@@ -106,6 +107,35 @@ To record a Flight Recorder file from a JMH run run it using the `jmh.extras.JFR
 jmh:run -prof jmh.extras.JFR -t1 -f 1 -wi 10 -i 20 .*TestBenchmark.*
 ```
 
+All options can be discovered by running the help task:
+
+```
+sbt> jmh:run Bench -prof jmh.extras.JFR:help
+Option                              Description
+------                              -----------
+--debugNonSafepoints <Boolean>      (default: [true, false])
+--dir <Output directory>
+--events <JfrEventType>             (default: [CPU, ALLOCATION_TLAB,
+                                      ALLOCATION_OUTSIDE_TLAB, EXCEPTIONS,
+                                      LOCKS])
+--flameGraphDir <directory>       Location of clone of https://github.
+                                      com/brendangregg/FlameGraph. Also
+                                      can be provided as $FLAME_GRAPH_DIR
+--flameGraphDirection <Directions>  Directions to generate flamegraphs
+--flameGraphOpts                    Options passed to FlameGraph.pl
+--flightRecorderOpts
+--help                              Display help.
+--jfrFlameGraphDir <directory>    Location of clone of https://github.
+                                      com/chrishantha/jfr-flame-graph.
+                                      Also can be provided as
+                                      $JFR_FLAME_GRAPH_DIR
+--jfrFlameGraphOpts                 Options passed to flamegraph-output.sh
+--stackDepth <Integer>              (default: 1024)
+--verbose <Boolean>                 Output the sequence of commands
+                                      (default: false)
+
+```
+
 This will result in flight recording file which you can then open and analyse offline using JMC.
 
 Example output:
@@ -122,6 +152,57 @@ Export JFR to **specific directory**:
 ```sbt
 jmh:run -prof jmh.extras.JFR:--dir={absolute}/{path}/{of}/{folder} -t1 -f 1 -wi 10 -i 20 .*TestBenchmark.*
 ```
+
+Using async-profiler
+--------------------
+
+Using async profiler is done by using the `jmh.extras.Async` profiler like this:
+
+```
+sbt> jmh:run Bench -prof jmh.extras.Async ...
+```
+
+All additional options are documented in it's help task:
+
+```
+sbt> jmh:run Bench -prof jmh.extras.Async:help
+
+Option                              Description
+------                              -----------
+--asyncProfilerDir <directory>    Location of clone of https://github.
+                                      com/jvm-profiling-tools/async-
+                                      profiler. Also can be provided as
+                                      $ASYNC_PROFILER_DIR
+--dir <<directory>>                 Output directory
+--event <AsyncProfilerEventType>    Event to sample (default: [CPU, HEAP])
+--flameGraphDir <directory>       Location of clone of https://github.
+                                      com/brendangregg/FlameGraph. Also
+                                      can be provided as $FLAME_GRAPH_DIR
+--flameGraphDirection <Directions>  Directions to generate flamegraphs
+                                      (default: [BOTH, NONE, FORWARD,
+                                      REVERSE])
+--flameGraphOpts                    Options passed to FlameGraph.pl
+--framebuf <Long>                   Size of profiler framebuffer (default:
+                                      8388608)
+--help                              Display help.
+--threads <Boolean>                 profile threads separately (default:
+                                      [false, true])
+--verbose <Boolean>                 Output the sequence of commands
+                                      (default: false)
+```
+
+### Automatically generating flame-grapghs
+
+Read more about flame graphs here:
+
+To automatically generate flame graphs for a given benchmark you can invoke:
+
+```
+sbt> jmh:run Bench -f1 -wi 5 -i5 -prof jmh.extras.JFR:dir=/tmp/profile-jfr;flameGraphDir=/code/FlameGraph;jfrFlameGraphDir=/code/jfr-flame-graph;flameGraphOpts=--minwidth,2;verbose=true 
+```
+
+Where `/code/FlameGraph` and `/code/jfr-flame-graph` need to reflect actual paths of those tools on your system.
+
 
 Examples
 --------
@@ -201,14 +282,22 @@ an example for this is available in [plugin/src/sbt-test/sbt-jmh/runMain](plugin
 To replace the runner class which is used when you type `jmh:run`, you can set the class in your build file –
 an example for this is available in [plugin/src/sbt-test/sbt-jmh/custom-runner](plugin/src/sbt-test/sbt-jmh/custom-runner) (open the `build.sbt` file).
 
+Contributing
+============
+
+Yes, pull requests and opening issues is very welcome!
+
+The plugin is maintained at an best-effort basis -- submitting a PR is the best way of getting something done :-)
+
+Please test your changes using `sbt scripted`.
+
+Special thanks
+--------------
+
+Special thanks for contributing async-profiler and flame-graphs support and other improvements
+go to [@retronym](https://github.com/retronym) of Lightbend's Scala team.
+
 License
 -------
 
 This plugin is released under the **Apache 2.0 License**
-
-Contributing
-------------
-
-Yes, pull requests and opening issues is very welcome!
-
-Please test your changes using `sbt scripted`.
