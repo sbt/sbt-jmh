@@ -31,12 +31,12 @@ class JMHSample_01_HelloWorld {
    * This is our first benchmark method.
    *
    * The contract for the benchmark methods is very simple:
-   * annotate it with @GenerateMicroBenchmark, and you are set to go.
+   * annotate it with @Benchmark, and you are set to go.
    * JMH will run the test by continuously calling this method, and measuring
    * the performance metrics for its execution.
    *
    * The method names are non-essential, it matters they are marked with
-   * @GenerateMicroBenchmark. You can have multiple benchmark methods
+   * @Benchmark. You can have multiple benchmark methods
    * within the same class.
    *
    * Note: if the benchmark method never finishes, then JMH run never
