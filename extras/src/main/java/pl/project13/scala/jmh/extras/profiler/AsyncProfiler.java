@@ -12,11 +12,14 @@ import org.openjdk.jmh.results.Result;
 import org.openjdk.jmh.runner.IterationType;
 import org.openjdk.jmh.util.Utils;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class AsyncProfiler implements InternalProfiler {
 
@@ -28,6 +31,7 @@ public class AsyncProfiler implements InternalProfiler {
     private final Directions directions;
     private final Path asyncProfilerDir;
     private final boolean threads;
+    private final Boolean simpleName;
     private Path outputDir;
     private boolean started;
 
@@ -51,6 +55,7 @@ public class AsyncProfiler implements InternalProfiler {
         OptionSpec<String> flameGraphOpts = parser.accepts("flameGraphOpts", "Options passed to FlameGraph.pl").withRequiredArg().withValuesSeparatedBy(',').ofType(String.class);
         OptionSpec<Directions> flameGraphDirection = parser.accepts("flameGraphDirection", "Directions to generate flamegraphs").withRequiredArg().ofType(Directions.class).defaultsTo(Directions.values());
         OptionSpec<String> flameGraphDir = ProfilerUtils.addFlameGraphDirOption(parser);
+        OptionSpec<Boolean> simpleName = parser.accepts("simpleName", "Use simple names in flamegraphs").withRequiredArg().ofType(Boolean.class);
 
 
         OptionSet options = ProfilerUtils.parseInitLine(initLine, parser);
@@ -84,6 +89,11 @@ public class AsyncProfiler implements InternalProfiler {
         }
         if (options.has(verbose)) {
             this.verbose = options.valueOf(verbose);
+        }
+        if (options.has(simpleName)) {
+            this.simpleName = options.valueOf(simpleName);
+        } else {
+            this.simpleName = false;
         }
         this.flameGraphDir = ProfilerUtils.findFlamegraphDir(flameGraphDir, options);
         this.asyncProfilerDir = lookupAsyncProfilerHome(asyncProfilerDir, options);
@@ -143,21 +153,37 @@ public class AsyncProfiler implements InternalProfiler {
                 Path collapsedPath = outputDir.resolve("collapsed-" + event.toLowerCase() + ".txt");
                 profilerCommand(String.format("stop,file=%s,collapsed", collapsedPath));
                 generated.add(collapsedPath);
+                Path collapsedProcessedPath = collapsedPath;
+                if (simpleName) {
+                    collapsedProcessedPath = outputDir.resolve("collapsed-simple-" + event.toLowerCase() + ".txt");
+                    generated.add(collapsedProcessedPath);
+                    replaceAllInFileLines(collapsedPath, collapsedProcessedPath, Pattern.compile("(^|;)[^;]*\\/"));
+                }
+
                 Path summaryPath = outputDir.resolve("summary.txt");
                 profilerCommand(String.format("stop,file=%s,summary", summaryPath));
                 generated.add(summaryPath);
                 if (flameGraphDir != null) {
                     if (EnumSet.of(Directions.FORWARD, Directions.BOTH).contains(directions)) {
-                        flameGraph(collapsedPath, Collections.emptyList(), "");
+                        flameGraph(collapsedProcessedPath, Collections.emptyList(), "");
                     }
                     if (EnumSet.of(Directions.REVERSE, Directions.BOTH).contains(directions)) {
-                        flameGraph(collapsedPath, Arrays.asList("--reverse"), "-reverse");
+                        flameGraph(collapsedProcessedPath, Arrays.asList("--reverse"), "-reverse");
                     }
                 }
             }
         }
 
         return Collections.singletonList(result());
+    }
+
+    private void replaceAllInFileLines(Path in, Path out, Pattern pattern) {
+        try (Stream<String> lines = Files.lines(in)){
+            Stream<CharSequence> mapped = lines.map(line -> pattern.matcher(line).replaceAll("$1"));
+            Files.write(out, mapped::iterator);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void flameGraph(Path collapsedPath, List<String> extra, String suffix) {

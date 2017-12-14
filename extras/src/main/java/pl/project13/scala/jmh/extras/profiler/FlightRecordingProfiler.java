@@ -187,16 +187,18 @@ public class FlightRecordingProfiler implements InternalProfiler, ExternalProfil
                 options.add("filename=" + jfrDump.toAbsolutePath().toString());
                 jcmd(benchmarkParams.getJvm(), "JFR.stop", options);
                 generated.add(jfrDump);
-                for (JfrEventType event: events) {
-                    String eventName = event.name().toLowerCase().replace('_', '-');
-                    Path collapsed = createCollapsed(eventName);
-                    generated.add(collapsed);
-                    if (jfrFlameGraphDir != null) {
-                        if (EnumSet.of(Directions.FORWARD, Directions.BOTH).contains(directions)) {
-                            jfrFlameGraph(collapsed, Collections.emptyList(), "", eventName);
-                        }
-                        if (EnumSet.of(Directions.REVERSE, Directions.BOTH).contains(directions)) {
-                            jfrFlameGraph(collapsed, Arrays.asList("--reverse"), "-reverse", eventName);
+                if (jfrFlameGraphDir != null) {
+                    for (JfrEventType event : events) {
+                        String eventName = event.name().toLowerCase().replace('_', '-');
+                        Path collapsed = createCollapsed(eventName);
+                        generated.add(collapsed);
+                        if (flameGraphDir != null) {
+                            if (EnumSet.of(Directions.FORWARD, Directions.BOTH).contains(directions)) {
+                                generated.add(ProfilerUtils.flameGraph(collapsed, Collections.emptyList(), "", flameGraphDir, flameGraphOpts, outputDir, eventName, verbose));
+                            }
+                            if (EnumSet.of(Directions.REVERSE, Directions.BOTH).contains(directions)) {
+                                generated.add(ProfilerUtils.flameGraph(collapsed, Arrays.asList("--reverse"), "-reverse", flameGraphDir, flameGraphOpts, outputDir, eventName, verbose));
+                            }
                         }
                     }
                 }
@@ -204,10 +206,6 @@ public class FlightRecordingProfiler implements InternalProfiler, ExternalProfil
         }
 
         return Collections.singletonList(result());
-    }
-
-    private void jfrFlameGraph(Path collapsed, List<String> extra, String suffix, String eventName) {
-        generated.add(ProfilerUtils.flameGraph(collapsed, extra, suffix, flameGraphDir, flameGraphOpts, outputDir, eventName, verbose));
     }
 
     private Path createCollapsed(String eventName) {
