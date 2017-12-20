@@ -21,7 +21,8 @@ The latest published plugin version is: [![Download](https://api.bintray.com/pac
 
 | Plugin version                   | JMH version & other information       | 
 | -------------------------------- |:-------------------------------------:| 
-| `0.3.1`  (sbt 13.16 / sbt 1.0)   | `1.19`, bugfix release                |
+| `0.3.2`  (sbt 13.16 / sbt 1.0)   | `1.19`, minor bugfix release          |
+| `0.3.1`  (sbt 13.16 / sbt 1.0)   | `1.19`, minor bugfix release          |
 | `0.3.0`  (sbt 13.16 / sbt 1.0)   | `1.19`, async profiler, flame-graphs  |
 | `0.2.27` (sbt 0.13.16 / sbt 1.0) | `1.19`                                |
 | `0.2.26` (sbt 0.13.16-M1)        | `1.19`                                |
@@ -40,7 +41,7 @@ your project is to add the below line to your `project/plugins.sbt` file:
 
 ```scala
 // project/plugins.sbt
-addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.2.27")
+addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.3.2")
 ```
 
 and enable it in the projects where you want to (useful in multi-project builds, as you can enable it only where you need it):
