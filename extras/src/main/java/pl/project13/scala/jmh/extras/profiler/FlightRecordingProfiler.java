@@ -42,7 +42,7 @@ public class FlightRecordingProfiler implements InternalProfiler, ExternalProfil
     private final Path flameGraphDir;
     private final boolean debugNonSafepoints;
     private boolean verbose = false;
-    private List<String> flameGraphOpts;
+    private List<String> flameGraphOpts = Collections.emptyList();
     private final List<JfrEventType> events;
 
     private List<String> flightRecorderOptions;
