@@ -13,7 +13,7 @@ val jmhVersion = {
 val commonSettings = Seq(
   organization := "pl.project13.scala",
 
-  crossSbtVersions := Vector("0.13.17", "1.1.1"),
+  crossSbtVersions := Vector("0.13.17", "1.1.4"),
 
   scalacOptions ++= List(
     "-unchecked",
@@ -110,7 +110,7 @@ lazy val extras = project
   .settings(sonatypeSettings: _*)
   .settings(
     name := "sbt-jmh-extras",
-    scalaVersion := "2.12.2",
+    scalaVersion := "2.12.6",
     autoScalaLibrary := false, // it is plain Java
     crossPaths := false // it is plain Java
   )
