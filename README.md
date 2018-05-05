@@ -21,7 +21,7 @@ The latest published plugin version is: [![Download](https://api.bintray.com/pac
 
 | Plugin version                   | JMH version & other information       | 
 | -------------------------------- |:-------------------------------------:| 
-| `0.3.3`  (sbt 13.16 / sbt 1.0)   | `1.19`, JMH bugfix release            |
+| `0.3.3`  (sbt 13.17 / sbt 1.1.1) | `1.20`, JMH bugfix release            |
 | `0.3.2`  (sbt 13.16 / sbt 1.0)   | `1.19`, minor bugfix release          |
 | `0.3.1`  (sbt 13.16 / sbt 1.0)   | `1.19`, minor bugfix release          |
 | `0.3.0`  (sbt 13.16 / sbt 1.0)   | `1.19`, async profiler, flame-graphs  |
