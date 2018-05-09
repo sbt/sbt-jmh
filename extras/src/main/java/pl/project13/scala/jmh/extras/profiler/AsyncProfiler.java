@@ -12,7 +12,6 @@ import org.openjdk.jmh.results.Result;
 import org.openjdk.jmh.runner.IterationType;
 import org.openjdk.jmh.util.Utils;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,6 +26,7 @@ public class AsyncProfiler implements InternalProfiler {
 
     private static final String DEFAULT_EVENT = "cpu";
     private static final long DEFAULT_FRAMEBUF = 8 * 1024 * 1024;
+    private static final long DEFAULT_INTERVAL = 1000000;
     private final String event;
     private final Directions directions;
     private final Path asyncProfilerDir;
@@ -38,6 +38,7 @@ public class AsyncProfiler implements InternalProfiler {
     private Path profiler;
     private Path jattach;
     private Long framebuf;
+    private Long interval;
     private int measurementIterationCount;
     private Path flameGraphDir;
     private Collection<? extends String> flameGraphOpts = Collections.emptyList();
@@ -50,7 +51,8 @@ public class AsyncProfiler implements InternalProfiler {
         OptionSpec<String> asyncProfilerDir = parser.accepts("asyncProfilerDir", "Location of clone of https://github.com/jvm-profiling-tools/async-profiler. Also can be provided as $" + ASYNC_PROFILER_DIR).withRequiredArg().ofType(String.class).describedAs("directory");
         OptionSpec<String> event = parser.accepts("event", "Event to sample: cpu, alloc, lock, cache-misses etc.").withRequiredArg().ofType(String.class).defaultsTo("cpu");
         OptionSpec<Long> framebuf = parser.accepts("framebuf", "Size of profiler framebuffer").withRequiredArg().ofType(Long.class).defaultsTo(DEFAULT_FRAMEBUF);
-        OptionSpec<Boolean> threads = parser.accepts("threads", "profile threads separately").withRequiredArg().ofType(Boolean.class).defaultsTo(false,true);
+        OptionSpec<Long> interval = parser.accepts("interval", "Profiling interval, in nanoseconds").withRequiredArg().ofType(Long.class).defaultsTo(DEFAULT_INTERVAL);
+        OptionSpec<Boolean> threads = parser.accepts("threads", "Profile threads separately").withRequiredArg().ofType(Boolean.class).defaultsTo(false,true);
         OptionSpec<Boolean> verbose = parser.accepts("verbose", "Output the sequence of commands").withRequiredArg().ofType(Boolean.class).defaultsTo(false);
         OptionSpec<String> flameGraphOpts = parser.accepts("flameGraphOpts", "Options passed to FlameGraph.pl").withRequiredArg().withValuesSeparatedBy(',').ofType(String.class);
         OptionSpec<Directions> flameGraphDirection = parser.accepts("flameGraphDirection", "Directions to generate flamegraphs").withRequiredArg().ofType(Directions.class).defaultsTo(Directions.values());
@@ -68,6 +70,11 @@ public class AsyncProfiler implements InternalProfiler {
             this.framebuf = options.valueOf(framebuf);
         } else {
             this.framebuf = DEFAULT_FRAMEBUF;
+        }
+        if (options.has(interval)) {
+            this.interval = options.valueOf(interval);
+        } else {
+            this.interval = DEFAULT_INTERVAL;
         }
         if (options.has(outputDir)) {
             this.outputDir = Paths.get(options.valueOf(outputDir));
@@ -137,7 +144,7 @@ public class AsyncProfiler implements InternalProfiler {
     public void beforeIteration(BenchmarkParams benchmarkParams, IterationParams iterationParams) {
         if (!started && iterationParams.getType() == IterationType.MEASUREMENT) {
             String threadOpt = this.threads ? ",threads" : "";
-            profilerCommand(String.format("start,event=%s%s,framebuf=%d", event, threadOpt, framebuf));
+            profilerCommand(String.format("start,event=%s%s,framebuf=%d,interval=%d", event, threadOpt, framebuf, interval));
             started = true;
         }
     }
