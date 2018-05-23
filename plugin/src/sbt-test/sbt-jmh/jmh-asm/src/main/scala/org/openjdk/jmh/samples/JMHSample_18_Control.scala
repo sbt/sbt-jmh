@@ -61,7 +61,7 @@ class JMHSample_18_Control {
 
   @Benchmark
   @Group("pingpong")
-  def pong(cnt: Control) {
+  def pong(cnt: Control): Unit = {
     while (!cnt.stopMeasurement && !flag.compareAndSet(true, false)) {
       // this body is intentionally left blank
     }

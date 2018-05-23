@@ -62,7 +62,7 @@ class JMHSample_15_Asymmetric {
   private var counter: AtomicInteger = _
 
   @Setup
-  def up {
+  def up: Unit = {
     counter = new AtomicInteger
   }
 
