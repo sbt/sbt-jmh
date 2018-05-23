@@ -40,11 +40,11 @@ class JMHSample_34_SafeLooping {
   def work(x: Int): Int = BASE + x
 
   @CompilerControl(CompilerControl.Mode.DONT_INLINE)
-  def sink(v: Int) {
+  def sink(v: Int): Unit = {
   }
 
   @Setup
-  def setup() {
+  def setup(): Unit = {
     xs = Array.ofDim[Int](size)
     for (c <- 0 until size) {
       xs(c) = c
@@ -70,14 +70,14 @@ class JMHSample_34_SafeLooping {
   }
 
   @Benchmark
-  def measureRight_1(bh: Blackhole) {
+  def measureRight_1(bh: Blackhole): Unit = {
     for (x <- xs) {
       bh.consume(work(x))
     }
   }
 
   @Benchmark
-  def measureRight_2() {
+  def measureRight_2(): Unit = {
     for (x <- xs) {
       sink(work(x))
     }

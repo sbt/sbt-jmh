@@ -37,7 +37,7 @@ object JMHSample_23_AuxCounters {
     var case2: Int = _
 
     @Setup(Level.Iteration)
-    def clean() {
+    def clean(): Unit = {
       case1 = 0
       case2 = 0
     }

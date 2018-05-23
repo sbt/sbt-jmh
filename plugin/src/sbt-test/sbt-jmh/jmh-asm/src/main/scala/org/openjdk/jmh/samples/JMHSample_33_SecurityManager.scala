@@ -41,14 +41,14 @@ object JMHSample_33_SecurityManager {
   class SecurityManagerInstalled {
 
     @Setup
-    def setup() {
+    def setup(): Unit = {
       val policyFile = classOf[JMHSample_33_SecurityManager].getResource("/jmh-security.policy").toURI()
       Policy.setPolicy(Policy.getInstance("JavaPolicy", new URIParameter(policyFile)))
       System.setSecurityManager(new SecurityManager())
     }
 
     @TearDown
-    def tearDown() {
+    def tearDown(): Unit = {
       System.setSecurityManager(null)
     }
   }
@@ -56,7 +56,7 @@ object JMHSample_33_SecurityManager {
   @State(Scope.Benchmark)
   class SecurityManagerEmpty {
     @Setup
-    def setup() {
+    def setup(): Unit = {
       System.setSecurityManager(null)
     }
   }

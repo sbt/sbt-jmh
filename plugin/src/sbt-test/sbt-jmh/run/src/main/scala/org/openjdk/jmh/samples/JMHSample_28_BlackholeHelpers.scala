@@ -58,7 +58,7 @@ class JMHSample_28_BlackholeHelpers {
   private var workerWrong: Worker = _
 
   @Setup
-  def setup(bh: Blackhole) {
+  def setup(bh: Blackhole): Unit = {
     workerBaseline = new Worker() {
       var x: Double = _
       def work: Unit = () // do nothing

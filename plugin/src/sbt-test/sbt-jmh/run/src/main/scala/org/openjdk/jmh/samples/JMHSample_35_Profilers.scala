@@ -46,7 +46,7 @@ object JMHSample_35_Profilers {
     private var end: Int = _
 
     @Setup
-    def setup() {
+    def setup(): Unit = {
       if (`type` == "hashmap") {
         map = new HashMap[Integer, Integer]()
       } else if (`type` == "treemap") {
@@ -62,7 +62,7 @@ object JMHSample_35_Profilers {
     }
 
     @Benchmark
-    def test(bh: Blackhole) {
+    def test(bh: Blackhole): Unit = {
       for (i <- begin until end) {
         bh.consume(map.get(i))
       }
@@ -111,7 +111,7 @@ object JMHSample_35_Profilers {
     private var n: AtomicLong = _
 
     @Setup
-    def setup() {
+    def setup(): Unit = {
       n = new AtomicLong()
     }
 

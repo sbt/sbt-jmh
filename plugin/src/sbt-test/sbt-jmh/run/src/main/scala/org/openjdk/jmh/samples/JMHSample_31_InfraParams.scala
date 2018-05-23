@@ -46,7 +46,7 @@ object JMHSample_31_InfraParams {
     private[samples] var ids: List[String] = _
 
     @Setup
-    def setup(threads: ThreadParams) {
+    def setup(threads: ThreadParams): Unit = {
       ids = new ArrayList[String]
       var c = 0
       while (c < THREAD_SLICE) {
@@ -83,14 +83,14 @@ class JMHSample_31_InfraParams {
   private var mapFollowThreads: ConcurrentHashMap[String, String] = _
 
   @Setup
-  def setup(params: BenchmarkParams) {
+  def setup(params: BenchmarkParams): Unit = {
     val capacity = 16 * THREAD_SLICE * params.getThreads
     mapSingle = new ConcurrentHashMap[String, String](capacity, 0.75f, 1)
     mapFollowThreads = new ConcurrentHashMap[String, String](capacity, 0.75f, params.getThreads)
   }
 
   @Benchmark
-  def measureDefault(ids: Ids) {
+  def measureDefault(ids: Ids): Unit = {
     for (s <- ids.ids.asScala) {
       mapSingle.remove(s)
       mapSingle.put(s, s)
@@ -98,7 +98,7 @@ class JMHSample_31_InfraParams {
   }
 
   @Benchmark
-  def measureFollowThreads(ids: Ids) {
+  def measureFollowThreads(ids: Ids): Unit = {
     for (s <- ids.ids.asScala) {
       mapFollowThreads.remove(s)
       mapFollowThreads.put(s, s)
