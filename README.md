@@ -154,7 +154,7 @@ Example output:
 
 Export JFR to **specific directory**:
 ```sbt
-jmh:run -prof jmh.extras.JFR:--dir={absolute}/{path}/{of}/{folder} -t1 -f 1 -wi 10 -i 20 .*TestBenchmark.*
+jmh:run -prof jmh.extras.JFR:dir={absolute}/{path}/{of}/{folder} -t1 -f 1 -wi 10 -i 20 .*TestBenchmark.*
 ```
 
 Using async-profiler
