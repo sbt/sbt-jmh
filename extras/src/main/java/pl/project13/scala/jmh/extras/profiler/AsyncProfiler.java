@@ -184,6 +184,13 @@ public class AsyncProfiler implements InternalProfiler, ExternalProfiler {
                 Path collapsedPath = outputDir.resolve("collapsed-" + event.toLowerCase() + ".txt");
                 profilerCommand(String.format("stop,file=%s,collapsed", collapsedPath));
                 generated.add(collapsedPath);
+                try {
+                    Path jfrPath = outputDir.resolve(event.toLowerCase() + ".jfr");
+                    profilerCommand(String.format("file=%s,jfr", jfrPath));
+                    generated.add(jfrPath);
+                } catch (RuntimeException ex) {
+                    System.out.println("Could not create .jfr output, consider upgrading async-profiler");
+                }
                 Path collapsedProcessedPath = collapsedPath;
                 if (simpleName) {
                     collapsedProcessedPath = outputDir.resolve("collapsed-simple-" + event.toLowerCase() + ".txt");
