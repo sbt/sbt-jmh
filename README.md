@@ -293,7 +293,18 @@ Yes, pull requests and opening issues is very welcome!
 
 The plugin is maintained at an best-effort basis -- submitting a PR is the best way of getting something done :-)
 
-Please test your changes using `sbt scripted`.
+You can locally publish the plugin with:
+
+```
+sbt '; extras/publishLocal; project plugin; ^publishLocal'
+```
+
+Please test your changes by adding to the [scripted test suite][sbt-jmh/plugin/src/sbt-test/sbt-jmh/]
+which can be run with:
+
+```
+ sbt '; extras/publishLocal; project plugin; ^scripted'
+```
 
 Special thanks
 --------------
