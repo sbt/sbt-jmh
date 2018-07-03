@@ -3,3 +3,4 @@ language: scala
 script: sbt '; extras/publishLocal; project plugin; ^scripted'
 jdk:
  - oraclejdk8
+ - oraclejdk10
