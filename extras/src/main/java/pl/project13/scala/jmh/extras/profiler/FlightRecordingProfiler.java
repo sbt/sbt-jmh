@@ -150,22 +150,58 @@ public class FlightRecordingProfiler implements InternalProfiler, ExternalProfil
             } catch (Throwable t) {
                 // ignore, we might be running on OpenJDK 11
             }
-            name = "JMH-profile-" + benchmarkParams.getBenchmark().replaceAll("\\s+", "-");
+            name = profileName(benchmarkParams) + "-warmup";
             startJfr(benchmarkParams);
             warmupStarted = true;
         }
         if (!started && iterationParams.getType() == IterationType.MEASUREMENT) {
             stopDiscardJfr(benchmarkParams);
+            name = profileName(benchmarkParams);
             startJfr(benchmarkParams);
             started = true;
         }
     }
 
+    private String profileName(BenchmarkParams benchmarkParams) {
+        return "JMH-profile-" + benchmarkParams.getBenchmark().replaceAll("\\s+", "-");
+    }
+
     private void stopDiscardJfr(BenchmarkParams benchmarkParams) {
         ArrayList<String> options = new ArrayList<>();
         options.add("name=" + name);
-        options.add("discard=true");
-        jcmd(benchmarkParams.getJvm(), "JFR.stop", options);
+        try {
+            // Oracle JDK
+            //
+            // $ jcmd 49572 help JFR.stop
+            // 49572:
+            // JFR.stop
+            // Stops a JFR recording
+            //
+            // Impact: Low
+            //
+            // Permission: java.lang.management.ManagementPermission(monitor)
+            //
+            // Syntax : JFR.stop [options]
+            //
+            // Options: (options must be specified using the <key> or <key>=<value> syntax)
+            // name : [optional] Recording name,.e.g \"My Recording\" (STRING, no default value)
+            // recording : [optional] Recording number, see JFR.check for a list of available recordings (JLONG, -1)
+            // discard : [optional] Skip writing data to previously specified file (if any) (BOOLEAN, false)
+            // filename : [optional] Copy recording data to file, e.g. \"/Users/user/My Recording.jfr\" (STRING, no default value)
+            // compress : [optional] GZip-compress "filename" destination (BOOLEAN, false)
+            ArrayList<String> options1 = new ArrayList<>(options);
+            options1.add("discard=true");
+            jcmd(benchmarkParams.getJvm(), "JFR.stop", options);
+        } catch (RuntimeException ex) {
+            // vs. OpenJDK 11:
+            //
+            // Options: (options must be specified using the <key> or <key>=<value> syntax)
+            // name :  Recording text,.e.g \"My Recording\" (STRING, no default value)
+            // filename : [optional] Copy recording data to file, e.g. \"/Users/user/My Recording.jfr\" (STRING, no default value)
+            //
+            // Just stop, rather then discard. We will restart with a new recording name, anyway.
+            jcmd(benchmarkParams.getJvm(), "JFR.stop", options);
+        }
     }
 
     private void startJfr(BenchmarkParams benchmarkParams) {
