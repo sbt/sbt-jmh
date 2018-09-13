@@ -36,6 +36,7 @@ public class AsyncProfiler implements InternalProfiler, ExternalProfiler {
     private final boolean debugNonSafepoints;
     private final boolean threads;
     private final Boolean simpleName;
+    private final Boolean jfr;
     private Path outputDir;
     private boolean started;
 
@@ -63,6 +64,8 @@ public class AsyncProfiler implements InternalProfiler, ExternalProfiler {
         OptionSpec<Directions> flameGraphDirection = parser.accepts("flameGraphDirection", "Directions to generate flamegraphs").withRequiredArg().ofType(Directions.class).defaultsTo(Directions.values());
         OptionSpec<String> flameGraphDir = ProfilerUtils.addFlameGraphDirOption(parser);
         OptionSpec<Boolean> simpleName = parser.accepts("simpleName", "Use simple names in flamegraphs").withRequiredArg().ofType(Boolean.class);
+        OptionSpec<Boolean> jfr = parser.accepts("jfr", "Also dump profiles from async-profiler in Java Flight Recorder format").withRequiredArg().ofType(Boolean.class);
+
 
         OptionSet options = ProfilerUtils.parseInitLine(initLine, parser);
         if (options.has(event)) {
@@ -111,6 +114,11 @@ public class AsyncProfiler implements InternalProfiler, ExternalProfiler {
         } else {
             this.simpleName = false;
         }
+        if (options.has(jfr)) {
+            this.jfr = options.valueOf(jfr);
+        } else {
+            this.jfr = false;
+        }
         this.flameGraphDir = ProfilerUtils.findFlamegraphDir(flameGraphDir, options);
         this.asyncProfilerDir = lookupAsyncProfilerHome(asyncProfilerDir, options);
         Path build = this.asyncProfilerDir.resolve("build");
@@ -153,7 +161,8 @@ public class AsyncProfiler implements InternalProfiler, ExternalProfiler {
     public void beforeIteration(BenchmarkParams benchmarkParams, IterationParams iterationParams) {
         if (!started && iterationParams.getType() == IterationType.MEASUREMENT) {
             String threadOpt = this.threads ? ",threads" : "";
-            profilerCommand(String.format("start,event=%s%s,framebuf=%d,interval=%d", event, threadOpt, framebuf, interval));
+            String jfrOpt = this.jfr ? ",jfr,file=" + jfrFile().toAbsolutePath().toString() : "";
+            profilerCommand(String.format("start,event=%s%s%s,framebuf=%d,interval=%d", event, jfrOpt, threadOpt, framebuf, interval));
             started = true;
         }
     }
@@ -166,6 +175,12 @@ public class AsyncProfiler implements InternalProfiler, ExternalProfiler {
                 if (outputDir == null) {
                     outputDir = createTempDir(benchmarkParams.id().replaceAll("/", "-"));
                 }
+                if (jfr) {
+                    Path jfrDump = jfrFile();
+                    generated.add(jfrDump);
+                    profilerCommand(String.format("stop,file=%s,jfr", jfrDump));
+                }
+
                 Path collapsedPath = outputDir.resolve("collapsed-" + event.toLowerCase() + ".txt");
                 profilerCommand(String.format("stop,file=%s,collapsed", collapsedPath));
                 generated.add(collapsedPath);
@@ -191,6 +206,10 @@ public class AsyncProfiler implements InternalProfiler, ExternalProfiler {
         }
 
         return Collections.singletonList(result());
+    }
+
+    private Path jfrFile() {
+        return outputDir.resolve("profile-" + event.toLowerCase() + ".jfr");
     }
 
     private void replaceAllInFileLines(Path in, Path out, Pattern pattern) {
