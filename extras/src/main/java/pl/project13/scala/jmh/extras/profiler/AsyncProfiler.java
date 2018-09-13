@@ -5,13 +5,16 @@ import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import org.openjdk.jmh.infra.BenchmarkParams;
 import org.openjdk.jmh.infra.IterationParams;
+import org.openjdk.jmh.profile.ExternalProfiler;
 import org.openjdk.jmh.profile.InternalProfiler;
 import org.openjdk.jmh.profile.ProfilerException;
+import org.openjdk.jmh.results.BenchmarkResult;
 import org.openjdk.jmh.results.IterationResult;
 import org.openjdk.jmh.results.Result;
 import org.openjdk.jmh.runner.IterationType;
 import org.openjdk.jmh.util.Utils;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,7 +23,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-public class AsyncProfiler implements InternalProfiler {
+public class AsyncProfiler implements InternalProfiler, ExternalProfiler {
 
     private static final String ASYNC_PROFILER_DIR = "ASYNC_PROFILER_DIR";
 
@@ -30,6 +33,7 @@ public class AsyncProfiler implements InternalProfiler {
     private final String event;
     private final Directions directions;
     private final Path asyncProfilerDir;
+    private final boolean debugNonSafepoints;
     private final boolean threads;
     private final Boolean simpleName;
     private Path outputDir;
@@ -50,6 +54,7 @@ public class AsyncProfiler implements InternalProfiler {
         OptionSpec<String> outputDir = parser.accepts("dir", "Output directory").withRequiredArg().describedAs("directory").ofType(String.class);
         OptionSpec<String> asyncProfilerDir = parser.accepts("asyncProfilerDir", "Location of clone of https://github.com/jvm-profiling-tools/async-profiler. Also can be provided as $" + ASYNC_PROFILER_DIR).withRequiredArg().ofType(String.class).describedAs("directory");
         OptionSpec<String> event = parser.accepts("event", "Event to sample: cpu, alloc, lock, cache-misses etc.").withRequiredArg().ofType(String.class).defaultsTo("cpu");
+        OptionSpec<Boolean> debugNonSafepoints = parser.accepts("debugNonSafepoints").withRequiredArg().ofType(Boolean.class).defaultsTo(true, false);
         OptionSpec<Long> framebuf = parser.accepts("framebuf", "Size of profiler framebuffer").withRequiredArg().ofType(Long.class).defaultsTo(DEFAULT_FRAMEBUF);
         OptionSpec<Long> interval = parser.accepts("interval", "Profiling interval, in nanoseconds").withRequiredArg().ofType(Long.class).defaultsTo(DEFAULT_INTERVAL);
         OptionSpec<Boolean> threads = parser.accepts("threads", "Profile threads separately").withRequiredArg().ofType(Boolean.class).defaultsTo(false,true);
@@ -58,7 +63,6 @@ public class AsyncProfiler implements InternalProfiler {
         OptionSpec<Directions> flameGraphDirection = parser.accepts("flameGraphDirection", "Directions to generate flamegraphs").withRequiredArg().ofType(Directions.class).defaultsTo(Directions.values());
         OptionSpec<String> flameGraphDir = ProfilerUtils.addFlameGraphDirOption(parser);
         OptionSpec<Boolean> simpleName = parser.accepts("simpleName", "Use simple names in flamegraphs").withRequiredArg().ofType(Boolean.class);
-
 
         OptionSet options = ProfilerUtils.parseInitLine(initLine, parser);
         if (options.has(event)) {
@@ -88,6 +92,11 @@ public class AsyncProfiler implements InternalProfiler {
             this.directions = options.valueOf(flameGraphDirection);
         } else {
             this.directions = Directions.BOTH;
+        }
+        if (options.has(debugNonSafepoints)) {
+            this.debugNonSafepoints = options.valueOf(debugNonSafepoints);
+        } else {
+            this.debugNonSafepoints = true;
         }
         if (options.has(threads)) {
             this.threads = options.valueOf(threads);
@@ -226,5 +235,41 @@ public class AsyncProfiler implements InternalProfiler {
     @Override
     public String getDescription() {
         return "Profiling using async-profiler";
+    }
+
+    @Override
+    public Collection<String> addJVMInvokeOptions(BenchmarkParams params) {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public Collection<String> addJVMOptions(BenchmarkParams params) {
+
+        List<String> args = new ArrayList<>();
+        if (debugNonSafepoints) {
+            args.add("-XX:+UnlockDiagnosticVMOptions");
+            args.add("-XX:+DebugNonSafepoints");
+        }
+        return args;
+
+    }
+
+    @Override
+    public void beforeTrial(BenchmarkParams benchmarkParams) {
+    }
+
+    @Override
+    public Collection<? extends Result> afterTrial(BenchmarkResult br, long pid, File stdOut, File stdErr) {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public boolean allowPrintOut() {
+        return true;
+    }
+
+    @Override
+    public boolean allowPrintErr() {
+        return true;
     }
 }

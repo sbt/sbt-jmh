@@ -145,7 +145,11 @@ public class FlightRecordingProfiler implements InternalProfiler, ExternalProfil
     @Override
     public void beforeIteration(BenchmarkParams benchmarkParams, IterationParams iterationParams) {
         if (!warmupStarted) {
-            jcmd(benchmarkParams.getJvm(), "VM.unlock_commercial_features", Collections.emptyList());
+            try {
+                jcmd(benchmarkParams.getJvm(), "VM.unlock_commercial_features", Collections.emptyList());
+            } catch (Throwable t) {
+                // ignore, we might be running on OpenJDK 11
+            }
             name = "JMH-profile-" + benchmarkParams.getBenchmark().replaceAll("\\s+", "-");
             startJfr(benchmarkParams);
             warmupStarted = true;
