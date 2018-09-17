@@ -161,6 +161,9 @@ public class AsyncProfiler implements InternalProfiler, ExternalProfiler {
     public void beforeIteration(BenchmarkParams benchmarkParams, IterationParams iterationParams) {
         if (!started && iterationParams.getType() == IterationType.MEASUREMENT) {
             String threadOpt = this.threads ? ",threads" : "";
+            if (outputDir == null) {
+                outputDir = createTempDir(benchmarkParams.id().replaceAll("/", "-"));
+            }
             String jfrOpt = this.jfr ? ",jfr,file=" + jfrFile().toAbsolutePath().toString() : "";
             profilerCommand(String.format("start,event=%s%s%s,framebuf=%d,interval=%d", event, jfrOpt, threadOpt, framebuf, interval));
             started = true;
@@ -172,9 +175,6 @@ public class AsyncProfiler implements InternalProfiler, ExternalProfiler {
         if (iterationParams.getType() == IterationType.MEASUREMENT) {
             measurementIterationCount += 1;
             if (measurementIterationCount == iterationParams.getCount()) {
-                if (outputDir == null) {
-                    outputDir = createTempDir(benchmarkParams.id().replaceAll("/", "-"));
-                }
                 if (jfr) {
                     Path jfrDump = jfrFile();
                     generated.add(jfrDump);
