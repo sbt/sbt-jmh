@@ -259,7 +259,7 @@ public class FlightRecordingProfiler implements InternalProfiler, ExternalProfil
         args.add(outputDir.resolve(PROFILE_JFR).toAbsolutePath().toString());
         args.add("--event");
         args.add(eventName);
-        Path outFile = outputDir.resolve("jfr-collapsed-cpu.txt");
+        Path outFile = outputDir.resolve("jfr-collapsed-" + eventName.toLowerCase() + ".txt");
         args.add("--output");
         args.add(outFile.toAbsolutePath().toString());
         args.addAll(jfrFlameGraphOpts);
