@@ -65,7 +65,7 @@ public class FlightRecordingProfiler implements InternalProfiler, ExternalProfil
         OptionSpec<String> flightRecorderOpts = parser.accepts("flightRecorderOpts").withRequiredArg().ofType(String.class).withValuesSeparatedBy(",");
         OptionSpec<String> flameGraphDir = ProfilerUtils.addFlameGraphDirOption(parser);
         OptionSpec<String> jfrFlameGraphDir = parser.accepts("jfrFlameGraphDir", "Location of clone of https://github.com/chrishantha/jfr-flame-graph. Also can be provided as $" + JFR_FLAME_GRAPH_DIR).withRequiredArg().ofType(String.class).describedAs("directory");
-        OptionSpec<String> jfrFlameGraphOpts = parser.accepts("jfrFlameGraphOpts", "Options passed to flamegraph-output.sh").withRequiredArg().withValuesSeparatedBy(',').ofType(String.class);
+        OptionSpec<String> jfrFlameGraphOpts = parser.accepts("jfrFlameGraphOpts", "Options passed to jfr-flame-graph").withRequiredArg().withValuesSeparatedBy(',').ofType(String.class);
         OptionSpec<String> flameGraphOpts = parser.accepts("flameGraphOpts", "Options passed to FlameGraph.pl").withRequiredArg().withValuesSeparatedBy(',').ofType(String.class);
         OptionSpec<Directions> flameGraphDirection = parser.accepts("flameGraphDirection", "Directions to generate flamegraphs").withRequiredArg().ofType(Directions.class);
         OptionSet options = ProfilerUtils.parseInitLine(initLine, parser);
@@ -252,7 +252,7 @@ public class FlightRecordingProfiler implements InternalProfiler, ExternalProfil
         ArrayList<String> args = new ArrayList<>();
         args.add("bash");
         args.add("-e");
-        args.add(jfrFlameGraphDir.resolve("flamegraph-output.sh").toAbsolutePath().toString());
+        args.add(jfrFlameGraphDir.resolve("jfr-flame-graph").toAbsolutePath().toString());
         args.add("--output-type");
         args.add("folded");
         args.add("--jfrdump");

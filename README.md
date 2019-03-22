@@ -133,7 +133,7 @@ Option                              Description
                                       com/chrishantha/jfr-flame-graph.
                                       Also can be provided as
                                       $JFR_FLAME_GRAPH_DIR
---jfrFlameGraphOpts                 Options passed to flamegraph-output.sh
+--jfrFlameGraphOpts                 Options passed to jfr-flame-graph
 --stackDepth <Integer>              (default: 1024)
 --verbose <Boolean>                 Output the sequence of commands
                                       (default: false)
