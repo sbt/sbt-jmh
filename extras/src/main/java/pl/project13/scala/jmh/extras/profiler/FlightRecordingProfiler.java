@@ -252,7 +252,7 @@ public class FlightRecordingProfiler implements InternalProfiler, ExternalProfil
         ArrayList<String> args = new ArrayList<>();
         args.add("bash");
         args.add("-e");
-        args.add(jfrFlameGraphDir.resolve("jfr-flame-graph").toAbsolutePath().toString());
+        args.add(findJfrFlamegraph().toString());
         args.add("--output-type");
         args.add("folded");
         args.add("--jfrdump");
@@ -269,6 +269,15 @@ public class FlightRecordingProfiler implements InternalProfiler, ExternalProfil
         }
         ProfilerUtils.startAndWait(processBuilder, verbose);
         return outFile;
+    }
+
+    private Path findJfrFlamegraph() {
+        Path script = jfrFlameGraphDir.resolve("jfr-flame-graph");
+        if (!Files.exists(script)) {
+            // name prior to https://github.com/chrishantha/jfr-flame-graph/commit/948af606003481654e7f2ebb87fc52a3d98a3ae6
+            script = jfrFlameGraphDir.resolve("flamegraph-output.sh");
+        }
+        return script.toAbsolutePath();
     }
 
 
