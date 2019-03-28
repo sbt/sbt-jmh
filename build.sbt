@@ -22,6 +22,13 @@ val commonSettings = Seq(
     "-encoding", "UTF-8"
   ),
 
+  publishConfiguration := {
+    val javaVersion = System.getProperty("java.specification.version")
+    if (javaVersion != "1.8")
+      throw new RuntimeException("Cancelling publish, please use JDK 1.8")
+    publishConfiguration.value
+  },
+
   libraryDependencies += "org.openjdk.jmh" % "jmh-core"                 % jmhVersion, // GPLv2 with classpath exception
   libraryDependencies += "org.openjdk.jmh" % "jmh-generator-bytecode"   % jmhVersion, // GPLv2 with classpath exception
   libraryDependencies += "org.openjdk.jmh" % "jmh-generator-reflection" % jmhVersion, // GPLv2 with classpath exception
