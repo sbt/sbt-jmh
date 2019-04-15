@@ -21,7 +21,7 @@ The latest published plugin version is: [![Download](https://api.bintray.com/pac
 
 | Plugin version                   | JMH version & other information       | 
 | -------------------------------- |:-------------------------------------:| 
-| `0.3.5`  (sbt 13.17 / sbt 1.1.4) | `1.21`, support JDK 11                |
+| `0.3.6`  (sbt 13.17 / sbt 1.1.4) | `1.21`, support JDK 11                |
 | `0.3.4`  (sbt 13.17 / sbt 1.1.4) | `1.21`, support of GraalVM            |
 | `0.3.3`  (sbt 13.17 / sbt 1.1.1) | `1.20`, JMH bugfix release            |
 | `0.3.2`  (sbt 13.16 / sbt 1.0)   | `1.19`, minor bugfix release          |
