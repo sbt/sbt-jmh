@@ -17,8 +17,6 @@ before you set out to implement your benchmarks.
 Versions
 --------
 
-The latest published plugin version is: [![Download](https://api.bintray.com/packages/ktosopl/sbt-plugins/sbt-jmh/images/download.png) ](https://bintray.com/ktosopl/sbt-plugins/sbt-jmh/_latestVersion)
-
 | Plugin version                   | JMH version & other information       | 
 | -------------------------------- |:-------------------------------------:| 
 | `0.3.6`  (sbt 13.17 / sbt 1.1.4) | `1.21`, support JDK 11                |
