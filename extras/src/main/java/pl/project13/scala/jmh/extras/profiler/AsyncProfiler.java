@@ -54,7 +54,7 @@ public class AsyncProfiler implements InternalProfiler, ExternalProfiler {
         OptionParser parser = new OptionParser();
         OptionSpec<String> outputDir = parser.accepts("dir", "Output directory").withRequiredArg().describedAs("directory").ofType(String.class);
         OptionSpec<String> asyncProfilerDir = parser.accepts("asyncProfilerDir", "Location of clone of https://github.com/jvm-profiling-tools/async-profiler. Also can be provided as $" + ASYNC_PROFILER_DIR).withRequiredArg().ofType(String.class).describedAs("directory");
-        OptionSpec<String> event = parser.accepts("event", "Event to sample: cpu, alloc, lock, cache-misses etc.").withRequiredArg().ofType(String.class).defaultsTo("cpu");
+        OptionSpec<String> event = parser.accepts("event", "Event to sample: cpu, alloc, wall, lock, cache-misses etc.").withRequiredArg().ofType(String.class).defaultsTo("cpu");
         OptionSpec<Boolean> debugNonSafepoints = parser.accepts("debugNonSafepoints").withRequiredArg().ofType(Boolean.class).defaultsTo(true, false);
         OptionSpec<Long> framebuf = parser.accepts("framebuf", "Size of profiler framebuffer").withRequiredArg().ofType(Long.class).defaultsTo(DEFAULT_FRAMEBUF);
         OptionSpec<Long> interval = parser.accepts("interval", "Profiling interval, in nanoseconds").withRequiredArg().ofType(Long.class).defaultsTo(DEFAULT_INTERVAL);
@@ -184,6 +184,13 @@ public class AsyncProfiler implements InternalProfiler, ExternalProfiler {
                 Path collapsedPath = outputDir.resolve("collapsed-" + event.toLowerCase() + ".txt");
                 profilerCommand(String.format("stop,file=%s,collapsed", collapsedPath));
                 generated.add(collapsedPath);
+                try {
+                    Path jfrPath = outputDir.resolve(event.toLowerCase() + ".jfr");
+                    profilerCommand(String.format("file=%s,jfr", jfrPath));
+                    generated.add(jfrPath);
+                } catch (RuntimeException ex) {
+                    System.out.println("Could not create .jfr output, consider upgrading async-profiler");
+                }
                 Path collapsedProcessedPath = collapsedPath;
                 if (simpleName) {
                     collapsedProcessedPath = outputDir.resolve("collapsed-simple-" + event.toLowerCase() + ".txt");
