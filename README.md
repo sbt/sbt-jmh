@@ -19,7 +19,7 @@ Versions
 
 | Plugin version                   | JMH version & other information       | 
 | -------------------------------- |:-------------------------------------:|
-| `0.3.8`  (sbt 13.17 / sbt 1.1.4) | `1.21`, support JDK 11                | 
+| `0.3.7`  (sbt 13.17 / sbt 1.1.4) | `1.21`, support JDK 11                | 
 | `0.3.6`  (sbt 13.17 / sbt 1.1.4) | `1.21`, support JDK 11                |
 | `0.3.4`  (sbt 13.17 / sbt 1.1.4) | `1.21`, support of GraalVM            |
 | `0.3.3`  (sbt 13.17 / sbt 1.1.1) | `1.20`, JMH bugfix release            |
@@ -43,7 +43,7 @@ your project is to add the below line to your `project/plugins.sbt` file:
 
 ```scala
 // project/plugins.sbt
-addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.3.6")
+addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.3.7")
 ```
 
 and enable it in the projects where you want to (useful in multi-project builds, as you can enable it only where you need it):
