@@ -223,7 +223,8 @@ public class FlightRecordingProfiler implements InternalProfiler, ExternalProfil
                 ArrayList<String> options = new ArrayList<>();
 
                 options.add("name=" + name);
-                Path jfrDump = outputDir.resolve(PROFILE_JFR);
+                String params = benchmarkParams.id().replaceAll("/", "-");
+                Path jfrDump = outputDir.resolve(params + "-" + PROFILE_JFR);
                 options.add("filename=" + jfrDump.toAbsolutePath().toString());
                 jcmd(benchmarkParams.getJvm(), "JFR.stop", options);
                 generated.add(jfrDump);
