@@ -1,0 +1,3 @@
+# The implementations of JMH Profiler provided by the library:
+pl.project13.scala.jmh.extras.profiler.AsyncProfiler
+pl.project13.scala.jmh.extras.profiler.FlightRecordingProfiler

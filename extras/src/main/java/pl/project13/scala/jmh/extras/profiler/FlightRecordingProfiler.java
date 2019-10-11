@@ -55,6 +55,18 @@ public class FlightRecordingProfiler implements InternalProfiler, ExternalProfil
     private int stackDepth;
     private List<Path> generated = new ArrayList<>();
 
+    /**
+     * Creates a JFR profiler with an empty command line. This constructor is required
+     * so that {@link ServiceLoader} can instantiate this class as an implementation
+     * of {@link org.openjdk.jmh.profile.Profiler} interface. The instance will <em>not</em>
+     * be used by JMH for anything but getting its class name.
+     *
+     * @see org.openjdk.jmh.profile.ProfilerFactory
+     */
+    public FlightRecordingProfiler() throws ProfilerException {
+        this("");
+    }
+
     public FlightRecordingProfiler(String initLine) throws ProfilerException {
         OptionParser parser = new OptionParser();
         OptionSpec<String> outputDir = parser.accepts("dir").withRequiredArg().describedAs("Output directory").ofType(String.class);

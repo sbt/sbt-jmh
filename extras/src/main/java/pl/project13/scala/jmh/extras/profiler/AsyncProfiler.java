@@ -50,7 +50,31 @@ public class AsyncProfiler implements InternalProfiler, ExternalProfiler {
     private boolean verbose = false;
     private List<Path> generated = new ArrayList<>();
 
+    /**
+     * Creates an async profiler with an empty command line. This constructor is required
+     * so that {@link ServiceLoader} can instantiate this class as an implementation
+     * of {@link org.openjdk.jmh.profile.Profiler} interface. The instance will <em>not</em>
+     * be used by JMH for anything but getting its class name.
+     *
+     * @see org.openjdk.jmh.profile.ProfilerFactory
+     */
+    public AsyncProfiler() throws ProfilerException {
+        this("", false);
+    }
+
+    /**
+     * Creates an async profiler with the given command line. Will verify the async profiler
+     * installation.
+     */
     public AsyncProfiler(String initLine) throws ProfilerException {
+        this(initLine, true);
+    }
+
+    /**
+     * Creates an async profiler with the given command line arguments. If requested,
+     * will not verify async-profiler installation which is required for initial discovery.
+     */
+    private AsyncProfiler(String initLine, boolean verifyInstallation) throws ProfilerException {
         OptionParser parser = new OptionParser();
         OptionSpec<String> outputDir = parser.accepts("dir", "Output directory").withRequiredArg().describedAs("directory").ofType(String.class);
         OptionSpec<String> asyncProfilerDir = parser.accepts("asyncProfilerDir", "Location of clone of https://github.com/jvm-profiling-tools/async-profiler. Also can be provided as $" + ASYNC_PROFILER_DIR).withRequiredArg().ofType(String.class).describedAs("directory");
@@ -119,22 +143,26 @@ public class AsyncProfiler implements InternalProfiler, ExternalProfiler {
         } else {
             this.jfr = false;
         }
-        this.flameGraphDir = ProfilerUtils.findFlamegraphDir(flameGraphDir, options);
-        this.asyncProfilerDir = lookupAsyncProfilerHome(asyncProfilerDir, options);
-        Path build = this.asyncProfilerDir.resolve("build");
-        Path profiler1 = build.resolve("libasyncProfiler.so");
-        if (!Files.exists(profiler1)) {
-            throw new ProfilerException(profiler1 + " does not exist");
-        } else {
-            this.profiler = profiler1;
-            Path jattach1 = build.resolve("jattach");
-            if (!Files.exists(jattach1)) {
-                throw new ProfilerException(jattach1 + " does not exist");
-            } else {
-                this.jattach = jattach1;
-            }
-        }
 
+        if (verifyInstallation) {
+            this.flameGraphDir = ProfilerUtils.findFlamegraphDir(flameGraphDir, options);
+            this.asyncProfilerDir = lookupAsyncProfilerHome(asyncProfilerDir, options);
+            Path build = this.asyncProfilerDir.resolve("build");
+            Path profilerLib = build.resolve("libasyncProfiler.so");
+            if (!Files.exists(profilerLib)) {
+                throw new ProfilerException(profilerLib + " does not exist");
+            } else {
+                this.profiler = profilerLib;
+                Path jattach1 = build.resolve("jattach");
+                if (!Files.exists(jattach1)) {
+                    throw new ProfilerException(jattach1 + " does not exist");
+                } else {
+                    this.jattach = jattach1;
+                }
+            }
+        } else {
+            this.asyncProfilerDir = Paths.get(".");
+        }
     }
 
     private Path lookupAsyncProfilerHome(OptionSpec<String> asyncProfilerDir, OptionSet options) throws ProfilerException {

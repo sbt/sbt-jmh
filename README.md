@@ -195,7 +195,12 @@ Option                              Description
                                       (default: false)
 ```
 
-### Automatically generating flame-grapghs
+### Using Profilers with non-SBT Projects
+
+Both JFR and Async Profiler JMH integrations are shipped in a separate Java library,
+compatible with any JMH benchmark. See the [module readme](extras/README.md) for details.
+
+### Automatically generating flame-graphs
 
 Read more about flame graphs here:
 
