@@ -30,6 +30,33 @@ Add a dependency:
 </dependency>
 ```
 
+It is also recommended to add a ServicesResourceTransformer to the shade plugin configuration
+to ensure reliable detection in the presence of other profiler providers:
+
+```xml
+  <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-shade-plugin</artifactId>
+    <version>3.2.1</version>
+    <executions>
+      <execution>
+        <phase>package</phase>
+        <goals>
+          <goal>shade</goal>
+        </goals>
+        <configuration>
+          <transformers>
+            <!-- ¡Add this transformer if not already present: -->
+            <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+            <!-- Keep the other transformers -->
+          </transformers>
+          <!-- and the rest of the configuration -->
+        </configuration>
+      </execution>
+    </executions>
+  </plugin>
+```
+
 Build the benchmark project:
 
 ```sh
