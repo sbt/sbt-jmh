@@ -308,7 +308,7 @@ public class FlightRecordingProfiler implements InternalProfiler, ExternalProfil
 
     private Path findJcmd(String jvm) {
         Path jcmd;
-        Path firstTry = Paths.get(jvm.replaceAll("java", "jcmd"));
+        Path firstTry = Paths.get(jvm).resolveSibling("jcmd");
         if (Files.exists(firstTry)) {
             jcmd = firstTry;
         } else {
