@@ -312,7 +312,7 @@ public class FlightRecordingProfiler implements InternalProfiler, ExternalProfil
         if (Files.exists(firstTry)) {
             jcmd = firstTry;
         } else {
-            jcmd = Paths.get(jvm.replace("jre/bin/java", "bin/jcmd"));
+            jcmd = Paths.get(jvm.replace("bin/java$", "bin/jcmd"));
         }
         return jcmd;
     }
