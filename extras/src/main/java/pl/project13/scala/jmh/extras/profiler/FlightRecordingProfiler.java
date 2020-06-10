@@ -307,14 +307,20 @@ public class FlightRecordingProfiler implements InternalProfiler, ExternalProfil
     }
 
     private Path findJcmd(String jvm) {
-        Path jcmd;
-        Path firstTry = Paths.get(jvm).resolveSibling("jcmd");
-        if (Files.exists(firstTry)) {
-            jcmd = firstTry;
-        } else {
-            jcmd = Paths.get(jvm.replace("bin/java$", "bin/jcmd"));
+        Set<Path> paths = new LinkedHashSet<Path>();
+        paths.add(Paths.get(jvm).resolveSibling("jcmd"));
+        paths.add(Paths.get(jvm.replace("jre/bin/java", "bin/jcmd")));
+        paths.add(Paths.get(jvm.replace("bin/java$", "bin/jcmd")));
+        paths.remove(Paths.get(jvm));
+        StringBuilder errorMsg = new StringBuilder("Unable to find jcmd command in any of known locations:");
+        for (Path path : paths) {
+            if (Files.exists(path)) {
+                return path;
+            } else {
+                errorMsg.append(' ').append(path.toString());
+            }
         }
-        return jcmd;
+        throw new RuntimeException(errorMsg.toString());
     }
 
     private Path createTempDir(String name) {
