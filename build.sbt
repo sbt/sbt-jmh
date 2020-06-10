@@ -1,6 +1,6 @@
-import bintray.Keys._
 import java.io.FileInputStream
 import java.util.Properties
+import _root_.bintray.BintrayPlugin.bintrayPublishSettings
 
 val jmhVersion = {
   val props = new Properties()
@@ -74,11 +74,6 @@ val sonatypeSettings: Seq[Setting[_]] = Seq(
     </parent>
   )
 
-// sbt-scripted settings
-val myScriptedSettings = scriptedSettings ++ Seq(
-  scriptedLaunchOpts += s"-Dproject.version=${version.value}"
-) 
-
 // ---------------------------------------------------------------------------------------------------------------------
 
 lazy val root =
@@ -90,23 +85,24 @@ lazy val root =
 lazy val plugin = project
   .in(file("plugin"))
   .settings(commonSettings: _*)
-  .settings(myScriptedSettings: _*)
+  .enablePlugins(ScriptedPlugin)
+  .settings(scriptedLaunchOpts += s"-Dproject.version=${version.value}")
   .settings(
     name := "sbt-jmh",
     
     sbtPlugin := true,
     publishTo := {
       if (isSnapshot.value)
-        Some(Classpaths.sbtPluginSnapshots)
+        Some(Resolver.sbtPluginRepo("snapshots"))
       else
-        Some(Classpaths.sbtPluginReleases)
+        Some(Resolver.sbtPluginRepo("releases"))
     },
     publishMavenStyle := false,
     startYear := Some(2014),
     licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.html")),
     bintrayPublishSettings,
-    repository in bintray := "sbt-plugins",
-    bintrayOrganization in bintray := None
+    bintray / bintrayRepository := "sbt-plugins",
+    bintray / bintrayOrganization := None
   ).dependsOn(extras)
   .enablePlugins(AutomateHeaderPlugin)
 
