@@ -160,6 +160,9 @@ jmh:run -prof jmh.extras.JFR:dir={absolute}/{path}/{of}/{folder} -t1 -f 1 -wi 10
 Using async-profiler
 --------------------
 
+**NOTE**: `sbt-jmh`-s integration with async-profiler has been contributed to the
+JMH project as of JMH 1.24. Please migrate to using `-prof async`.
+
 Using async profiler is done by using the `jmh.extras.Async` profiler like this:
 
 ```
