@@ -19,6 +19,7 @@ Versions
 
 | Plugin version                     | JMH version & other information       | 
 | ---------------------------------- |:-------------------------------------:|
+| `0.4.0`  (sbt 0.13.17 / sbt 1.1.4) | `1.25`, profilers now in JMH core     | 
 | `0.3.7`  (sbt 0.13.17 / sbt 1.1.4) | `1.21`, support JDK 11                | 
 | `0.3.6`  (sbt 0.13.17 / sbt 1.1.4) | `1.21`, support JDK 11                |
 | `0.3.4`  (sbt 0.13.17 / sbt 1.1.4) | `1.21`, support of GraalVM            |
@@ -43,7 +44,7 @@ your project is to add the below line to your `project/plugins.sbt` file:
 
 ```scala
 // project/plugins.sbt
-addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.3.7")
+addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.4.0")
 ```
 
 and enable it in the projects where you want to (useful in multi-project builds, as you can enable it only where you need it):
@@ -99,120 +100,12 @@ Please invoke `run -h` to get a full list of run as well as output format option
 **Useful hint**: If you plan to aggregate the collected data you should have a look at the available output formats (`-lrf`).
 For example it's possible to keep the benchmark's results as csv or json files for later regression analysis.
 
-Using Oracle Flight Recorder
+Using Java Flight Recorder / async-profiler.
 ----------------------------
 
-**NOTE**: `sbt-jmh`-s integration with async-profiler has been contributed to the
-JMH project as of JMH 1.25. Please migrate to using `-prof jfr`.
-
-Flight Recorder / *Java Mission Control* is an excellent tool shipped by default in the Oracle JDK distribution.
-It is a profiler that uses internal APIs (commercial) and thus is way more precise and detailed than your every-day profiler.
-
-To record a Flight Recorder file from a JMH run it using the `jmh.extras.JFR` profiler:
-
-```sbt
-jmh:run -prof jmh.extras.JFR -t1 -f 1 -wi 10 -i 20 .*TestBenchmark.*
-```
-
-All options can be discovered by running the help task:
-
-```
-sbt> jmh:run Bench -prof jmh.extras.JFR:help
-Option                              Description
-------                              -----------
---debugNonSafepoints <Boolean>      (default: [true, false])
---dir <Output directory>
---events <JfrEventType>             (default: [CPU, ALLOCATION_TLAB,
-                                      ALLOCATION_OUTSIDE_TLAB, EXCEPTIONS,
-                                      LOCKS])
---flameGraphDir <directory>       Location of clone of https://github.
-                                      com/brendangregg/FlameGraph. Also
-                                      can be provided as $FLAME_GRAPH_DIR
---flameGraphDirection <Directions>  Directions to generate flamegraphs
---flameGraphOpts                    Options passed to FlameGraph.pl
---flightRecorderOpts
---help                              Display help.
---jfrFlameGraphDir <directory>    Location of clone of https://github.
-                                      com/chrishantha/jfr-flame-graph.
-                                      Also can be provided as
-                                      $JFR_FLAME_GRAPH_DIR
---jfrFlameGraphOpts                 Options passed to jfr-flame-graph
---stackDepth <Integer>              (default: 1024)
---verbose <Boolean>                 Output the sequence of commands
-                                      (default: false)
-
-```
-
-This will result in flight recording file which you can then open and analyse offline using JMC.
-
-Example output:
-
-```
-[info] Secondary result "JFR":
-[info] JFR Messages:
-[info] --------------------------------------------
-[info] Flight Recording output saved to:
-[info]     /Users/ktoso/code/sbt-jmh/sbt-jmh-tester/./test.TestBenchmark.range-Throughput-1.jfr
-```
-
-Export JFR to **specific directory**:
-```sbt
-jmh:run -prof jmh.extras.JFR:dir={absolute}/{path}/{of}/{folder} -t1 -f 1 -wi 10 -i 20 .*TestBenchmark.*
-```
-
-Using async-profiler
---------------------
-
-**NOTE**: `sbt-jmh`-s integration with async-profiler has been contributed to the
-JMH project as of JMH 1.24. Please migrate to using `-prof async`.
-
-Using async profiler is done by using the `jmh.extras.Async` profiler like this:
-
-```
-sbt> jmh:run Bench -prof jmh.extras.Async ...
-```
-
-All additional options are documented in it's help task:
-
-```
-sbt> jmh:run Bench -prof jmh.extras.Async:help
-
-Option                              Description
-------                              -----------
---asyncProfilerDir <directory>    Location of clone of https://github.
-                                      com/jvm-profiling-tools/async-
-                                      profiler. Also can be provided as
-                                      $ASYNC_PROFILER_DIR
---dir <<directory>>                 Output directory
---event <AsyncProfilerEventType>    Event to sample (default: [CPU, HEAP])
---flameGraphDir <directory>       Location of clone of https://github.
-                                      com/brendangregg/FlameGraph. Also
-                                      can be provided as $FLAME_GRAPH_DIR
---flameGraphDirection <Directions>  Directions to generate flamegraphs
-                                      (default: [BOTH, NONE, FORWARD,
-                                      REVERSE])
---flameGraphOpts                    Options passed to FlameGraph.pl
---framebuf <Long>                   Size of profiler framebuffer (default:
-                                      8388608)
---help                              Display help.
---threads <Boolean>                 profile threads separately (default:
-                                      [false, true])
---verbose <Boolean>                 Output the sequence of commands
-                                      (default: false)
-```
-
-### Automatically generating flame-grapghs
-
-Read more about flame graphs here:
-
-To automatically generate flame graphs for a given benchmark you can invoke:
-
-```
-sbt> jmh:run Bench -f1 -wi 5 -i5 -prof jmh.extras.JFR:dir=/tmp/profile-jfr;flameGraphDir=/code/FlameGraph;jfrFlameGraphDir=/code/jfr-flame-graph;flameGraphOpts=--minwidth,2;verbose=true 
-```
-
-Where `/code/FlameGraph` and `/code/jfr-flame-graph` need to reflect actual paths of those tools on your system.
-
+**NOTE**: `sbt-jmh`-s integration with async-profiler and Java Flight Recorder has been contributed to the
+JMH project as of JMH 1.25 and removed from this project. Please migrate to using `-prof jfr` / `-prof async`.
+Use `-prof jfr:help` / `-prof async:help` to list available options.
 
 Examples
 --------
@@ -302,14 +195,14 @@ The plugin is maintained at an best-effort basis -- submitting a PR is the best 
 You can locally publish the plugin with:
 
 ```
-sbt '; extras/publishLocal; project plugin; ^publishLocal'
+sbt '; project plugin; ^publishLocal'
 ```
 
 Please test your changes by adding to the [scripted test suite][sbt-jmh/plugin/src/sbt-test/sbt-jmh/]
 which can be run with:
 
 ```
- sbt '; extras/publishLocal; project plugin; ^scripted'
+ sbt '; project plugin; ^scripted'
 ```
 
 Special thanks

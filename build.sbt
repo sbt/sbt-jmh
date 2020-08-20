@@ -35,45 +35,6 @@ val commonSettings = Seq(
   libraryDependencies += "org.openjdk.jmh" % "jmh-generator-asm"        % jmhVersion  // GPLv2 with classpath exception
 )
 
-val sonatypeSettings: Seq[Setting[_]] = Seq(
-  publishMavenStyle := true,
-  publishArtifact in Test := false,
-  pomIncludeRepository := { _ => false },
-  publishTo := {
-    val nexus = "https://oss.sonatype.org/"
-    if (version.value.trim.endsWith("SNAPSHOT"))
-      Some("snapshots" at nexus + "content/repositories/snapshots")
-    else
-      Some("releases" at nexus + "service/local/staging/deploy/maven2")
-  },
-  credentials += Credentials(Path.userHome / ".sbt" / "sonatype.properties"),
-  pomExtra := 
-    <url>https://github.com/ktoso/sbt-jmh</url>
-    <licenses>
-      <license>
-          <name>Apache License, Version 2.0</name>
-          <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-          <distribution>repo</distribution>
-      </license>
-    </licenses>
-    <scm>
-      <url>git@github.com:ktoso/sbt-jmh.git</url>
-      <connection>scm:git:git@github.com:ktoso/sbt-jmh.git</connection>
-    </scm>
-    <developers>
-      <developer>
-        <id>ktoso</id>
-        <name>Konrad 'ktoso' Malawski</name>
-        <url>http://kto.so</url>
-      </developer>
-    </developers>
-    <parent>
-      <groupId>org.sonatype.oss</groupId>
-      <artifactId>oss-parent</artifactId>
-      <version>7</version>
-    </parent>
-  )
-
 // sbt-scripted settings
 val myScriptedSettings = scriptedSettings ++ Seq(
   scriptedLaunchOpts += s"-Dproject.version=${version.value}"
@@ -85,7 +46,7 @@ lazy val root =
   project
     .in(file("."))
     .settings(commonSettings: _*)
-    .aggregate(plugin, extras)
+    .aggregate(plugin)
 
 lazy val plugin = project
   .in(file("plugin"))
@@ -107,17 +68,4 @@ lazy val plugin = project
     bintrayPublishSettings,
     repository in bintray := "sbt-plugins",
     bintrayOrganization in bintray := None
-  ).dependsOn(extras)
-  .enablePlugins(AutomateHeaderPlugin)
-
-
-lazy val extras = project
-  .in(file("extras"))
-  .settings(commonSettings: _*)
-  .settings(sonatypeSettings: _*)
-  .settings(
-    name := "sbt-jmh-extras",
-    scalaVersion := "2.12.6",
-    autoScalaLibrary := false, // it is plain Java
-    crossPaths := false // it is plain Java
-  )
+  ).enablePlugins(AutomateHeaderPlugin)

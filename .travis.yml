@@ -1,7 +1,7 @@
 sudo: false
 dist: trusty
 language: scala
-script: sbt '; extras/publishLocal; project plugin; ^scripted'
+script: sbt '; project plugin; ^scripted'
 jdk:
   - oraclejdk8
 cache:
