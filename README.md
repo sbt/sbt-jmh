@@ -105,7 +105,7 @@ Using Oracle Flight Recorder
 Flight Recorder / *Java Mission Control* is an excellent tool shipped by default in the Oracle JDK distribution.
 It is a profiler that uses internal APIs (commercial) and thus is way more precise and detailed than your every-day profiler.
 
-To record a Flight Recorder file from a JMH run run it using the `jmh.extras.JFR` profiler:
+To record a Flight Recorder file from a JMH run it using the `jmh.extras.JFR` profiler:
 
 ```sbt
 jmh:run -prof jmh.extras.JFR -t1 -f 1 -wi 10 -i 20 .*TestBenchmark.*
