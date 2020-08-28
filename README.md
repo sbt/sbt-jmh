@@ -102,6 +102,9 @@ For example it's possible to keep the benchmark's results as csv or json files f
 Using Oracle Flight Recorder
 ----------------------------
 
+**NOTE**: `sbt-jmh`-s integration with async-profiler has been contributed to the
+JMH project as of JMH 1.25. Please migrate to using `-prof jfr`.
+
 Flight Recorder / *Java Mission Control* is an excellent tool shipped by default in the Oracle JDK distribution.
 It is a profiler that uses internal APIs (commercial) and thus is way more precise and detailed than your every-day profiler.
 
