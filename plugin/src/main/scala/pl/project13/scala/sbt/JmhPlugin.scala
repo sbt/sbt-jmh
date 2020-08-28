@@ -63,7 +63,7 @@ object JmhPlugin extends AutoPlugin {
     resourceDirectory := (resourceDirectory in Compile).value,
     sourceGenerators := Seq(Def.task { generateJmhSourcesAndResources.value._1 }.taskValue),
     resourceGenerators := Seq(Def.task { generateJmhSourcesAndResources.value._2 }.taskValue),
-    generateJmhSourcesAndResources := generateBenchmarkSourcesAndResources(streams.value, crossTarget.value / "jmh-cache", (classDirectory in Jmh).value, sourceManaged.value, resourceManaged.value, generatorType.value, (dependencyClasspath in Jmh).value),
+    generateJmhSourcesAndResources := generateBenchmarkSourcesAndResources(streams.value, crossTarget.value / "jmh-cache", (classDirectory in Jmh).value, sourceManaged.value, resourceManaged.value, generatorType.value, (dependencyClasspath in Jmh).value, new Run(scalaInstance.value, true, taskTemporaryDirectory.value)),
     generateJmhSourcesAndResources := (generateJmhSourcesAndResources dependsOn(compile in Compile)).value
   )) ++ Seq(
     // settings in default
@@ -101,29 +101,27 @@ object JmhPlugin extends AutoPlugin {
     props.get("extras.version").toString
   }
 
-  private def generateBenchmarkSourcesAndResources(s: TaskStreams, cacheDir: File, bytecodeDir: File, sourceDir: File, resourceDir: File, generatorType: String, classpath: Seq[Attributed[File]]): (Seq[File], Seq[File]) = {
+  private def generateBenchmarkSourcesAndResources(s: TaskStreams, cacheDir: File, bytecodeDir: File, sourceDir: File, resourceDir: File, generatorType: String, classpath: Seq[Attributed[File]], run: Run): (Seq[File], Seq[File]) = {
     val inputs: Set[File] = (bytecodeDir ** "*").filter(_.isFile).get.toSet
     val cachedGeneration = FileFunction.cached(cacheDir, FilesInfo.hash) { _ =>
       // ignore change report and rebuild it completely
-      internalGenerateBenchmarkSourcesAndResources(s, bytecodeDir, sourceDir, resourceDir, generatorType, classpath)
+      internalGenerateBenchmarkSourcesAndResources(s, bytecodeDir, sourceDir, resourceDir, generatorType, classpath, run, s.log)
     }
     cachedGeneration(inputs).toSeq.partition(f => IO.relativizeFile(sourceDir, f).nonEmpty)
   }
 
-  private def internalGenerateBenchmarkSourcesAndResources(s: TaskStreams, bytecodeDir: File, sourceDir: File, resourceDir: File, generatorType: String, classpath: Seq[Attributed[File]]): Set[File] = {
+  private def internalGenerateBenchmarkSourcesAndResources(s: TaskStreams, bytecodeDir: File, sourceDir: File,
+                                                           resourceDir: File, generatorType: String, classpath: Seq[Attributed[File]],
+                                                           run: Run, log: Logger): Set[File] = {
     // rebuild everything
     IO.delete(sourceDir)
     IO.createDirectory(sourceDir)
     IO.delete(resourceDir)
     IO.createDirectory(resourceDir)
 
-    // since we might end up using reflection (even in ASM generated benchmarks), we have to set up the classpath to include classes our code depends on
-    val bench = classOf[Benchmark]
-    val loader = new URLClassLoader(classpath.map(_.data.toURI.toURL), bench.getClassLoader)
-    val old = Thread.currentThread.getContextClassLoader
-    Thread.currentThread.setContextClassLoader(loader)
-    JmhBytecodeGenerator.main(Array(bytecodeDir, sourceDir, resourceDir, generatorType).map(_.toString))
-    Thread.currentThread.setContextClassLoader(old)
+    val mainClass = "org.openjdk.jmh.generators.bytecode.JmhBytecodeGenerator"
+    val options = Seq(bytecodeDir, sourceDir, resourceDir, generatorType).map(_.toString)
+    run.run(mainClass, classpath.map(_.data), options, log)
     ((sourceDir ** "*").filter(_.isFile) +++ (resourceDir ** "*").filter(_.isFile)).get.toSet
   }
 }
