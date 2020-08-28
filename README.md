@@ -17,20 +17,20 @@ before you set out to implement your benchmarks.
 Versions
 --------
 
-| Plugin version                   | JMH version & other information       | 
-| -------------------------------- |:-------------------------------------:|
-| `0.3.7`  (sbt 13.17 / sbt 1.1.4) | `1.21`, support JDK 11                | 
-| `0.3.6`  (sbt 13.17 / sbt 1.1.4) | `1.21`, support JDK 11                |
-| `0.3.4`  (sbt 13.17 / sbt 1.1.4) | `1.21`, support of GraalVM            |
-| `0.3.3`  (sbt 13.17 / sbt 1.1.1) | `1.20`, JMH bugfix release            |
-| `0.3.2`  (sbt 13.16 / sbt 1.0)   | `1.19`, minor bugfix release          |
-| `0.3.1`  (sbt 13.16 / sbt 1.0)   | `1.19`, minor bugfix release          |
-| `0.3.0`  (sbt 13.16 / sbt 1.0)   | `1.19`, async profiler, flame-graphs  |
-| `0.2.27` (sbt 0.13.16 / sbt 1.0) | `1.19`                                |
-| `0.2.26` (sbt 0.13.16-M1)        | `1.19`                                |
-| `0.2.25` (sbt 0.13.x)            | `1.19`                                |
-| `0.2.24` (sbt 0.13.x)            | `1.18`                                |
-| ...                              | ...                                   |
+| Plugin version                     | JMH version & other information       | 
+| ---------------------------------- |:-------------------------------------:|
+| `0.3.7`  (sbt 0.13.17 / sbt 1.1.4) | `1.21`, support JDK 11                | 
+| `0.3.6`  (sbt 0.13.17 / sbt 1.1.4) | `1.21`, support JDK 11                |
+| `0.3.4`  (sbt 0.13.17 / sbt 1.1.4) | `1.21`, support of GraalVM            |
+| `0.3.3`  (sbt 0.13.17 / sbt 1.1.1) | `1.20`, JMH bugfix release            |
+| `0.3.2`  (sbt 0.13.16 / sbt 1.0)   | `1.19`, minor bugfix release          |
+| `0.3.1`  (sbt 0.13.16 / sbt 1.0)   | `1.19`, minor bugfix release          |
+| `0.3.0`  (sbt 0.13.16 / sbt 1.0)   | `1.19`, async profiler, flame-graphs  |
+| `0.2.27` (sbt 0.13.16 / sbt 1.0)   | `1.19`                                |
+| `0.2.26` (sbt 0.13.16-M1)          | `1.19`                                |
+| `0.2.25` (sbt 0.13.x)              | `1.19`                                |
+| `0.2.24` (sbt 0.13.x)              | `1.18`                                |
+| ...                                | ...                                   |
 
 Not interesting versions are skipped in the above listing. Always use the newest which has the JMH version you need.
 You should stick to the latest version at all times anyway of course.
