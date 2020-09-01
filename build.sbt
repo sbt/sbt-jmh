@@ -1,4 +1,3 @@
-import bintray.Keys._
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -13,7 +12,7 @@ val jmhVersion = {
 val commonSettings = Seq(
   organization := "pl.project13.scala",
 
-  crossSbtVersions := Vector("1.2.1", "0.13.17"),
+  crossSbtVersions := Vector("1.3.0"),
 
   scalacOptions ++= List(
     "-unchecked",
@@ -36,7 +35,7 @@ val commonSettings = Seq(
 )
 
 // sbt-scripted settings
-val myScriptedSettings = scriptedSettings ++ Seq(
+val myScriptedSettings = Seq(
   scriptedLaunchOpts += s"-Dproject.version=${version.value}"
 ) 
 
@@ -51,21 +50,16 @@ lazy val root =
 lazy val plugin = project
   .in(file("plugin"))
   .settings(commonSettings: _*)
+  .enablePlugins(SbtPlugin)
   .settings(myScriptedSettings: _*)
   .settings(
     name := "sbt-jmh",
-    
     sbtPlugin := true,
-    publishTo := {
-      if (isSnapshot.value)
-        Some(Classpaths.sbtPluginSnapshots)
-      else
-        Some(Classpaths.sbtPluginReleases)
-    },
+    publishTo := Some(Classpaths.sbtPluginReleases),
     publishMavenStyle := false,
     startYear := Some(2014),
     licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.html")),
-    bintrayPublishSettings,
-    repository in bintray := "sbt-plugins",
-    bintrayOrganization in bintray := None
+    bintrayRepository := "sbt-plugins",
+    bintrayOrganization := None,
+    bintrayPackageLabels := Seq("sbt-plugin", "jmh", "benchmarking")
   ).enablePlugins(AutomateHeaderPlugin)
