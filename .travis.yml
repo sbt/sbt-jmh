@@ -1,9 +1,9 @@
 sudo: false
-dist: trusty
+dist: bionic
 language: scala
 script: sbt '; project plugin; ^scripted'
 jdk:
-  - oraclejdk8
+  - openjdk8
 cache:
   directories:
     - $HOME/.ivy2/cache
