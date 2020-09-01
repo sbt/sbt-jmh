@@ -31,7 +31,6 @@ object JmhPlugin extends AutoPlugin {
   object JmhKeys {
     val Jmh = config("jmh") extend Test
     val generatorType = settingKey[String]("Benchmark code generator type. Available: `default`, `reflection` or `asm`.")
-    val extrasVersion = settingKey[String]("sbt-jmh extras version")
   }
 
   import JmhKeys._
@@ -51,7 +50,6 @@ object JmhPlugin extends AutoPlugin {
   override def projectSettings = inConfig(Jmh)(Defaults.testSettings ++ Seq(
     // settings in Jmh
     version := jmhVersionFromProps(),
-    extrasVersion := extrasVersionFromProps(),
     generatorType := "default",
 
     mainClass in run := Some("org.openjdk.jmh.Main"),
@@ -71,10 +69,8 @@ object JmhPlugin extends AutoPlugin {
     // includes the asm jar only if needed
     libraryDependencies ++= {
       val jmhV = (version in Jmh).value
-      val extrasV = (extrasVersion in Jmh).value
-      
+
       Seq(
-        "pl.project13.scala"  % "sbt-jmh-extras"           % extrasV, // Apache v2
         "org.openjdk.jmh"     % "jmh-core"                 % jmhV,    // GPLv2
         "org.openjdk.jmh"     % "jmh-generator-bytecode"   % jmhV,    // GPLv2
         "org.openjdk.jmh"     % "jmh-generator-reflection" % jmhV     // GPLv2
@@ -92,13 +88,6 @@ object JmhPlugin extends AutoPlugin {
     props.load(is)
     is.close()
     props.get("jmh.version").toString
-  }
-  private def extrasVersionFromProps(): String = {
-    val props = new Properties()
-    val is = getClass.getResourceAsStream("/sbt-jmh.properties")
-    props.load(is)
-    is.close()
-    props.get("extras.version").toString
   }
 
   private def generateBenchmarkSourcesAndResources(s: TaskStreams, cacheDir: File, bytecodeDir: File, sourceDir: File, resourceDir: File, generatorType: String, classpath: Seq[Attributed[File]], run: Run): (Seq[File], Seq[File]) = {
