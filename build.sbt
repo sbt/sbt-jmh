@@ -45,6 +45,7 @@ lazy val root =
   project
     .in(file("."))
     .settings(commonSettings: _*)
+    .settings(publish / skip := true)
     .aggregate(plugin)
 
 lazy val plugin = project
@@ -55,11 +56,10 @@ lazy val plugin = project
   .settings(
     name := "sbt-jmh",
     sbtPlugin := true,
-    publishTo := Some(Classpaths.sbtPluginReleases),
     publishMavenStyle := false,
     startYear := Some(2014),
     licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.html")),
     bintrayRepository := "sbt-plugins",
-    bintrayOrganization := None,
+    bintrayOrganization in bintray := None,
     bintrayPackageLabels := Seq("sbt-plugin", "jmh", "benchmarking")
   ).enablePlugins(AutomateHeaderPlugin)
