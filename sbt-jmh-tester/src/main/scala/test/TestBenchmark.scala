@@ -21,11 +21,13 @@ class TestBenchmark {
       .count(_.toString.length == 4)
 
   @Benchmark
-  def readFromFile(): Int =
-    helloFile.getLines()
+  def readFromFile(): Int = {
+    val actual = helloFile.getLines()
       .map(_.length)
       .sum
-}
+    assert(actual > 0)
+    actual
+  }
 
 object TestBenchmark {
   val helloFile = Source.fromInputStream(getClass.getClassLoader.getResourceAsStream("hello.txt"))
