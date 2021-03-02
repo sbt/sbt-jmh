@@ -1,0 +1,27 @@
+name: CI
+on:
+  pull_request:
+  push:
+  schedule:
+  - cron: '0 0 * * *'
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - java: 8
+        - java: 11
+    steps:
+    - uses: actions/checkout@v2.3.4
+    - uses: olafurpg/setup-scala@v10
+      with:
+        java-version: "adopt@1.${{ matrix.java }}"
+    - uses: coursier/cache-action@v5
+    - run: sbt -v test scripted
+    - run:
+        rm -rf "$HOME/.ivy2/local" || true
+        find "$HOME/.ivy2/cache" -name "ivydata-*.properties" -print -delete
+        find "$HOME/.sbt"        -name "*.lock"               -print -delete
