@@ -11,6 +11,9 @@ val jmhVersion = {
 
 val commonSettings = Seq(
   organization := "pl.project13.scala",
+  publishTo := Some(if (isSnapshot.value) Opts.resolver.sonatypeSnapshots else Opts.resolver.sonatypeStaging),
+  startYear := Some(2014),
+  licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.html")),
 
   crossSbtVersions := Vector("1.3.0"),
 
@@ -56,10 +59,4 @@ lazy val plugin = project
   .settings(
     name := "sbt-jmh",
     sbtPlugin := true,
-    publishMavenStyle := false,
-    startYear := Some(2014),
-    licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.html")),
-    bintrayRepository := "sbt-plugins",
-    bintrayOrganization in bintray := None,
-    bintrayPackageLabels := Seq("sbt-plugin", "jmh", "benchmarking")
   ).enablePlugins(AutomateHeaderPlugin)
