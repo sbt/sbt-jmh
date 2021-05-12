@@ -14,7 +14,13 @@ val commonSettings = Seq(
   publishTo := Some(if (isSnapshot.value) Opts.resolver.sonatypeSnapshots else Opts.resolver.sonatypeStaging),
   startYear := Some(2014),
   licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.html")),
-
+  homepage := Some(url("https://github.com/ktoso/sbt-jmh")),
+  scmInfo := Some(ScmInfo(url("https://github.com/ktoso/sbt-jmh"), "git@github.com:ktoso/sbt-jmh.git")),
+  developers := List(
+    Developer("ktoso", "Konrad 'ktoso' Malawski", "<ktoso@project13.pl>", url("https://github.com/ktoso")),
+    Developer("retronym", "Jason Zaugg", "<jzaugg@gmail.com>", url("https://github.com/retronym")),
+    Developer("ktoso", "Johan Andrén", "<johan@markatta.com>", url("https://github.com/johanandren"))
+  ),
   crossSbtVersions := Vector("1.3.0"),
 
   scalacOptions ++= List(
