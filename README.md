@@ -18,6 +18,7 @@ Versions
 
 | Plugin version                     | JMH version & other information       | 
 | ---------------------------------- |:-------------------------------------:|
+| `0.4.2`  (sbt 1.3.0+)              | `1.31`, JMH `-prof async` supports 2.x | 
 | `0.4.1`  (sbt 1.3.0+)              | `1.30`                                | 
 | `0.4.0`  (sbt 1.3.0+)              | `1.25`, profilers now in JMH core     | 
 | `0.3.7`  (sbt 0.13.17 / sbt 1.1.4) | `1.21`, support JDK 11                | 
@@ -44,7 +45,7 @@ your project is to add the below line to your `project/plugins.sbt` file:
 
 ```scala
 // project/plugins.sbt
-addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.4.1")
+addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.4.2")
 ```
 
 and enable it in the projects where you want to (useful in multi-project builds, as you can enable it only where you need it):
