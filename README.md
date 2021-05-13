@@ -18,6 +18,7 @@ Versions
 
 | Plugin version                     | JMH version & other information       | 
 | ---------------------------------- |:-------------------------------------:|
+| `0.4.2`  (sbt 1.3.0+)              | `1.31`, JMH `-prof async` supports 2.x | 
 | `0.4.1`  (sbt 1.3.0+)              | `1.30`                                | 
 | `0.4.0`  (sbt 1.3.0+)              | `1.25`, profilers now in JMH core     | 
 | `0.3.7`  (sbt 0.13.17 / sbt 1.1.4) | `1.21`, support JDK 11                | 
