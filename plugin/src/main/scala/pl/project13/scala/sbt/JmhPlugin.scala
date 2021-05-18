@@ -110,7 +110,7 @@ object JmhPlugin extends AutoPlugin {
 
     val mainClass = "org.openjdk.jmh.generators.bytecode.JmhBytecodeGenerator"
     val options = Seq(bytecodeDir, sourceDir, resourceDir, generatorType).map(_.toString)
-    run.run(mainClass, classpath.map(_.data), options, log)
+    run.run(mainClass, classpath.map(_.data), options, log).get
     ((sourceDir ** "*").filter(_.isFile) +++ (resourceDir ** "*").filter(_.isFile)).get.toSet
   }
 }

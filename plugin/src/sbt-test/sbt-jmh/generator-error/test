@@ -1,0 +1,3 @@
+# Expect a failure
+-> show jmh:managedSources
+
