@@ -16,24 +16,20 @@ before you set out to implement your benchmarks.
 Versions
 --------
 
-| Plugin version                     | JMH version & other information       | 
-| ---------------------------------- |:-------------------------------------:|
-| `0.4.3`  (sbt 1.3.0+)              | `1.32`                                | 
-| `0.4.2`  (sbt 1.3.0+)              | `1.31`, JMH `-prof async` supports 2.x | 
-| `0.4.1`  (sbt 1.3.0+)              | `1.30`                                | 
-| `0.4.0`  (sbt 1.3.0+)              | `1.25`, profilers now in JMH core     | 
-| `0.3.7`  (sbt 0.13.17 / sbt 1.1.4) | `1.21`, support JDK 11                | 
-| `0.3.6`  (sbt 0.13.17 / sbt 1.1.4) | `1.21`, support JDK 11                |
-| `0.3.4`  (sbt 0.13.17 / sbt 1.1.4) | `1.21`, support of GraalVM            |
-| `0.3.3`  (sbt 0.13.17 / sbt 1.1.1) | `1.20`, JMH bugfix release            |
-| `0.3.2`  (sbt 0.13.16 / sbt 1.0)   | `1.19`, minor bugfix release          |
-| `0.3.1`  (sbt 0.13.16 / sbt 1.0)   | `1.19`, minor bugfix release          |
-| `0.3.0`  (sbt 0.13.16 / sbt 1.0)   | `1.19`, async profiler, flame-graphs  |
-| `0.2.27` (sbt 0.13.16 / sbt 1.0)   | `1.19`                                |
-| `0.2.26` (sbt 0.13.16-M1)          | `1.19`                                |
-| `0.2.25` (sbt 0.13.x)              | `1.19`                                |
-| `0.2.24` (sbt 0.13.x)              | `1.18`                                |
-| ...                                | ...                                   |
+| Plugin version                                                                             | Default JMH version                                        | Notes                           | 
+| ------------------------------------------------------------------------------------------ |------------------------------------------------------------|:-------------------------------:|
+| [`0.4.3`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.4.3)  (sbt 1.3.0+)              | [`1.32`](https://github.com/openjdk/jmh/releases/tag/1.32) |                                 | 
+| [`0.4.2`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.4.2)  (sbt 1.3.0+)              | [`1.31`](https://github.com/openjdk/jmh/releases/tag/1.31) | JMH `-prof async` supports 2.x  | 
+| [`0.4.1`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.4.1)  (sbt 1.3.0+)              | [`1.30`](https://github.com/openjdk/jmh/releases/tag/1.30) |                                 | 
+| [`0.4.0`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.4.0)  (sbt 1.3.0+)              | [`1.25`](https://github.com/openjdk/jmh/releases/tag/1.25) | profilers now in JMH core       | 
+| [`0.3.7`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.3.7)  (sbt 0.13.17 / sbt 1.1.4) | [`1.21`](https://github.com/openjdk/jmh/releases/tag/1.21) | support JDK 11                  | 
+| [`0.3.6`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.3.6)  (sbt 0.13.17 / sbt 1.1.4) | [`1.21`](https://github.com/openjdk/jmh/releases/tag/1.21) | support JDK 11                  |
+| [`0.3.4`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.3.4)  (sbt 0.13.17 / sbt 1.1.4) | [`1.21`](https://github.com/openjdk/jmh/releases/tag/1.21) | support of GraalVM              |
+| [`0.3.3`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.3.3)  (sbt 0.13.17 / sbt 1.1.1) | [`1.20`](https://github.com/openjdk/jmh/releases/tag/1.20) | JMH bugfix release              |
+| [`0.3.2`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.3.2)  (sbt 0.13.16 / sbt 1.0)   | [`1.19`](https://github.com/openjdk/jmh/releases/tag/1.19) | minor bugfix release            |
+| [`0.3.1`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.3.1)  (sbt 0.13.16 / sbt 1.0)   | [`1.19`](https://github.com/openjdk/jmh/releases/tag/1.19) | minor bugfix release            |
+| [`0.3.0`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.3.0)  (sbt 0.13.16 / sbt 1.0)   | [`1.19`](https://github.com/openjdk/jmh/releases/tag/1.19) | async profiler, flame-graphs    |
+| ...                                | ...                                                        |                                 |
 
 Not interesting versions are skipped in the above listing. Always use the newest which has the JMH version you need.
 You should stick to the latest version at all times anyway of course.
