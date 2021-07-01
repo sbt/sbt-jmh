@@ -62,7 +62,11 @@ object JmhPlugin extends AutoPlugin {
     sourceGenerators := Seq(Def.task { generateJmhSourcesAndResources.value._1 }.taskValue),
     resourceGenerators := Seq(Def.task { generateJmhSourcesAndResources.value._2 }.taskValue),
     generateJmhSourcesAndResources := generateBenchmarkSourcesAndResources(streams.value, crossTarget.value / "jmh-cache", (classDirectory in Jmh).value, sourceManaged.value, resourceManaged.value, generatorType.value, (dependencyClasspath in Jmh).value, new Run(scalaInstance.value, true, taskTemporaryDirectory.value)),
-    generateJmhSourcesAndResources := (generateJmhSourcesAndResources dependsOn(compile in Compile)).value
+    generateJmhSourcesAndResources := (generateJmhSourcesAndResources dependsOn(compile in Compile)).value,
+
+    // local copy of https://github.com/sbt/sbt/blob/e4231ac03903e174bc9975ee00d34064a1d1f373/main/src/main/scala/sbt/Keys.scala#L400
+    // so that it does not break on sbt version below 1.4.0
+    SettingKey[Boolean]("bspEnabled") := false
   )) ++ Seq(
     // settings in default
 
