@@ -107,7 +107,7 @@ Use `-prof jfr:help` / `-prof async:help` to list available options.
 
 Examples
 --------
-The [examples are scala-fied examples from the original JMH repo](https://github.com/ktoso/sbt-jmh/tree/master/plugin/src/sbt-test/sbt-jmh/run/src/main/scala/org/openjdk/jmh/samples), check them out, and run them! 
+The [examples are scala-fied examples from the original JMH repo](https://github.com/ktoso/sbt-jmh/tree/main/plugin/src/sbt-test/sbt-jmh/run/src/main/scala/org/openjdk/jmh/samples), check them out, and run them!
 
 The results will look somewhat like this:
 
