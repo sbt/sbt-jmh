@@ -208,8 +208,3 @@ Special thanks
 
 Special thanks for contributing async-profiler and flame-graphs support and other improvements
 go to [@retronym](https://github.com/retronym) of Lightbend's Scala team.
-
-License
--------
-
-This plugin is released under the **Apache 2.0 License**
