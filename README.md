@@ -62,11 +62,11 @@ You can read more about [auto plugins in sbt on it's documentation page](http://
 
 Write your benchmarks in `src/main/scala`. They will be picked up and instrumented by the plugin.
 
-JMH has a very specific way of working (it generates loads of code), so you should prepare a separate project for your benchmarks. In it, just type `run` in order to run your benchmarks.
-All JMH options work as expected. For help type `run -h`. Another example of running it is:
+JMH has a very specific way of working (it generates loads of code), so you should prepare a separate project for your benchmarks. In it, just type `Jmh/run` in order to run your benchmarks.
+All JMH options work as expected. For help type `Jmh/run -h`. Another example of running it is:
 
 ```sbt
-jmh:run -i 3 -wi 3 -f1 -t1 .*FalseSharing.*
+Jmh/run -i 3 -wi 3 -f1 -t1 .*FalseSharing.*
 ```
 
 Which means "3 iterations" "3 warmup iterations" "1 fork" "1 thread". Please note that benchmarks should be usually executed at least in 10 iterations (as a rule of thumb), but more is better.
@@ -76,24 +76,25 @@ Which means "3 iterations" "3 warmup iterations" "1 fork" "1 thread". Please not
 If your benchmark should be a module in a multimodule project and needs access to another modules test classes then you
 might want to define your benchmarks in `src/test` as well (because [Intellij does not support "compile->test" dependencies](https://youtrack.jetbrains.com/issue/SCL-8396)).
 While this is not directly supported it can be achieved with some tweaks. Assuming the benchmarks live in a module `bench` and need access
- to test classes from `anotherModule`, you have to define this dependency in your main `build.sbt`:
+ to test classes from `anotherModule`, you have to define this dependency in your `build.sbt`:
 ```scala
-lazy val bench = project.dependsOn(anotherModule % "test->test").enablePlugins(JmhPlugin)
-```
-In `bench/build.sbt` you need to tweak some settings:
-```scala
-sourceDirectory in Jmh := (sourceDirectory in Test).value
-classDirectory in Jmh := (classDirectory in Test).value
-dependencyClasspath in Jmh := (dependencyClasspath in Test).value
-// rewire tasks, so that 'jmh:run' automatically invokes 'jmh:compile' (otherwise a clean 'jmh:run' would fail)
-compile in Jmh := (compile in Jmh).dependsOn(compile in Test).value
-run in Jmh := (run in Jmh).dependsOn(Keys.compile in Jmh).evaluated
+lazy val bench = project
+  .dependsOn(anotherModule % "test->test")
+  .enablePlugins(JmhPlugin)
+  .settings(
+     Jmh / sourceDirectory := (Test / sourceDirectory).value
+     Jmh / classDirectory := (Test / classDirectory).value
+     Jmh / dependencyClasspath := (Test / dependencyClasspath).value
+     // rewire tasks, so that 'bench/Jmh/run' automatically invokes 'bench/Jmh/compile' (otherwise a clean 'bench/Jmh/run' would fail)
+     Jmh / compile := (Jmh / compile).dependsOn(Test / compile).value
+     Jmh / run := (Jmh / run).dependsOn(Jmh / compile).evaluated
+  )
 ```
 
 Options
 -------
 
-Please invoke `run -h` to get a full list of run as well as output format options.
+Please invoke `Jmh/run -h` to get a full list of run as well as output format options.
 
 **Useful hint**: If you plan to aggregate the collected data you should have a look at the available output formats (`-lrf`).
 For example it's possible to keep the benchmark's results as csv or json files for later regression analysis.
@@ -177,10 +178,10 @@ Advanced: Using custom Runners
 It is possible to hand over the running of JMH to an `App` implemented by you, which allows you to programmatically
 access all test results and modify JMH arguments before you actually invoke it.
 
-To use a custom runner class with `runMain`, simply use it: `jmh:runMain com.example.MyRunner -i 10 .*` –
+To use a custom runner class with `runMain`, simply use it: `Jmh/runMain com.example.MyRunner -i 10 .*` –
 an example for this is available in [plugin/src/sbt-test/sbt-jmh/runMain](plugin/src/sbt-test/sbt-jmh/runMain) (open the `test` file).
 
-To replace the runner class which is used when you type `jmh:run`, you can set the class in your build file –
+To replace the runner class which is used when you type `Jmh/run`, you can set the class in your build file –
 an example for this is available in [plugin/src/sbt-test/sbt-jmh/custom-runner](plugin/src/sbt-test/sbt-jmh/custom-runner) (open the `build.sbt` file).
 
 Contributing
@@ -193,14 +194,14 @@ The plugin is maintained at an best-effort basis -- submitting a PR is the best 
 You can locally publish the plugin with:
 
 ```
-sbt '; project plugin; ^publishLocal'
+sbt 'project plugin; ^publishLocal'
 ```
 
 Please test your changes by adding to the [scripted test suite][sbt-jmh/plugin/src/sbt-test/sbt-jmh/]
 which can be run with:
 
 ```
- sbt '; project plugin; ^scripted'
+ sbt 'project plugin; ^scripted'
 ```
 
 Special thanks
