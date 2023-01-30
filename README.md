@@ -17,7 +17,8 @@ Versions
 --------
 
 | Plugin version                                                                             | Default JMH version                                        | Notes                           | 
-| ------------------------------------------------------------------------------------------ |------------------------------------------------------------|:-------------------------------:|
+|--------------------------------------------------------------------------------------------|------------------------------------------------------------|:-------------------------------:|
+| [`0.4.4`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.4.4)  (sbt 1.3.0+)              | [`1.36`](https://github.com/openjdk/jmh/releases/tag/1.36) |                                 | 
 | [`0.4.3`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.4.3)  (sbt 1.3.0+)              | [`1.32`](https://github.com/openjdk/jmh/releases/tag/1.32) |                                 | 
 | [`0.4.2`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.4.2)  (sbt 1.3.0+)              | [`1.31`](https://github.com/openjdk/jmh/releases/tag/1.31) | JMH `-prof async` supports 2.x  | 
 | [`0.4.1`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.4.1)  (sbt 1.3.0+)              | [`1.30`](https://github.com/openjdk/jmh/releases/tag/1.30) |                                 | 
@@ -29,7 +30,7 @@ Versions
 | [`0.3.2`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.3.2)  (sbt 0.13.16 / sbt 1.0)   | [`1.19`](https://github.com/openjdk/jmh/releases/tag/1.19) | minor bugfix release            |
 | [`0.3.1`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.3.1)  (sbt 0.13.16 / sbt 1.0)   | [`1.19`](https://github.com/openjdk/jmh/releases/tag/1.19) | minor bugfix release            |
 | [`0.3.0`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.3.0)  (sbt 0.13.16 / sbt 1.0)   | [`1.19`](https://github.com/openjdk/jmh/releases/tag/1.19) | async profiler, flame-graphs    |
-| ...                                | ...                                                        |                                 |
+| ...                                                                                        | ...                                                        |                                 |
 
 Not interesting versions are skipped in the above listing. Always use the newest which has the JMH version you need.
 You should stick to the latest version at all times anyway of course.
