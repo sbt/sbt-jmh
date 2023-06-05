@@ -16,15 +16,10 @@
 
 package pl.project13.scala.sbt
 
+import sbt.*
+import sbt.Keys.*
+
 import java.util.Properties
-
-import sbt._
-import sbt.Keys._
-import org.openjdk.jmh.annotations.Benchmark
-import org.openjdk.jmh.generators.bytecode.JmhBytecodeGenerator
-import sbt.KeyRanks.AMinusSetting
-
-import scala.tools.nsc.util.ScalaClassLoader.URLClassLoader
 
 object JmhPlugin extends AutoPlugin {
 
@@ -33,7 +28,7 @@ object JmhPlugin extends AutoPlugin {
     val generatorType = settingKey[String]("Benchmark code generator type. Available: `default`, `reflection` or `asm`.")
   }
 
-  import JmhKeys._
+  import JmhKeys.*
 
   val autoImport = JmhKeys
 
@@ -52,17 +47,17 @@ object JmhPlugin extends AutoPlugin {
     version := jmhVersionFromProps(),
     generatorType := "default",
 
-    mainClass in run := Some("org.openjdk.jmh.Main"),
-    fork in run := true, // makes sure that sbt manages classpath for JMH when forking
+    run / mainClass := Some("org.openjdk.jmh.Main"),
+    run / fork := true, // makes sure that sbt manages classpath for JMH when forking
     // allow users to configure another classesDirectory like e.g. test:classDirectory
-    classDirectory := (classDirectory in Compile).value,
-    dependencyClasspath := (dependencyClasspath in Compile).value,
+    classDirectory := (Compile / classDirectory).value,
+    dependencyClasspath := (Compile / dependencyClasspath).value,
 
-    resourceDirectory := (resourceDirectory in Compile).value,
+    resourceDirectory := (Compile / resourceDirectory).value,
     sourceGenerators := Seq(Def.task { generateJmhSourcesAndResources.value._1 }.taskValue),
     resourceGenerators := Seq(Def.task { generateJmhSourcesAndResources.value._2 }.taskValue),
-    generateJmhSourcesAndResources := generateBenchmarkSourcesAndResources(streams.value, crossTarget.value / "jmh-cache", (classDirectory in Jmh).value, sourceManaged.value, resourceManaged.value, generatorType.value, (dependencyClasspath in Jmh).value, new Run(scalaInstance.value, true, taskTemporaryDirectory.value)),
-    generateJmhSourcesAndResources := (generateJmhSourcesAndResources dependsOn(compile in Compile)).value,
+    generateJmhSourcesAndResources := generateBenchmarkSourcesAndResources(streams.value, crossTarget.value / "jmh-cache", (Jmh / classDirectory).value, sourceManaged.value, resourceManaged.value, generatorType.value, (Jmh / dependencyClasspath).value, new Run(scalaInstance.value, true, taskTemporaryDirectory.value)),
+    generateJmhSourcesAndResources := (generateJmhSourcesAndResources dependsOn(Compile / compile)).value,
 
     // local copy of https://github.com/sbt/sbt/blob/e4231ac03903e174bc9975ee00d34064a1d1f373/main/src/main/scala/sbt/Keys.scala#L400
     // so that it does not break on sbt version below 1.4.0
@@ -72,13 +67,13 @@ object JmhPlugin extends AutoPlugin {
 
     // includes the asm jar only if needed
     libraryDependencies ++= {
-      val jmhV = (version in Jmh).value
+      val jmhV = (Jmh / version).value
 
       Seq(
         "org.openjdk.jmh"     % "jmh-core"                 % jmhV,    // GPLv2
         "org.openjdk.jmh"     % "jmh-generator-bytecode"   % jmhV,    // GPLv2
         "org.openjdk.jmh"     % "jmh-generator-reflection" % jmhV     // GPLv2
-      ) ++ ((generatorType in Jmh).value match {
+      ) ++ ((Jmh / generatorType).value match {
         case "default" | "reflection" => Nil // default == reflection (0.9)
         case "asm"                    => Seq("org.openjdk.jmh" % "jmh-generator-asm" % jmhV)    // GPLv2
         case unknown                  => throw new IllegalArgumentException(s"Unknown benchmark generator type: $unknown, please use one of the supported generators!")
