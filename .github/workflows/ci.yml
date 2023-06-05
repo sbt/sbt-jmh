@@ -21,9 +21,5 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: ${{ matrix.java }}
-    - uses: coursier/cache-action@v5
+    - uses: coursier/cache-action@v6
     - run: sbt -v test scripted
-    - run:
-        rm -rf "$HOME/.ivy2/local" || true
-        find "$HOME/.ivy2/cache" -name "ivydata-*.properties" -print -delete
-        find "$HOME/.sbt"        -name "*.lock"               -print -delete
