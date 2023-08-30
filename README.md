@@ -18,6 +18,7 @@ Versions
 
 | Plugin version                                                                             | Default JMH version                                        | Notes                           | 
 |--------------------------------------------------------------------------------------------|------------------------------------------------------------|:-------------------------------:|
+| [`0.4.6`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.4.6)  (sbt 1.3.0+)              | [`1.37`](https://github.com/openjdk/jmh/releases/tag/1.37) |                                 | 
 | [`0.4.5`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.4.5)  (sbt 1.3.0+)              | [`1.36`](https://github.com/openjdk/jmh/releases/tag/1.36) |                                 | 
 | [`0.4.4`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.4.4)  (sbt 1.3.0+)              | [`1.36`](https://github.com/openjdk/jmh/releases/tag/1.36) |                                 | 
 | [`0.4.3`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.4.3)  (sbt 1.3.0+)              | [`1.32`](https://github.com/openjdk/jmh/releases/tag/1.32) |                                 | 
