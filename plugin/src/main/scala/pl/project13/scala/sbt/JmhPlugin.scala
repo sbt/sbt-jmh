@@ -56,7 +56,7 @@ object JmhPlugin extends AutoPlugin {
     resourceDirectory := (Compile / resourceDirectory).value,
     sourceGenerators := Seq(Def.task { generateJmhSourcesAndResources.value._1 }.taskValue),
     resourceGenerators := Seq(Def.task { generateJmhSourcesAndResources.value._2 }.taskValue),
-    generateJmhSourcesAndResources := generateBenchmarkSourcesAndResources(streams.value, crossTarget.value / "jmh-cache", (Jmh / classDirectory).value, sourceManaged.value, resourceManaged.value, generatorType.value, (Jmh / dependencyClasspath).value, new Run(scalaInstance.value, true, taskTemporaryDirectory.value)),
+    generateJmhSourcesAndResources := generateBenchmarkSourcesAndResources(streams.value, crossTarget.value / "jmh-cache", (Jmh / classDirectory).value, sourceManaged.value, resourceManaged.value, generatorType.value, (Jmh / dependencyClasspath).value, new ForkRun(ForkOptions())),
     generateJmhSourcesAndResources := (generateJmhSourcesAndResources dependsOn(Compile / compile)).value,
 
     // local copy of https://github.com/sbt/sbt/blob/e4231ac03903e174bc9975ee00d34064a1d1f373/main/src/main/scala/sbt/Keys.scala#L400
@@ -89,7 +89,7 @@ object JmhPlugin extends AutoPlugin {
     props.get("jmh.version").toString
   }
 
-  private def generateBenchmarkSourcesAndResources(s: TaskStreams, cacheDir: File, bytecodeDir: File, sourceDir: File, resourceDir: File, generatorType: String, classpath: Seq[Attributed[File]], run: Run): (Seq[File], Seq[File]) = {
+  private def generateBenchmarkSourcesAndResources(s: TaskStreams, cacheDir: File, bytecodeDir: File, sourceDir: File, resourceDir: File, generatorType: String, classpath: Seq[Attributed[File]], run: ScalaRun): (Seq[File], Seq[File]) = {
     val inputs: Set[File] = (bytecodeDir ** "*").filter(_.isFile).get.toSet
     val cachedGeneration = FileFunction.cached(cacheDir, FilesInfo.hash) { _ =>
       // ignore change report and rebuild it completely
@@ -100,7 +100,7 @@ object JmhPlugin extends AutoPlugin {
 
   private def internalGenerateBenchmarkSourcesAndResources(s: TaskStreams, bytecodeDir: File, sourceDir: File,
                                                            resourceDir: File, generatorType: String, classpath: Seq[Attributed[File]],
-                                                           run: Run, log: Logger): Set[File] = {
+                                                           run: ScalaRun, log: Logger): Set[File] = {
     // rebuild everything
     IO.delete(sourceDir)
     IO.createDirectory(sourceDir)
