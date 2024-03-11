@@ -13,4 +13,4 @@ jobs:
     name: Scala Steward
     steps:
       - name: Scala Steward
-        uses: scala-steward-org/scala-steward-action@v2.64.0
+        uses: scala-steward-org/scala-steward-action@v2.65.0
