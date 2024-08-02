@@ -1,8 +1,6 @@
 sbt-jmh
 =======
 
-[![Join the chat at https://gitter.im/ktoso/sbt-jmh](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ktoso/sbt-jmh?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 SBT plugin for running [OpenJDK JMH](http://openjdk.java.net/projects/code-tools/jmh/) benchmarks.
 
 JMH about itself:
