@@ -1,2 +1,2 @@
 enablePlugins(JmhPlugin)
-mainClass in (Jmh, run) := Some("com.example.CustomRunnerApp")
+Jmh / run / mainClass := Some("com.example.CustomRunnerApp")
