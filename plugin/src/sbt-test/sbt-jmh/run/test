@@ -1,5 +1,5 @@
 # compile jmh sources all the way to ready to run bench class files
-> jmh:run -i 1 -wi 1 -f 1 -rf csv .*Hello.*
+> Jmh/run -i 1 -wi 1 -f 1 -rf csv .*Hello.*
 
 # check if the csv file was generated
 $ exists jmh-result.csv
