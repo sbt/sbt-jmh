@@ -37,7 +37,7 @@ object JmhPlugin extends AutoPlugin {
   /** All we need is Java. */
   override def requires = plugins.JvmPlugin
 
-  /** Plugin must be enabled on the benchmarks project. See http://www.scala-sbt.org/0.13/tutorial/Using-Plugins.html */
+  /** Plugin must be enabled on the benchmarks project. See https://www.scala-sbt.org/1.x/docs/Using-Plugins.html */
   override def trigger = noTrigger
 
   override def projectConfigurations = Seq(Jmh)

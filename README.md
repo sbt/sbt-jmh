@@ -60,7 +60,7 @@ If you define your project in a `Build.scala`, you also need the following impor
 import pl.project13.scala.sbt.JmhPlugin
 ```
 
-You can read more about [auto plugins in sbt on it's documentation page](http://www.scala-sbt.org/0.13/tutorial/Using-Plugins.html#Enabling+and+disabling+auto+plugins).
+You can read more about [auto plugins in sbt on it's documentation page](https://www.scala-sbt.org/1.x/docs/Using-Plugins.html#Enabling+and+disabling+auto+plugins).
 
 Write your benchmarks in `src/main/scala`. They will be picked up and instrumented by the plugin.
 
