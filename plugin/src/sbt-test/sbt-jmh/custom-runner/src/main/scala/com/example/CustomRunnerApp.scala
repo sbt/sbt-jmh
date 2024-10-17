@@ -7,7 +7,7 @@ import org.openjdk.jmh.runner.Runner
 import org.openjdk.jmh.runner.options.CommandLineOptions
 
 object CustomRunnerApp {
-  import scala.collection.JavaConversions._
+  import scala.collection.JavaConverters._
 
   def main(args: Array[String]): Unit = {
     val opts = new CommandLineOptions(args: _*) // parse command line arguments, and then bend them to your will! ;-)
@@ -17,7 +17,7 @@ object CustomRunnerApp {
     val results = runner.run() // actually run the benchmarks
 
     val f = new FileOutputStream(new File("custom.out"))
-    results.foreach { result: RunResult ⇒
+    results.asScala.foreach { (result: RunResult) =>
       // usually you'd use these results to report into some external aggregation tool for example
       f.write(s"custom reporting result: ${result.getAggregatedResult.getPrimaryResult}".getBytes("UTF-8"))
     }
