@@ -21,12 +21,21 @@ val commonSettings = Seq(
     Developer("retronym", "Jason Zaugg", "<jzaugg@gmail.com>", url("https://github.com/retronym")),
     Developer("johanandren", "Johan Andrén", "<johan@markatta.com>", url("https://github.com/johanandren"))
   ),
-  crossSbtVersions := Vector("1.3.0"),
+
+  crossScalaVersions += "3.7.2",
+
+  pluginCrossBuild / sbtVersion := {
+    scalaBinaryVersion.value match {
+      case "2.12" =>
+        (pluginCrossBuild / sbtVersion).value
+      case _ =>
+        "2.0.0-RC2"
+    }
+  },
 
   scalacOptions ++= List(
     "-unchecked",
     "-deprecation",
-    "-language:_",
     "-encoding", "UTF-8"
   ),
 
