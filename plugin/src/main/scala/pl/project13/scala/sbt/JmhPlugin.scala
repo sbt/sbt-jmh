@@ -18,6 +18,9 @@ package pl.project13.scala.sbt
 
 import sbt.*
 import sbt.Keys.*
+import sjsonnew.BasicJsonProtocol.*
+import pl.project13.scala.sbt.JmhPluginCompat.*
+import xsbti.FileConverter
 
 import java.util.Properties
 
@@ -51,13 +54,23 @@ object JmhPlugin extends AutoPlugin {
     run / fork := true, // makes sure that sbt manages classpath for JMH when forking
     // allow users to configure another classesDirectory like e.g. test:classDirectory
     classDirectory := (Compile / classDirectory).value,
-    dependencyClasspath := (Compile / dependencyClasspath).value,
+    dependencyClasspath := Def.uncached((Compile / dependencyClasspath).value),
 
     resourceDirectory := (Compile / resourceDirectory).value,
     sourceGenerators := Seq(Def.task { generateJmhSourcesAndResources.value._1 }.taskValue),
     resourceGenerators := Seq(Def.task { generateJmhSourcesAndResources.value._2 }.taskValue),
-    generateJmhSourcesAndResources := generateBenchmarkSourcesAndResources(streams.value, crossTarget.value / "jmh-cache", (Jmh / classDirectory).value, sourceManaged.value, resourceManaged.value, generatorType.value, (Jmh / dependencyClasspath).value, new ForkRun(ForkOptions())),
-    generateJmhSourcesAndResources := (generateJmhSourcesAndResources dependsOn(Compile / compile)).value,
+    generateJmhSourcesAndResources := Def.uncached {
+      generateBenchmarkSourcesAndResources(
+        streams.value,
+        crossTarget.value / "jmh-cache",
+        (Jmh / classDirectory).value, sourceManaged.value,
+        resourceManaged.value,
+        generatorType.value,
+        (Jmh / dependencyClasspath).value.map(JmhPluginCompat.toAttributedFile(_, fileConverter.value)),
+        new ForkRun(ForkOptions())
+      )
+    },
+    generateJmhSourcesAndResources := generateJmhSourcesAndResources.dependsOn(Compile / compile).value,
 
     // local copy of https://github.com/sbt/sbt/blob/e4231ac03903e174bc9975ee00d34064a1d1f373/main/src/main/scala/sbt/Keys.scala#L400
     // so that it does not break on sbt version below 1.4.0
@@ -90,7 +103,7 @@ object JmhPlugin extends AutoPlugin {
   }
 
   private def generateBenchmarkSourcesAndResources(s: TaskStreams, cacheDir: File, bytecodeDir: File, sourceDir: File, resourceDir: File, generatorType: String, classpath: Seq[Attributed[File]], run: ScalaRun): (Seq[File], Seq[File]) = {
-    val inputs: Set[File] = (bytecodeDir ** "*").filter(_.isFile).get.toSet
+    val inputs: Set[File] = (bytecodeDir ** "*").filter(_.isFile).get().toSet
     val cachedGeneration = FileFunction.cached(cacheDir, FilesInfo.hash) { _ =>
       // ignore change report and rebuild it completely
       internalGenerateBenchmarkSourcesAndResources(s, bytecodeDir, sourceDir, resourceDir, generatorType, classpath, run, s.log)
@@ -109,7 +122,7 @@ object JmhPlugin extends AutoPlugin {
 
     val mainClass = "org.openjdk.jmh.generators.bytecode.JmhBytecodeGenerator"
     val options = Seq(bytecodeDir, sourceDir, resourceDir, generatorType).map(_.toString)
-    run.run(mainClass, classpath.map(_.data), options, log).get
-    ((sourceDir ** "*").filter(_.isFile) +++ (resourceDir ** "*").filter(_.isFile)).get.toSet
+    run.run(mainClass, classpath.map(x => JmhPluginCompat.toPath(x.data)), options, log).get
+    ((sourceDir ** "*").filter(_.isFile) +++ (resourceDir ** "*").filter(_.isFile)).get().toSet
   }
 }
