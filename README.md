@@ -203,7 +203,7 @@ Please test your changes by adding to the [scripted test suite][sbt-jmh/plugin/s
 which can be run with:
 
 ```
- sbt 'project plugin; ^scripted'
+ sbt 'project plugin; + scripted'
 ```
 
 Special thanks
