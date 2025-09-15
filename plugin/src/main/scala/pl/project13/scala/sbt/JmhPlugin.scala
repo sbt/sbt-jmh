@@ -54,7 +54,7 @@ object JmhPlugin extends AutoPlugin {
     run / fork := true, // makes sure that sbt manages classpath for JMH when forking
     // allow users to configure another classesDirectory like e.g. test:classDirectory
     classDirectory := (Compile / classDirectory).value,
-    dependencyClasspath := Def.uncached((Compile / dependencyClasspath).value),
+    dependencyClasspath ++= Def.uncached((Compile / dependencyClasspath).value),
 
     resourceDirectory := (Compile / resourceDirectory).value,
     sourceGenerators := Seq(Def.task { generateJmhSourcesAndResources.value._1 }.taskValue),
