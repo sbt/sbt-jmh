@@ -16,6 +16,7 @@ Versions
 
 | Plugin version                                                                             | Default JMH version                                        | Notes                           | 
 |--------------------------------------------------------------------------------------------|------------------------------------------------------------|:-------------------------------:|
+ | [`0.4.8`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.4.8) (sbt 1.3.0/2.0)           | [`1.37`](https://github.com/openjdk/jmh/releases/tag/1.37) |                                 |
 | [`0.4.7`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.4.7)  (sbt 1.3.0+)              | [`1.37`](https://github.com/openjdk/jmh/releases/tag/1.37) |                                 | 
 | [`0.4.6`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.4.6)  (sbt 1.3.0+)              | [`1.37`](https://github.com/openjdk/jmh/releases/tag/1.37) |                                 | 
 | [`0.4.5`](https://github.com/ktoso/sbt-jmh/releases/tag/v0.4.5)  (sbt 1.3.0+)              | [`1.36`](https://github.com/openjdk/jmh/releases/tag/1.36) |                                 | 
@@ -44,7 +45,7 @@ your project is to add the below line to your `project/plugins.sbt` file:
 
 ```scala
 // project/plugins.sbt
-addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.4.7")
+addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.4.8")
 ```
 
 and enable it in the projects where you want to (useful in multi-project builds, as you can enable it only where you need it):
