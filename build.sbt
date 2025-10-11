@@ -65,15 +65,15 @@ val myScriptedSettings = Seq(
 lazy val root =
   project
     .in(file("."))
-    .settings(commonSettings: _*)
+    .settings(commonSettings)
     .settings(publish / skip := true)
     .aggregate(plugin)
 
 lazy val plugin = project
   .in(file("plugin"))
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .enablePlugins(SbtPlugin)
-  .settings(myScriptedSettings: _*)
+  .settings(myScriptedSettings)
   .settings(
     name := "sbt-jmh",
     sbtPlugin := true,
