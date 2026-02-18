@@ -24,3 +24,6 @@ jobs:
         cache: sbt
     - uses: sbt/setup-sbt@v1
     - run: sbt -v "+ Test/compile" "+ test" "+ scripted"
+      if: ${{ matrix.java == 17 }}
+    - run: sbt -v Test/compile test scripted
+      if: ${{ matrix.java != 17 }}
