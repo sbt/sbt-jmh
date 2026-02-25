@@ -25,7 +25,7 @@ val commonSettings = Seq(
     Developer("johanandren", "Johan Andrén", "<johan@markatta.com>", url("https://github.com/johanandren"))
   ),
 
-  crossScalaVersions += "3.8.1",
+  crossScalaVersions += "3.8.2",
 
   pluginCrossBuild / sbtVersion := {
     scalaBinaryVersion.value match {
