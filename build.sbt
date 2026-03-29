@@ -32,7 +32,7 @@ val commonSettings = Seq(
       case "2.12" =>
         (pluginCrossBuild / sbtVersion).value
       case _ =>
-        "2.0.0-RC9"
+        "2.0.0-RC10"
     }
   },
 

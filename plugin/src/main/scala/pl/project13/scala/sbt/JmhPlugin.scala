@@ -35,6 +35,7 @@ object JmhPlugin extends AutoPlugin {
 
   val autoImport = JmhKeys
 
+  @transient
   val generateJmhSourcesAndResources = taskKey[(Seq[File], Seq[File])]("Generate benchmark JMH Java code and resources")
 
   /** All we need is Java. */
