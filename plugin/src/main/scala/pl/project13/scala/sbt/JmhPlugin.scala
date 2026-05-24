@@ -27,7 +27,7 @@ import java.util.Properties
 object JmhPlugin extends AutoPlugin {
 
   object JmhKeys {
-    val Jmh = config("jmh") extend Test
+    val Jmh = config("jmh").extend(Test)
     val generatorType = settingKey[String]("Benchmark code generator type. Available: `default`, `reflection` or `asm`.")
   }
 
