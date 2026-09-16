@@ -1,0 +1,22 @@
+# Regression test for https://github.com/sbt/sbt-jmh/issues/16
+# Generate and run both benchmarks the first time.
+> Jmh/run -i 1 -wi 1 -f 1 -rf csv .*
+$ exists jmh-result.csv
+$ exists target/**/src_managed/jmh/bench/jmh_generated/ToBeDeletedBenchmark_jmhType.java
+
+# Remove one of the benchmark sources.
+$ delete src/main/scala/bench/ToBeDeletedBenchmark.scala
+
+# Regenerating and running now must not find the removed benchmark anymore.
+# Before the fix, the stale compiled class for the deleted benchmark lingered
+# in (Compile / classDirectory), which was shared with the Jmh config's
+# classDirectory, so JMH kept happily rediscovering and re-running it.
+-> Jmh/run -i 1 -wi 1 -f 1 -rf csv .*ToBeDeleted.*
+
+# Pin the actual invariant: the stale generated wrapper source for the
+# deleted benchmark must be gone too, not just undiscoverable at runtime.
+$ absent target/**/src_managed/jmh/bench/jmh_generated/ToBeDeletedBenchmark_jmhType.java
+
+# The remaining benchmark must still run fine.
+> Jmh/run -i 1 -wi 1 -f 1 -rf csv .*KeptBenchmark.*
+$ exists target/**/src_managed/jmh/bench/jmh_generated/KeptBenchmark_jmhType.java
