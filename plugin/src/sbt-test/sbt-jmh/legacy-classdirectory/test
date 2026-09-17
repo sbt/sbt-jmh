@@ -1,0 +1,4 @@
+# A build still setting (Jmh / classDirectory) to select the scanned directory must fail
+# with migration instructions, rather than silently scanning the wrong directory and
+# reporting no benchmarks. See https://github.com/sbt/sbt-jmh/issues/16
+-> Jmh/compile

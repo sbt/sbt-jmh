@@ -86,13 +86,15 @@ lazy val bench = project
   .enablePlugins(JmhPlugin)
   .settings(
      Jmh / sourceDirectory := (Test / sourceDirectory).value,
-     Jmh / classDirectory := (Test / classDirectory).value,
+     Jmh / jmhBytecodeDirectory := (Test / classDirectory).value,
      Jmh / dependencyClasspath := (Test / dependencyClasspath).value,
-     // rewire tasks, so that 'bench/Jmh/run' automatically invokes 'bench/Jmh/compile' (otherwise a clean 'bench/Jmh/run' would fail)
-     Jmh / compile := (Jmh / compile).dependsOn(Test / compile).value,
-     Jmh / run := (Jmh / run).dependsOn(Jmh / compile).evaluated
+     // the benchmarks have to be compiled before the generator scans for them,
+     // otherwise a clean 'bench/Jmh/run' would fail
+     Jmh / run := (Jmh / run).dependsOn(Test / compile).evaluated
   )
 ```
+
+Note: `Jmh / jmhBytecodeDirectory` is the directory the generator scans for `@Benchmark`-annotated classes, which is why the recipe above points it at `Test / classDirectory`. It is separate from `Jmh / classDirectory`, the directory the generated benchmark wrapper classes are compiled to, which should be left at its default.
 
 Options
 -------

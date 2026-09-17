@@ -1,0 +1,10 @@
+# (Jmh / jmhBytecodeDirectory) redirects the scan for @Benchmark-annotated classes away from
+# the default (Compile / classDirectory), per the multimodule recipe in the README.
+> Jmh/run -i 1 -wi 1 -f 1 -r 1 -w 1 .*TestScoped.*
+
+# The benchmark under src/test is the one that gets generated and run.
+$ exists target/**/src_managed/jmh/bench/jmh_generated/TestScopedBenchmark_jmhType.java
+
+# The benchmark under src/main sits in the default scan directory, so redirecting
+# jmhBytecodeDirectory must leave it out entirely.
+$ absent target/**/src_managed/jmh/bench/jmh_generated/MainScopedBenchmark_jmhType.java
