@@ -20,7 +20,6 @@ import sbt.*
 import sbt.Keys.*
 import sjsonnew.BasicJsonProtocol.*
 import pl.project13.scala.sbt.JmhPluginCompat.*
-import xsbti.FileConverter
 
 import java.util.Properties
 
