@@ -9,6 +9,8 @@ val jmhVersion = {
   props.get("jmh.version").toString
 }
 
+ThisBuild / scalaVersion := "2.12.21"
+
 val commonSettings = Seq(
   organization := "pl.project13.scala",
   startYear := Some(2014),
@@ -21,21 +23,21 @@ val commonSettings = Seq(
     Developer("johanandren", "Johan Andrén", "<johan@markatta.com>", url("https://github.com/johanandren"))
   ),
 
-  crossScalaVersions += "3.8.4",
+  crossScalaVersions := Seq("2.12.21", "3.9.0"),
 
   pluginCrossBuild / sbtVersion := {
     scalaBinaryVersion.value match {
       case "2.12" =>
-        (pluginCrossBuild / sbtVersion).value
+        "1.13.1"
       case _ =>
-        "2.0.0"
+        "2.1.0"
     }
   },
 
   scalacOptions ++= {
     scalaBinaryVersion.value match {
       case "2.12" =>
-        Seq("-release:8")
+        Seq("-Xsource:3", "-release:8")
       case "3" =>
         Nil
     }
