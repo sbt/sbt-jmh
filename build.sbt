@@ -11,10 +11,6 @@ val jmhVersion = {
 
 val commonSettings = Seq(
   organization := "pl.project13.scala",
-  publishTo := {
-    if (isSnapshot.value) Some(Resolver.sonatypeCentralSnapshots)
-    else localStaging.value
-  },
   startYear := Some(2014),
   licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.html")),
   homepage := Some(url("https://github.com/sbt/sbt-jmh")),
@@ -50,13 +46,6 @@ val commonSettings = Seq(
     "-deprecation",
     "-encoding", "UTF-8"
   ),
-
-  publishConfiguration := {
-    val javaVersion = System.getProperty("java.specification.version")
-    if (javaVersion != "1.8")
-      throw new RuntimeException("Cancelling publish, please use JDK 1.8")
-    publishConfiguration.value
-  },
 
   libraryDependencies += "org.openjdk.jmh" % "jmh-core"                 % jmhVersion, // GPLv2 with classpath exception
   libraryDependencies += "org.openjdk.jmh" % "jmh-generator-bytecode"   % jmhVersion, // GPLv2 with classpath exception

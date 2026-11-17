@@ -1,14 +1,17 @@
 Releasing notes
 ===============
 
-- change all versions from -SNAPSHOT to current one
-- commit and tag the change at this stage
-- dry run:
-  - `sbt -Dsbt.supershell=false clean ^plugin/publishLocalSigned )`
-- release the plugin:
-  -  prerequisite: @ktoso needs to grant your oss.sontaype.org publish permissions by means of a request to [OSSRH-1324](https://issues.sonatype.org/browse/OSSRH-1324).
-  - `sbt -Dsbt.supershell=false clean ^plugin/publishSigned )`
-  - Close/Release the staging repository on oss.sonatype.org. 
-- If you encounter `gpg: signing failed: Inappropriate ioctl for device`, 
-  try `export GPG_TTY=$(tty)` (hat tip: https://github.com/keybase/keybase-issues/issues/2798.
+Releases are published to Maven Central by the `Release` GitHub Actions workflow,
+using [sbt-ci-release](https://github.com/sbt/sbt-ci-release).
+The version comes from the git tag.
 
+- Check that CI on `main` is green.
+- Tag the release commit and push the tag:
+  - `git tag -a v0.4.9 -m "v0.4.9"`
+  - `git push origin v0.4.9`
+- The workflow publishes the plugin for sbt 1 and sbt 2 and releases it on Sonatype Central.
+- Publish the GitHub release draft created by Release Drafter.
+
+The workflow needs these repository or organization secrets:
+`PGP_SECRET`, `PGP_PASSPHRASE`, `SONATYPE_USERNAME` and `SONATYPE_PASSWORD`.
+See the sbt-ci-release README for how to create them.
