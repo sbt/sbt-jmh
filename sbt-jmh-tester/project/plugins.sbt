@@ -1,4 +1,4 @@
-addSbtPlugin("pl.project13.scala" % "sbt-jmh" % {
+addSbtPlugin("com.github.sbt" % "sbt-jmh" % {
   val is = scala.io.Source.fromFile(new File("../version.sbt")).mkString
   val it = is.replaceAll("version in ThisBuild := ", "").replaceAll("\"", "").replaceAll("\n", "")
   it

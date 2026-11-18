@@ -1,1 +1,1 @@
-addSbtPlugin("pl.project13.scala" % "sbt-jmh" % sys.props("project.version"))
+addSbtPlugin("com.github.sbt" % "sbt-jmh" % sys.props("project.version"))

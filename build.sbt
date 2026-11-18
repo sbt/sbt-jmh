@@ -10,7 +10,8 @@ val jmhVersion = {
 }
 
 val commonSettings = Seq(
-  organization := "pl.project13.scala",
+  organization := "com.github.sbt",
+  organizationName := "pl.project13.scala",
   startYear := Some(2014),
   licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.html")),
   homepage := Some(url("https://github.com/sbt/sbt-jmh")),
