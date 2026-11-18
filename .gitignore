@@ -6,3 +6,4 @@ project/target
 hs_err*
 *.iml
 *.jfr
+.bsp
