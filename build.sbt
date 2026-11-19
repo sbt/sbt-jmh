@@ -9,7 +9,7 @@ val jmhVersion = {
   props.get("jmh.version").toString
 }
 
-ThisBuild / scalaVersion := "2.12.21"
+ThisBuild / scalaVersion := "2.13.18"
 
 val commonSettings = Seq(
   organization := "com.github.sbt",
@@ -24,7 +24,7 @@ val commonSettings = Seq(
     Developer("johanandren", "Johan Andrén", "<johan@markatta.com>", url("https://github.com/johanandren"))
   ),
 
-  crossScalaVersions := Seq("2.12.21", "3.9.0"),
+  crossScalaVersions := Seq("2.13.18", "3.9.0"),
 
   pluginCrossBuild / sbtVersion := {
     scalaBinaryVersion.value match {
